@@ -1,5 +1,5 @@
 var Wrk = function() {
-    // setup
+    // setup wrk instance
 }
 
 Wrk.prototype.roundTo = function(num, decimalPlaces) {

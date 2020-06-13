@@ -1,0 +1,4 @@
+components/core.js
+components/math.js
+components/vector.js
+components/end.js
