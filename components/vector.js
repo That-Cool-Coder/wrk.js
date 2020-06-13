@@ -1,7 +1,6 @@
 Wrk.prototype.Vector = function(x, y, z=0) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
+    // simple and (hopefully) fast
+    return {x : x, y : y, z : z};
 }
 
 Wrk.prototype.Vector.copy = function(v) {
