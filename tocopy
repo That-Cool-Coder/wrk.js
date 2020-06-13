@@ -1,0 +1,53 @@
+function randflt(min, max) {
+    var diff = max - min;
+    return Math.random() * diff + min;
+}
+
+function sigmoid(x) {
+    return 1 / (1 + Math.exp(-x)); // f(x) = 1 / (1 + e^(-x))
+}
+
+function _sigmoid(x) {
+    return sigmoid(x) * (1 - sigmoid(x)); // f'(x) = f(x) * (1 - f(x))
+}
+
+function roundTo(num, decimalPlaces) {
+    var numToRound = num * 10**decimalPlaces;
+    return Math.round(numToRound) / 10**decimalPlaces;
+}
+
+function getElemById(id) {
+    return document.getElementById(id);
+}
+
+function setValues(obj, values) {
+    // change the values of an object without changing the keys
+    // assumes that keys and values are same length, etc
+    var keys = Object.keys(obj);
+    keys.forEach((key, i) => {
+        obj[key] = values[i];
+    });
+}
+
+function highestIndex(array) {
+    var highestIdx = null;
+    var highestItem = 0;
+    array.forEach((item, i) => {
+        if (item => highestItem) {
+            highestItem = item;
+            highestIdx = i;
+        }
+    });
+    return highestIdx;
+}
+
+function uniqueId() {
+    // Math.random should be unique because of its seeding algorithm.
+    // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+    // after the decimal.
+    return '_' + Math.random().toString(36).substr(2, 9);
+}
+
+function nullFunc() {
+    // do nothing
+}
