@@ -51,7 +51,7 @@ Wrk.prototype.Vector.div = function(v1, amount) {
     }
 }
 
-Wrk.prototype.Vector.multAndCopy = function(v1, amount) {
+Wrk.prototype.Vector.divAndCopy = function(v1, amount) {
     var v3 = wrk.Vector.copy(v1);
     wrk.Vector.div(v3, amount);
     return v3;
