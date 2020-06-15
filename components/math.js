@@ -16,6 +16,6 @@ Wrk.prototype.sigmoid = function(x) {
     return 1 / (1 + Math.exp(-x)); // f(x) = 1 / (1 + e^(-x))
 }
 
-Wrk.prototype.sigmoid = function(x) {
-    return sigmoid(x) * (1 - sigmoid(x)); // f'(x) = f(x) * (1 - f(x))
+Wrk.prototype._sigmoid = function(x) {
+    return wrk.sigmoid(x) * (1 - wrk.sigmoid(x)); // f'(x) = f(x) * (1 - f(x))
 }
