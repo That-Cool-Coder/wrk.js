@@ -1,6 +1,16 @@
-wrk.roundTo = function(num, decimalPlaces) {
+wrk.round = function(num, decimalPlaces=0) {
     var numToRound = num * 10**decimalPlaces;
     return Math.round(numToRound) / 10**decimalPlaces;
+}
+
+wrk.floor = function(num, decimalPlaces=0) {
+    var numToRound = num * 10**decimalPlaces;
+    return Math.floor(numToRound) / 10**decimalPlaces;
+}
+
+wrk.ceiling = function(num, decimalPlaces=0) {
+    var numToRound = num * 10**decimalPlaces;
+    return Math.ceil(numToRound) / 10**decimalPlaces;
 }
 
 wrk.randflt = function(min, max) {
@@ -17,5 +27,13 @@ wrk.sigmoid = function(x) {
 }
 
 wrk.invSigmoid = function(x) {
-    return sigmoid(x) * (1 - sigmoid(x)); // f'(x) = f(x) * (1 - f(x))
+    return wrk.sigmoid(x) * (1 - wrk.sigmoid(x)); // f'(x) = f(x) * (1 - f(x))
+}
+
+wrk.degrees = function(radians) {
+    return radians * wrk._180DIVPI;
+}
+
+wrk.radians = function(degrees) {
+    return degrees / wrk._180DIVPI;
 }
