@@ -1,5 +1,7 @@
-components/core.js
-components/misc.js
-components/math.js
-components/vector.js
-components/end.js
+src/core.js
+src/misc.js
+src/dom.js
+src/arr.js
+src/obj.js
+src/math.js
+src/vector.js
