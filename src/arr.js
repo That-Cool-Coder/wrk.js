@@ -1,6 +1,6 @@
 wrk.arr = {};
 
-wrk.arr.highestIndex = function(array) {
+wrk.arr.highestIndex = function(array=[]) {
     var highestIdx = null;
     var highestItem = 0;
     array.forEach((item, i) => {
@@ -10,4 +10,8 @@ wrk.arr.highestIndex = function(array) {
         }
     });
     return highestIdx;
+}
+
+wrk.arr.choose = function(array=[]) {
+    return array[wrk.randint(0, array.length)];
 }

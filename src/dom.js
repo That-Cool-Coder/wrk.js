@@ -1,5 +1,5 @@
 wrk.dom = {};
 
-wrk.dom.elemId = function(id) {
+wrk.dom.id = function(id) {
     return document.getElementById(id);
 }
