@@ -27,7 +27,7 @@ wrk.sigmoid = function(x) {
 }
 
 wrk.invSigmoid = function(x) {
-    return wrk.sigmoid(x) * (1 - wrk.sigmoid(x)); // f'(x) = f(x) * (1 - f(x))
+    return wrk.sigmoid(x) * (1 - wrk.sigmoid(x));; // f'(x) = f(x) * (1 - f(x))
 }
 
 wrk.degrees = function(radians) {

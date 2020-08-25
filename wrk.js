@@ -14,10 +14,6 @@ else {
     wrk._180DIVPI = 180 / wrk.PI;
 }
 
-wrk.getElemById = function(id) {
-    return document.getElementById(id);
-}
-
 wrk.uniqueId = function() {
     // Math.random should be unique because of its seeding algorithm.
     // Convert it to base 36 (numbers + letters), and grab the first 9 characters
@@ -114,7 +110,7 @@ wrk.sigmoid = function(x) {
 }
 
 wrk.invSigmoid = function(x) {
-    return wrk.sigmoid(x) * (1 - wrk.sigmoid(x)); // f'(x) = f(x) * (1 - f(x))
+    return wrk.sigmoid(x) * (1 - wrk.sigmoid(x));; // f'(x) = f(x) * (1 - f(x))
 }
 
 wrk.degrees = function(radians) {
@@ -245,5 +241,212 @@ wrk.v.distSq = function(v1, v2) {
 
 wrk.v.dist = function(v1, v2) {
     return wrk.sqrt(wrk.v.distSq(v1, v2));
+}
+
+wrk.NeuralNetwork = class {
+    constructor() {
+        this.inputs = [];
+        this.hiddenLayers = [];
+        this.outputs = [];
+    }
+
+    createInputLayer(size) {
+        this.inputs = [];
+        for (var i = 0; i < size; i ++) {
+            this.inputs.push(new wrk.Neuron());
+        }
+    }
+
+    addHiddenLayer(size) {
+        var newLayer = [];
+        for (var i = 0; i < size; i ++) {
+            newLayer.push(new wrk.Neuron());
+        }
+        this.hiddenLayers.push(newLayer);
+    }
+
+    createOutputLayer(size) {
+        this.outputs = [];
+        for (var i = 0; i < size; i ++) {
+            this.outputs.push(new wrk.Neuron());
+        }
+    }
+
+    connect() {
+        // connect input to first hidden
+        this._connect2Layers(this.inputs, this.hiddenLayers[0]);
+        // connect last hidden to output
+        this._connect2Layers(this.hiddenLayers[this.hiddenLayers.length - 1], this.outputs);
+
+        // connect hidden layers to each other
+        for (var i = 0; i < this.hiddenLayers.length - 1; i ++) {
+            var firstLayer = this.hiddenLayers[i];
+            var secondLayer =  this.hiddenLayers[i + 1];
+            this._connect2Layers(firstLayer, secondLayer);
+        }
+    }
+
+    activate(input) {
+        this.inputs.forEach((neuron, i) => neuron.activate(input[i]));
+        this.hiddenLayers.forEach(layer => {
+            layer.forEach(neuron => neuron.activate());
+        });
+        return this.outputs.map(neuron => neuron.activate());
+    }
+
+    propagate(target) {
+        this.outputs.forEach((neuron, i) => neuron.propagate(target[i]));
+        for (var i = this.hiddenLayers.length - 1; i >= 0; i --) {
+            var layer = this.hiddenLayers[i];
+            layer.forEach(neuron => neuron.propagate());
+        }
+        return this.inputs.forEach(neuron => neuron.propagate());
+    }
+
+    train(dataset, iterations=1) {
+        while(iterations > 0) {
+            dataset.forEach(datum => {
+                this.activate(datum.inputs);
+                this.propagate(datum.outputs);
+            });
+            iterations--;
+        }
+    }
+
+    saveTraining() {
+        var savedTraining = [];
+
+        savedTraining.push(this._saveLayer(this.inputs));
+        this.hiddenLayers.forEach(layer => {
+            savedTraining.push(this._saveLayer(layer));
+        });
+        savedTraining.push(this._saveLayer(this.outputs));
+
+        return savedTraining;
+    }
+
+    loadTraining(savedTraining) {
+        this._loadLayer(savedTraining[0], this.inputs);
+        this.hiddenLayers.forEach((layer, i) => {
+            this._loadLayer(savedTraining[i + 1], layer);
+        });
+        this._loadLayer(savedTraining[this.hiddenLayers.length + 1], this.outputs);
+    }
+
+    _saveLayer(layer) {
+        var savedLayer = [];
+        layer.forEach(neuron => {
+            var savedNeuron = [];
+            savedNeuron.push(neuron.bias);
+
+            var incomingWeights = Object.values(neuron.incoming.weights);
+            savedNeuron.push(incomingWeights);
+            var outgoingWeights = Object.values(neuron.outgoing.weights);
+            savedNeuron.push(outgoingWeights);
+
+            savedLayer.push(savedNeuron);
+        });
+        return savedLayer;
+    }
+
+    _loadLayer(savedLayer, neuronObjs) {
+        for (var i = 0; i < neuronObjs.length; i ++) {
+            var neuron = neuronObjs[i];
+            var values = savedLayer[i];
+
+            // set the bias (the first item in a saved neuron)
+            neuron.bias = values.shift();
+            
+            // then set the weights of the connections
+            setValues(neuron.incoming.weights, values[0]);
+            setValues(neuron.outgoing.weights, values[1]);
+        }
+    }
+
+    _connect2Layers(layer1, layer2) {
+        layer1.forEach(neuron => {
+            layer2.forEach(neuron2 => {
+                neuron.connect(neuron2);
+            });
+        });
+    }
+}
+
+wrk.Neuron = class {
+    constructor(bias=wrk.randflt(-1, 1)) {
+        this.id = wrk.uniqueId();
+        this.bias = bias;
+
+        this.incoming = {
+            weights : {},
+            targets : {}
+        }
+
+        this.outgoing = {
+            weights : {},
+            targets : {}
+        }
+
+        this._output;
+        this.output;
+        this.error;
+    }
+    
+    connect(neuron, weight=wrk.randflt(0, 1)) {
+        this.outgoing.targets[neuron.id] = neuron;
+        neuron.incoming.targets[this.id] = this;
+        neuron.incoming.weights[this.id] = weight;
+        
+        if (neuron.incoming.weights[this.id] == undefined) {
+            this.outgoing.weights[neuron.id] = wrk.randflt(-1, 1);
+        }
+        else {
+            this.outgoing.weights[neuron.id] = weight;
+        }
+    }
+
+    activate(input) {
+        if (input != undefined) {
+            this._output = 1;
+            this.output = input;
+        }
+        else {
+            var targetIds = Object.keys(this.incoming.targets);
+            var sum = targetIds.reduce((total, target) => {
+                return total += this.incoming.targets[target].output * this.incoming.weights[target];
+            }, this.bias);
+            
+            this._output = wrk.invSigmoid(sum);
+            this.output = wrk.sigmoid(sum);
+        }
+
+        return this.output;
+    }
+    
+    propagate(target, rate=0.3) {
+        var outgoingIds = Object.keys(this.outgoing.targets);     
+        
+        if (target == undefined) {
+            var sum = outgoingIds.reduce((total, target, index) => {
+                var targetObj = this.outgoing.targets[target];
+                this.outgoing.weights[target] -= rate * targetObj.error * this.output;
+                this.outgoing.targets[target].incoming.weights[this.id] = this.outgoing.weights[target];
+                
+                total += targetObj.error * this.outgoing.weights[target];
+                return total;
+            }, 0);
+        }
+        else {
+            var sum = this.output - target;
+        }
+        
+        // 𝛿squash/𝛿sum
+        this.error = sum * this._output
+        
+        // Δbias
+        this.bias -= rate * this.error;
+        
+        return this.error;
+    }
 }
 
