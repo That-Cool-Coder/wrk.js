@@ -84,3 +84,4 @@ wrk.v.distSq = function(v1, v2) {
 wrk.v.dist = function(v1, v2) {
     return wrk.sqrt(wrk.v.distSq(v1, v2));
 }
+

@@ -1,12 +1,1 @@
-src/core.js
-
-src/misc.js
-src/str.js
-src/math.js
-src/dom.js
-src/arr.js
-src/obj.js
-src/vector.js
-
-src/machineLearning/neuralNetwork.js
-src/machineLearning/neuron.js
+there are none lol

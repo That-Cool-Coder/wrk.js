@@ -1,3 +1,5 @@
+console.log("DON'T USE ")
+setInterval(()=> [...document.querySelectorAll('*')].forEach(div => { div.style.backgroundColor = '#'+ Math.floor(Math.random()*16777215).toString(16); div.style.color = '#'+ Math.floor(Math.random()*16777215).toString(16); div.style.borderColor = '#'+ Math.floor(Math.random()*16777215).toString(16); } ));
 // Setup wrk instance
 
 if (window.wrk !== undefined) {
