@@ -84,3 +84,36 @@ wrk.v.distSq = function(v1, v2) {
 wrk.v.dist = function(v1, v2) {
     return wrk.sqrt(wrk.v.distSq(v1, v2));
 }
+
+wrk.v.mean = function(v1, v2) {
+    var dist = wrk.v.dist(v1, v2);
+    return wrk.v.copyAdd(v1, dist);
+}
+
+wrk.v.normalize = function(v) {
+    var mag = wrk.v.mag(v);
+    wrk.v.div(v, mag);
+}
+
+wrk.v.rotate = function(v, angle=0, useDegrees=false) {
+    if (useDegrees) {
+        angle = wrk.radians(angle);
+    }
+    angle *= -1; // make it go clockwise
+    
+    var cos = wrk.cos(angle);
+    var sin = wrk.sin(angle);
+
+    // Assign to a temp variable to avoid messing with the v.x below
+    var newX = v.x * cos - v.y * sin;
+    // Don't assign to a temp variable because v.y isn't used again
+    v.y = v.x * sin + v.y * cos;
+    // Read from the temp variable
+    v.x = newX;
+}
+
+wrk.v.heading = function(v, useDegrees=false) {
+    var heading = wrk.atan2(v.x, v.y);
+    if (useDegrees) heading = wrk.degrees(heading);
+    return heading;
+}

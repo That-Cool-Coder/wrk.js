@@ -5,6 +5,10 @@ wrk.uniqueId = function() {
     return '_' + Math.random().toString(36).substr(2, 9);
 }
 
+wrk.randBoolean = function() {
+    return wrk.randflt(0, 1) > 0.5;
+}
+
 wrk.doNothing = function() {
     // do nothing
 }

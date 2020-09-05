@@ -21,6 +21,10 @@ wrk.uniqueId = function() {
     return '_' + Math.random().toString(36).substr(2, 9);
 }
 
+wrk.randBoolean = function() {
+    return wrk.randflt(0, 1) > 0.5;
+}
+
 wrk.doNothing = function() {
     // do nothing
 }
@@ -123,8 +127,38 @@ wrk.radians = function(degrees) {
 
 wrk.dom = {};
 
+wrk.dom.logPara = undefined;
+
 wrk.dom.id = function(id) {
     return document.getElementById(id);
+}
+
+wrk.dom.viewportWidth = function() {
+    return Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+}
+
+wrk.dom.viewportHeight = function() { 
+    return Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
+}
+
+wrk.dom.viewportSize = function() {
+    return wrk.v(wrk.dom.viewportWidth, wrk.dom.viewportHeight);
+}
+
+wrk.dom.clearLogPara = function() {
+    if (wrk.dom.logPara !== undefined) {
+        wrk.dom.logPara.innerText = '';
+    }
+}
+
+wrk.dom.logToPara = function(data, label='No label') {
+    if (wrk.dom.logPara === undefined) {
+        wrk.dom.logPara = document.createElement('p');
+        document.body.appendChild(wrk.dom.logPara);
+    }
+    else {
+        wrk.dom.logPara.innerText += `${label} : ${data}\n`;
+    }
 }
 
 wrk.arr = {};
@@ -241,6 +275,95 @@ wrk.v.distSq = function(v1, v2) {
 
 wrk.v.dist = function(v1, v2) {
     return wrk.sqrt(wrk.v.distSq(v1, v2));
+}
+
+wrk.v.mean = function(v1, v2) {
+    var dist = wrk.v.dist(v1, v2);
+    return wrk.v.copyAdd(v1, dist);
+}
+
+wrk.v.normalize = function(v) {
+    var mag = wrk.v.mag(v);
+    wrk.v.div(v, mag);
+}
+
+wrk.v.rotate = function(v, angle=0, useDegrees=false) {
+    if (useDegrees) {
+        angle = wrk.radians(angle);
+    }
+    angle *= -1; // make it go clockwise
+
+    var cos = wrk.cos(angle);
+    var sin = wrk.sin(angle);
+
+    // Assign to a temp variable to avoid messing with the v.x below
+    var newX = v.x * cos - v.y * sin;
+    // Don't assign to a temp variable because v.y isn't used again
+    v.y = v.x * sin + v.y * cos;
+    // Read from the temp variable
+    v.x = newX;
+}
+
+wrk.v.heading = function(v, useDegrees=false) {
+    var heading = wrk.atan2(v.x, v.y);
+    if (useDegrees) heading = wrk.degrees(heading);
+    return heading;
+}
+
+wrk.attitude = function(heading, pitch, roll) {
+    return {heading : heading, pitch : pitch, roll : roll};
+}
+
+wrk.attitude.copy = function(a) {
+    return wrk.attitude(a.heading, a.pitch, a.roll);
+}
+
+wrk.attitude.add = function(a1, a2) {
+    a1.heading += a2.heading;
+    a1.pitch += a2.pitch;
+    a1.roll += a2.roll;
+}
+
+wrk.attitude.copyAdd = function(a1, a2) {
+    var a3 = wrk.attitude.copy(a1);
+    wrk.attitude.add(a3, a2);
+    return a3;
+}
+
+wrk.attitude.sub = function(a1, a2) {
+    a1.heading -= a2.heading;
+    a1.pitch -= a2.pitch;
+    a1.roll -= a2.roll;
+}
+
+wrk.attitude.copySub = function(a1, a2) {
+    var a3 = wrk.attitude.copy(a1);
+    wrk.attitude.sub(a3, a2);
+    return a3;
+}
+
+wrk.attitude.mult = function(a, amount) {
+    a.heading *= amount;
+    a.pitch *= amount;
+    a.roll *= amount;
+}
+
+wrk.attitude.copyMult = function(a, amount) {
+    var a2 = wrk.attitude.copy(a);
+    wrk.attitude.mult(a2, amount);
+    return a2;
+}
+
+wrk.attitude.div = function(a, amount) {
+    a.heading /= amount;
+    a.pitch /= amount;
+    a.roll /= amount;
+}
+
+wrk.attitude.copyDiv = function(a, amount) {
+    var a2 = wrk.attitude.copy(a);
+    wrk.attitude.div(a2, amount);
+    return a2;
 }
 
 wrk.NeuralNetwork = class {

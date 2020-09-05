@@ -7,6 +7,7 @@ src/dom.js
 src/arr.js
 src/obj.js
 src/vector.js
+src/attitude.js
 
 src/machineLearning/neuralNetwork.js
 src/machineLearning/neuron.js
