@@ -39,7 +39,7 @@ wrk.constrain = function(num, min, max) {
 
 wrk.wrapAround = function(num, min, max) {
     // Make num wrap around from min to max and max to min if it goes over
-    // Not complete !FIXME! if num < min is not correct!
+    // Not complete !FIXME! if num < min is not correct! and it's also wrong if num > max
 
     var diff = max - min;
     if (num > max) num = num % diff + min;
@@ -143,6 +143,11 @@ wrk.radians = function(degrees) {
     return degrees / wrk._180DIVPI;
 }
 
+// Should this be in math? !FIXME
+wrk.mean = function(a, b) {
+    return (a + b) / 2;
+}
+
 wrk.dom = {};
 
 wrk.dom.logPara = undefined;
@@ -193,9 +198,57 @@ wrk.arr.highestIndex = function(array=[]) {
     return highestIdx;
 }
 
+wrk.arr.lowestIndex = function(array=[]) {
+    var lowestIdx = null;
+    var lowestItem = 0;
+    array.forEach((item, i) => {
+        if (item <= lowestItem) {
+            lowestItem = item;
+            lowestIdx = i;
+        }
+    });
+    return lowestIdx;
+}
+
 wrk.arr.choose = function(array=[]) {
     return array[wrk.randint(0, array.length)];
 }
+
+wrk.arr.sum = function(array=[]) {
+    var sum = array.reduce(function(a, b){
+        return a + b;
+    }, 0);
+    return sum;
+}
+
+wrk.arr.product = function(array=[]) {
+    var product = array.reduce(function(a, b){
+        return a + b;
+    }, 1); // should this 1 be 0? !FIXME
+    return product;
+}
+
+wrk.arr.mean = function(array=[]) {
+    var sum = wrk.arr.sum(array);
+    var mean = sum / array.length;
+    return mean;
+}
+
+wrk.arr.median = function(array=[]) {
+    // If it's even find the two middle numbers and find their mean
+    if (array.length % 2 == 0) {
+        var justBelowMiddle = array[array.length / 2 - 1];
+        var justOverMiddle = array[array.length / 2];
+        return wrk.mean(justBelowMiddle, justOverMiddle);
+    }
+    // If it's odd find the middle index
+    else {
+        var middleIndex = array.length / 2 - 0.5;
+        return array[middleIndex];
+    }
+}
+
+wrk.arr.mode = function(){}; // do nothing because thinking about whether this should do objects and strings, not just numbers !FIXME
 
 wrk.obj = {};
 

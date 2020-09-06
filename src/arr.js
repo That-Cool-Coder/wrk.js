@@ -57,7 +57,7 @@ wrk.arr.median = function(array=[]) {
     }
     // If it's odd find the middle index
     else {
-        var middleIndex = array.length / 2 + 0.5;
+        var middleIndex = array.length / 2 - 0.5;
         return array[middleIndex];
     }
 }
