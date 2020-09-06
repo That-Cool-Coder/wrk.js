@@ -3,4 +3,33 @@
 [Back to README](/README.md)  
 
 #### Creating the user reference
-The basic user reference is stored in /documentation/rawReference.txt as a text file and can be parsed and transformed into a README file, an HTML table, etc by programs written for that task. Each line in the file is one wrk function or feature. Each line is split into several parts, seperated by backslashes. The parts on each line are: name of feature, description, file in which the feature is declared, an example, and a link to more information. Lines starting with // are comments should be ignored.
+
+The basic user reference is stored in /documentation/rawReference.txt. However, this should be not edited itself, as it is created by a python script (/documentation/referenceCompiler.py) from all of the raw reference sections located in seperate .txt files in /documentation/rawReferenceSections. The reference sections line up approximately with the JS source files.
+
+Each section in the files is one feature/function of wrk.js. The sections are seperated by NEXTSECTION. The sections are divided into parts, too. The parts are seperated by a line break. The parts are:
+- feature/function name
+- feature function name with args (if it's a variable or has no args juts repeat the name, show optional args and their default values)
+- description
+- file defined
+- example with args
+- link to a full reference page on that item (not implemented yet)
+
+Example:
+```
+wrk.NeuralNetwork()
+wrk.NeuralNetwork()
+A generic neural network class
+/src/machineLearning/neuralNetwork.js
+new wrk.NeuralNetwork()
+nolink
+
+NEXTSECTION
+
+wrk.NeuralNetwork.train()
+wrk.NeuralNetwork.train(dataset, iterations=1)
+Train the network using the dataset iterations times.
+/src/machineLearning/neuralNetwork.js
+/src/machineLearning/neuralNetwork.js
+network.train([{ inputs: [0,0], outputs: [0] }, { inputs: [0,1], outputs: [1] }, { inputs: [1,0], outputs: [1] }, { inputs: [1,1], outputs: [0] }])
+nolink
+```

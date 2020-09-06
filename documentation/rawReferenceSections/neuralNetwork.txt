@@ -86,4 +86,3 @@ network.propagate([0, 1])
 propagate how wrong you were (should this be in the public API or is it the network's private data?)
 /src/machineLearning/neuralNetwork.js
 nolink
-

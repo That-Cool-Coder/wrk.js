@@ -30,8 +30,20 @@ wrk.doNothing = function() {
 }
 
 wrk.constrain = function(num, min, max) {
+    // Constrain num between min and max
+
     if (num < min) num = min;
     if (num > max) num = max;
+    return num;
+}
+
+wrk.wrapAround = function(num, min, max) {
+    // Make num wrap around from min to max and max to min if it goes over
+    // Not complete !FIXME! if num < min is not correct!
+
+    var diff = max - min;
+    if (num > max) num = num % diff + min;
+    if (num < min) num = max;
     return num;
 }
 

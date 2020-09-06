@@ -37,3 +37,8 @@ wrk.degrees = function(radians) {
 wrk.radians = function(degrees) {
     return degrees / wrk._180DIVPI;
 }
+
+// Should this be in math? !FIXME
+wrk.mean = function(a, b) {
+    return (a + b) / 2;
+}
