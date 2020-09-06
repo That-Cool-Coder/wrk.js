@@ -29,6 +29,12 @@ wrk.doNothing = function() {
     // do nothing
 }
 
+wrk.constrain = function(num, min, max) {
+    if (num < min) num = min;
+    if (num > max) num = max;
+    return num;
+}
+
 wrk.str = {};
 
 wrk.str.lowerAlphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
@@ -292,7 +298,7 @@ wrk.v.rotate = function(v, angle=0, useDegrees=false) {
         angle = wrk.radians(angle);
     }
     angle *= -1; // make it go clockwise
-
+    
     var cos = wrk.cos(angle);
     var sin = wrk.sin(angle);
 

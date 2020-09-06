@@ -12,3 +12,9 @@ wrk.randBoolean = function() {
 wrk.doNothing = function() {
     // do nothing
 }
+
+wrk.constrain = function(num, min, max) {
+    if (num < min) num = min;
+    if (num > max) num = max;
+    return num;
+}
