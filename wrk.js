@@ -268,12 +268,12 @@ wrk.v = function(x, y, z=0) {
 
 wrk.v.random = function(min, max, floatsAllowed=true) {
     if (floatsAllowed) {
-        return new wrk.v(wrk.randflt(min.x, max.y),
+        return new wrk.v(wrk.randflt(min.x, max.x),
             wrk.randflt(min.y, max.y),
             wrk.randflt(min.z, max.z));
     }
     else {
-        return new wrk.v(wrk.randint(min.x, max.y),
+        return new wrk.v(wrk.randint(min.x, max.x),
             wrk.randint(min.y, max.y),
             wrk.randint(min.z, max.z));
     }
