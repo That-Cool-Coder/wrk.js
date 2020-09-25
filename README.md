@@ -12,3 +12,4 @@
 - [More about wrk.js]()
 - [Reference manual](/documentation/reference.md)
 - [How to document](/documentation/howToDocument.md)
+- [cdn folder info](/documentation/cdn.md)

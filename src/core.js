@@ -1,3 +1,6 @@
+// wrk.js v0.2.0
+// Protected under GNU General Public License v3.0
+
 // Setup wrk instance
 
 if (window.wrk !== undefined) {

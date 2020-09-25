@@ -117,3 +117,18 @@ wrk.v.heading = function(v, useDegrees=false) {
     if (useDegrees) heading = wrk.degrees(heading);
     return heading;
 }
+
+wrk.v.dot = function(v1, v2) {
+    var result = v1.x * v2.x;
+    result += v1.y * v2.y;
+    result += v1.z * v2.z;
+    return result;
+}
+
+wrk.v.cross = function(v1, v2) {
+    var crossP = wrk.v(0, 0, 0);
+    crossP.x = v1.y * v2.z - v1.z * v2.y;
+    crossP.y = v1.z * v2.x - v1.x * v2.z;
+    crossP.z = v1.x * v2.y - v1.y * v2.x;
+    return crossP;
+}
