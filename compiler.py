@@ -10,6 +10,8 @@ def readFile(pathToFile):
     file.close()
     return contents
 
+input('Did you remember to update the version number in /src/core.js (enter to compile)')
+
 INPUT_FILES = readFile('inputFiles.txt').split('\n')
 
 OUTPUT_FILE = 'wrk.js'
