@@ -11,5 +11,6 @@
 #### Contents:
 - [More about wrk.js]()
 - [Reference manual](/documentation/reference.md)
+- [Code writing conventions](/documentation/codeWritingConventions.md)
 - [How to document](/documentation/howToDocument.md)
 - [cdn folder info](/documentation/cdn.md)

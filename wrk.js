@@ -226,8 +226,8 @@ wrk.arr.sum = function(array=[]) {
 
 wrk.arr.product = function(array=[]) {
     var product = array.reduce(function(a, b){
-        return a + b;
-    }, 1); // should this 1 be 0? !FIXME
+        return a * b;
+    }, 1);
     return product;
 }
 
@@ -506,15 +506,6 @@ wrk.NeuralNetwork = class {
         return this.outputs.map(neuron => neuron.activate());
     }
 
-    propagate(target) {
-        this.outputs.forEach((neuron, i) => neuron.propagate(target[i]));
-        for (var i = this.hiddenLayers.length - 1; i >= 0; i --) {
-            var layer = this.hiddenLayers[i];
-            layer.forEach(neuron => neuron.propagate());
-        }
-        return this.inputs.forEach(neuron => neuron.propagate());
-    }
-
     train(dataset, iterations=1) {
         while(iterations > 0) {
             dataset.forEach(datum => {
@@ -523,6 +514,15 @@ wrk.NeuralNetwork = class {
             });
             iterations--;
         }
+    }
+
+    propagate(target) {
+        this.outputs.forEach((neuron, i) => neuron.propagate(target[i]));
+        for (var i = this.hiddenLayers.length - 1; i >= 0; i --) {
+            var layer = this.hiddenLayers[i];
+            layer.forEach(neuron => neuron.propagate());
+        }
+        return this.inputs.forEach(neuron => neuron.propagate());
     }
 
     saveTraining() {

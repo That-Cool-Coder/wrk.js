@@ -1,0 +1,33 @@
+wrk.Neuron()
+wrk.Neuron(bias=wrk.randflt(-1, 1))
+var neuron = new wrk.Neuron(0.2)
+A generic neuron class. Designed to primarily be used by wrk.neuralNetwork.
+/src/machineLearning/neuron.js
+nolink
+
+NEXTSECTION
+
+wrk.Neuron.connect()
+wrk.Neuron.connect(neuron, weight=wrk.randflt(0, 1))
+neuron.connect(neuron2, 0.3325)
+Form a connection between neuron being called (neuron in the example) and the neuron being passed in (neuron2 in the example) such that neuron being called outputs to the neuron being passed.
+/src/machineLearning/neuron.js
+nolink
+
+NEXTSECTION
+
+wrk.Neuron.activate()
+wrk.Neuron.activate(input)
+var result = neuron.activate(input)
+Activate the neuron. Not recommended to call this directly. In short, read the input, find which neuron it was sent from, use the weight to change the value and then save the output before returning it.
+/src/machineLearning/neuron.js
+nolink
+
+NEXTSECTION
+
+wrk.Neuron.propagate()
+wrk.Neuron.propagate(target, rate=0.3)
+neuron.propagate(0.5, 0.5)
+Propagate the wrongness. Not recommended to call this directly. In short, read the target, find what you did wrong and change the weights, then make the other neurons change some weights. It's really confusing.
+/src/machineLearning/neuron.js
+nolink

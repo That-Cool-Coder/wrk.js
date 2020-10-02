@@ -49,15 +49,6 @@ wrk.NeuralNetwork = class {
         return this.outputs.map(neuron => neuron.activate());
     }
 
-    propagate(target) {
-        this.outputs.forEach((neuron, i) => neuron.propagate(target[i]));
-        for (var i = this.hiddenLayers.length - 1; i >= 0; i --) {
-            var layer = this.hiddenLayers[i];
-            layer.forEach(neuron => neuron.propagate());
-        }
-        return this.inputs.forEach(neuron => neuron.propagate());
-    }
-
     train(dataset, iterations=1) {
         while(iterations > 0) {
             dataset.forEach(datum => {
@@ -66,6 +57,15 @@ wrk.NeuralNetwork = class {
             });
             iterations--;
         }
+    }
+
+    propagate(target) {
+        this.outputs.forEach((neuron, i) => neuron.propagate(target[i]));
+        for (var i = this.hiddenLayers.length - 1; i >= 0; i --) {
+            var layer = this.hiddenLayers[i];
+            layer.forEach(neuron => neuron.propagate());
+        }
+        return this.inputs.forEach(neuron => neuron.propagate());
     }
 
     saveTraining() {

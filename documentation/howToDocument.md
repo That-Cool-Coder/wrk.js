@@ -12,7 +12,7 @@ Each section in the files is one feature/function of wrk.js. The sections are se
 - description
 - file defined
 - example with args
-- link to a full reference page on that item (not implemented yet)
+- link to a full reference page on that item (not implemented yet, may never be implemented - instead might be added by the compiler, using its own page system)
 
 Example:
 ```

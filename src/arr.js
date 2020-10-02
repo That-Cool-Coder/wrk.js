@@ -37,8 +37,8 @@ wrk.arr.sum = function(array=[]) {
 
 wrk.arr.product = function(array=[]) {
     var product = array.reduce(function(a, b){
-        return a + b;
-    }, 1); // should this 1 be 0? !FIXME
+        return a * b;
+    }, 1);
     return product;
 }
 

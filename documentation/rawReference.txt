@@ -43,6 +43,15 @@ nolink
 
 NEXTSECTION
 
+wrk.NeuralNetwork.activate()
+wrk.NeuralNetwork.activate(input)
+var results = network.activate([0, 1])
+Activate the neural network using input.
+/src/machineLearning/neuralNetwork.js
+nolink
+
+NEXTSECTION
+
 wrk.NeuralNetwork.train()
 wrk.NeuralNetwork.train(dataset, iterations=1)
 network.train([{ inputs: [0,0], outputs: [0] }, { inputs: [0,1], outputs: [1] }, { inputs: [1,0], outputs: [1] }, { inputs: [1,1], outputs: [0] }])
@@ -53,10 +62,10 @@ nolink
 
 NEXTSECTION
 
-wrk.NeuralNetwork.activate()
-wrk.NeuralNetwork.activate(input)
-var results = network.activate([0, 1])
-Activate the neural network using input.
+wrk.NeuralNetwork.propagate()
+wrk.NeuralNetwork.propagate(target)
+network.propagate([0, 1])
+propagate how wrong you were (should this be in the public API or is it the network's private data?)
 /src/machineLearning/neuralNetwork.js
 nolink
 
@@ -78,12 +87,101 @@ Load the training from a nested array in the form exported by wrk.NeuralNetwork.
 /src/machineLearning/neuralNetwork.js
 nolink
 
+wrk.Neuron()
+wrk.Neuron(bias=wrk.randflt(-1, 1))
+var neuron = new wrk.Neuron(0.2)
+A generic neuron class. Designed to primarily be used by wrk.neuralNetwork.
+/src/machineLearning/neuron.js
+nolink
+
 NEXTSECTION
 
-wrk.NeuralNetwork.propagate()
-wrk.NeuralNetwork.propagate(target)
-network.propagate([0, 1])
-propagate how wrong you were (should this be in the public API or is it the network's private data?)
-/src/machineLearning/neuralNetwork.js
+wrk.Neuron.connect()
+wrk.Neuron.connect(neuron, weight=wrk.randflt(0, 1))
+neuron.connect(neuron2, 0.3325)
+Form a connection between neuron being called (neuron in the example) and the neuron being passed in (neuron2 in the example) such that neuron being called outputs to the neuron being passed.
+/src/machineLearning/neuron.js
+nolink
+
+NEXTSECTION
+
+wrk.Neuron.activate()
+wrk.Neuron.activate(input)
+var result = neuron.activate(input)
+Activate the neuron. Not recommended to call this directly. In short, read the input, find which neuron it was sent from, use the weight to change the value and then save the output before returning it.
+/src/machineLearning/neuron.js
+nolink
+
+NEXTSECTION
+
+wrk.Neuron.propagate()
+wrk.Neuron.propagate(target, rate=0.3)
+neuron.propagate(0.5, 0.5)
+Propagate the wrongness. Not recommended to call this directly. In short, read the target, find what you did wrong and change the weights, then make the other neurons change some weights. It's really confusing.
+/src/machineLearning/neuron.js
+nolink
+
+wrk.arr.highestIndex()
+wrk.arr.highestIndex(array=[])
+var highestIndex = wrk.arr.highestIndex([1, 4, 2, 3])
+Return the index of the highest item in the array. In the example given, the output would be 1. If there are multiple lowest items, return the index of the last one. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.lowestIndex()
+wrk.arr.lowestIndex(array=[])
+var lowestIndex = wrk.arr.lowestIndex([4, 1, 4, 2])
+Return the index of the lowest item in the array. In the example given, the output would be 1. If there are multiple lowest items, return the index of the last one. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.choose()
+wrk.arr.choose(array=[])
+Return a random item from the array. If the array is empty or undefined, returns undefined;
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.sum()
+wrk.arr.sum(array=[])
+Return the sum of all of the items in the array. If the array is empty or undefined, returns 0. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.product()
+wrk.arr.product(array=[])
+Return the product of all of the items in the array. If the array is empty or undefined, returns 1. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.mean()
+wrk.arr.mean(array=[])
+Returns the mean (average) of all of the items in the array. If the array is empty or undefined, returns NaN. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.median()
+wrk.arr.median(array=[])
+Returns the median (middle value) of all of the items in the array. If the array is empty or undefined, returns NaN. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.mode()
+wrk.arr.mode(array=[])
+Has not been implemented yet due to difficulties (see source for details)
+/src/arr.js
 nolink
 

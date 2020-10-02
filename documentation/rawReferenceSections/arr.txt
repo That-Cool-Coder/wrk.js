@@ -1,0 +1,63 @@
+wrk.arr.highestIndex()
+wrk.arr.highestIndex(array=[])
+var highestIndex = wrk.arr.highestIndex([1, 4, 2, 3])
+Return the index of the highest item in the array. In the example given, the output would be 1. If there are multiple lowest items, return the index of the last one. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.lowestIndex()
+wrk.arr.lowestIndex(array=[])
+var lowestIndex = wrk.arr.lowestIndex([4, 1, 4, 2])
+Return the index of the lowest item in the array. In the example given, the output would be 1. If there are multiple lowest items, return the index of the last one. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.choose()
+wrk.arr.choose(array=[])
+Return a random item from the array. If the array is empty or undefined, returns undefined;
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.sum()
+wrk.arr.sum(array=[])
+Return the sum of all of the items in the array. If the array is empty or undefined, returns 0. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.product()
+wrk.arr.product(array=[])
+Return the product of all of the items in the array. If the array is empty or undefined, returns 1. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.mean()
+wrk.arr.mean(array=[])
+Returns the mean (average) of all of the items in the array. If the array is empty or undefined, returns NaN. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.median()
+wrk.arr.median(array=[])
+Returns the median (middle value) of all of the items in the array. If the array is empty or undefined, returns NaN. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.mode()
+wrk.arr.mode(array=[])
+Has not been implemented yet due to difficulties (see source for details)
+/src/arr.js
+nolink

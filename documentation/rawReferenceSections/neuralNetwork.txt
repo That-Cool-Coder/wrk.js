@@ -43,6 +43,15 @@ nolink
 
 NEXTSECTION
 
+wrk.NeuralNetwork.activate()
+wrk.NeuralNetwork.activate(input)
+var results = network.activate([0, 1])
+Activate the neural network using input.
+/src/machineLearning/neuralNetwork.js
+nolink
+
+NEXTSECTION
+
 wrk.NeuralNetwork.train()
 wrk.NeuralNetwork.train(dataset, iterations=1)
 network.train([{ inputs: [0,0], outputs: [0] }, { inputs: [0,1], outputs: [1] }, { inputs: [1,0], outputs: [1] }, { inputs: [1,1], outputs: [0] }])
@@ -53,10 +62,10 @@ nolink
 
 NEXTSECTION
 
-wrk.NeuralNetwork.activate()
-wrk.NeuralNetwork.activate(input)
-var results = network.activate([0, 1])
-Activate the neural network using input.
+wrk.NeuralNetwork.propagate()
+wrk.NeuralNetwork.propagate(target)
+network.propagate([0, 1])
+propagate how wrong you were (should this be in the public API or is it the network's private data?)
 /src/machineLearning/neuralNetwork.js
 nolink
 
@@ -75,14 +84,5 @@ wrk.NeuralNetwork.loadTraining()
 wrk.NeuralNetwork.loadTraining(savedTraining)
 network.loadTraining(savedTraining)
 Load the training from a nested array in the form exported by wrk.NeuralNetwork.saveTraining(). The network that is loading the training must have already had its layers created and connected. Fails if the network that saved the training doesn't have the same layer sizes and amounts as the one receiving the training.
-/src/machineLearning/neuralNetwork.js
-nolink
-
-NEXTSECTION
-
-wrk.NeuralNetwork.propagate()
-wrk.NeuralNetwork.propagate(target)
-network.propagate([0, 1])
-propagate how wrong you were (should this be in the public API or is it the network's private data?)
 /src/machineLearning/neuralNetwork.js
 nolink

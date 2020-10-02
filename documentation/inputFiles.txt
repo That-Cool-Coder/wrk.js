@@ -1,1 +1,3 @@
 rawReferenceSections/neuralNetwork.txt
+rawReferenceSections/neuron.txt
+rawReferenceSections/arr.txt
