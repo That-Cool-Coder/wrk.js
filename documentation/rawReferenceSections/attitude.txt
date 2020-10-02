@@ -1,0 +1,87 @@
+wrk.attitude()
+wrk.attitude(heading, pitch, roll)
+var attitude = wrk.attitude(45, 0, 0)
+A three dimensional angle. Yaw is left/right rotation (as in a car driving), pitch is up/down rotation and roll is rotating to put the left wing, for instance, down or up
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.copy()
+wrk.attitude.copy(a)
+var attitude2 = wrk.attitude.copy(attitude);
+Deep copy the attitude passed in. 
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.add()
+wrk.attitude.add(a1, a2)
+wrk.attitude.add(attitude, attitude2);
+Set the value of a1 to the value of a1 plus the value of a2. Edits a1 but not a2.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.copyAdd()
+wrk.attitude.copyAdd(a1, a2)
+var attitude3 = wrk.attitude.copyAdd(attitude, attitude2);
+Return a new attitude that is the sum of a1 and a2. Doesn't edit a1 or a2.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.sub()
+wrk.attitude.sub(a1, a2)
+wrk.attitude.sub(attitude, attitude2);
+Set the value of a1 to the value of a1 minus the value of a2. Edits a1 but not a2.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.copySub()
+wrk.attitude.copySub(a1, a2)
+var attitude3 = wrk.attitude.copySub(attitude, attitude2);
+Return a new attitude that is the difference between a1 and a2. Doesn't edit a1 or a2.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.mult()
+wrk.attitude.mult(a, amount)
+wrk.attitude.mult(attitude, 2);
+Multiply the heading, pitch and roll components of a by amount. Edits a.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.copyMult()
+wrk.attitude.copyMult(a, amount)
+wrk.attitude.copyMult(attitude, 2);
+Return a new attitude that is equivalent to a multiplied by amount in the same manner as wrk.attitude.mult. Doesn't edit a.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.div()
+wrk.attitude.div(a, amount)
+wrk.attitude.div(attitude, 2);
+Divide the heading, pitch and roll components of a by amount. Edits a.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.copyDiv()
+wrk.attitude.copyDiv(a, amount)
+wrk.attitude.copyDiv(attitude, 2);
+Return a new attitude that is equivalent to a divided by amount in the same manner as wrk.attitude.div. Doesn't edit a.
+/src/attitude.js
+nolink

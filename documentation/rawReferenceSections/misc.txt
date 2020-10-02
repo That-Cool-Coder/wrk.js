@@ -1,0 +1,42 @@
+wrk.uniqueId()
+wrk.uniqueId()
+var id = wrk.uniqueId()
+Use wrk.random() (wrapper of Math.random()) to generate a random, unique number, which is converted into a string. Ids are prefixed with an underscore to allow property naming, etc.
+/src/misc.js
+nolink
+
+NEXTSECTION
+
+wrk.randBoolean()
+wrk.randBoolean()
+var shouldThrow = wrk.randBoolean()
+Return either true or false. There is an equal chance of each.
+/src/misc.js
+nolink
+
+NEXTSECTION
+
+wrk.doNothing()
+wrk.doNothing()
+wrk.doNothing()
+Do nothing. Handy for indicating that nothing is supposed to be done in a particular circumstance.
+/src/misc.js
+nolink
+
+NEXTSECTION
+
+wrk.constrain()
+wrk.constrain(num, min, max)
+var clippedResult = constrain(result, minAllowable, maxAllowable)
+Constrain num to the inclusive range from min to max.
+/src/misc.js
+nolink
+
+NEXTSECTION
+
+wrk.wrapAround()
+wrk.wrapAround(num, min, max)
+var angle = wrk.wrapAround(angle, 0, 360);
+Make the number wrap around so that when it is above max it goes back around to min and vice versa. Not working, do not use!
+/src/misc.js
+nolink

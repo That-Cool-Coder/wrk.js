@@ -1,0 +1,60 @@
+wrk.dom.id()
+wrk.dom.id(id)
+var elem = wrk.dom.id('anElementId')
+A shorter way to call document.getElementById()
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.viewportWidth()
+wrk.dom.viewportWidth()
+var width = wrk.dom.viewportWidth();
+Get the width of the viewport.
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.viewportHeight()
+wrk.dom.viewportHeight()
+var height = wrk.dom.viewportHeight();
+Get the height of the viewport.
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.viewportSize()
+wrk.dom.viewportSize()
+var size = wrk.dom.viewportSize();
+Get the size of the viewport in a wrk vector.
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.logPara
+wrk.dom.logPara
+var elem = wrk.dom.logPara
+A paragraph element which can be used to log data to. Only created when wrk.dom.logToPara is called. Has access methods wrk.dom.clearLogPara and wrk.dom.logToPara
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.clearLogPara()
+wrk.dom.clearLogPara();
+wrk.dom.clearLogPara();
+If wrk.dom.logPara is defined, clear it
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.logToPara()
+wrk.dom.logToPara(data, label='No label');
+wrk.dom.logToPara(testResult, 'Test Result')
+Append to wrk.dom.logPara the value of data, formatted in this way: label : data
+/src/dom.js
+nolink
