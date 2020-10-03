@@ -20,6 +20,10 @@ wrk.v.copy = function(v) {
     return wrk.v(v.x, v.y, v.z);
 }
 
+wrk.v.equal = function(v1, v2) {
+    return (v1.x == v2.x && v1.y == v2.y && v1.z == v1.z);
+}
+
 wrk.v.add = function(v1, v2) {
     v1.x += v2.x;
     v1.y += v2.y;
