@@ -40,3 +40,14 @@ var angle = wrk.wrapAround(angle, 0, 360);
 Make the number wrap around so that when it is above max it goes back around to min and vice versa. Not working, do not use!
 /src/misc.js
 nolink
+
+NEXTSECTION
+
+wrk.doNTimes()
+wrk.doNTimes(n, func)
+wrk.doNTimes(5, (i) => {
+    newRecords[i] = records[i];
+});
+Run `func` n times. Pass the current loop count (from 0 to `n - 1`) as an argument to func. Shorthand for `for (var i = 0; i < n; i ++) func(i);`.
+/src/misc.js
+nolink

@@ -28,3 +28,9 @@ wrk.wrapAround = function(num, min, max) {
     if (num < min) num = max;
     return num;
 }
+
+wrk.doNTimes = function(n, func) {
+    for (var i = 0; i < n; i ++) {
+        func(i);
+    }
+}

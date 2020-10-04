@@ -1,4 +1,4 @@
-// wrk.js v0.2.1
+// wrk.js v0.3.0
 // Protected under GNU General Public License v3.0
 
 // Setup wrk instance
@@ -21,11 +21,11 @@ wrk.uniqueId = function() {
     // Math.random should be unique because of its seeding algorithm.
     // Convert it to base 36 (numbers + letters), and grab the first 9 characters
     // after the decimal.
-    return '_' + Math.random().toString(36).substr(2, 9);
+    return '_' + wrk.random().toString(36).substr(2, 9);
 }
 
 wrk.randBoolean = function() {
-    return wrk.randflt(0, 1) > 0.5;
+    return wrk.random() > 0.5;
 }
 
 wrk.doNothing = function() {
@@ -35,9 +35,7 @@ wrk.doNothing = function() {
 wrk.constrain = function(num, min, max) {
     // Constrain num between min and max
 
-    if (num < min) num = min;
-    if (num > max) num = max;
-    return num;
+    return Math.max(min, Math.min(num, max))
 }
 
 wrk.wrapAround = function(num, min, max) {
@@ -48,6 +46,12 @@ wrk.wrapAround = function(num, min, max) {
     if (num > max) num = num % diff + min;
     if (num < min) num = max;
     return num;
+}
+
+wrk.doNTimes = function(n, func) {
+    for (var i = 0; i < n; i ++) {
+        func(i);
+    }
 }
 
 wrk.str = {};
@@ -135,7 +139,7 @@ wrk.sigmoid = function(x) {
 }
 
 wrk.invSigmoid = function(x) {
-    return wrk.sigmoid(x) * (1 - wrk.sigmoid(x));; // f'(x) = f(x) * (1 - f(x))
+    return wrk.sigmoid(x) * (1 - wrk.sigmoid(x)); // f'(x) = f(x) * (1 - f(x))
 }
 
 wrk.degrees = function(radians) {
@@ -284,6 +288,10 @@ wrk.v.random = function(min, max, floatsAllowed=true) {
 
 wrk.v.copy = function(v) {
     return wrk.v(v.x, v.y, v.z);
+}
+
+wrk.v.equal = function(v1, v2) {
+    return (v1.x == v2.x && v1.y == v2.y && v1.z == v1.z);
 }
 
 wrk.v.add = function(v1, v2) {
