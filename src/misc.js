@@ -34,3 +34,9 @@ wrk.doNTimes = function(n, func) {
         func(i);
     }
 }
+
+wrk.mapNum = function(num, oldMin, oldMax, newMin, newMax) {
+    var slope = (newMax -  newMin) / (oldMax - oldMin);
+    var output = newMin + slope * (num - oldMin);
+    return output;
+}
