@@ -1,4 +1,4 @@
-from referenceParser import * # import the consts in there
+from referenceConsts import *
 
 # file read/write stuff
 def writeFile(pathToFile, contents):
@@ -28,7 +28,7 @@ for fileIdx in range(len(INPUT_FILES)):
         if not isLastFile:
             # The newlines here aren't actually needed but they make it neater for debugging.
             # If minification is needed, they can be removed
-            output += '\n\n' + ITEM_SPLITTER + '\n\n'
+            output += '\n\n' + MD_REFERENCE_ITEM_SPLITTER + '\n\n'
 
 # Save the result
 writeFile(OUTPUT_FILE, output)

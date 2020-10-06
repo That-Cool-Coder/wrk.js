@@ -28,7 +28,7 @@ NEXTSECTION
 wrk.str.symbols
 wrk.str.symbols
 var char = wrk.choose(wrk.str.symbols)
-An array containing all of the symbols on my keyboard. In the example above, number would be a random symbol. All values: ```['~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', '{', ']', '}', '\\', '|', ';', ':', '\'', '"', ',', '<', '.', '>', '/', '?']```
+An array containing all of the symbols on my keyboard. In the example above, char would be a random symbol. All values: ```['~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', '{', ']', '}', '\\', '|', ';', ':', '\'', '"', ',', '<', '.', '>', '/', '?']```
 /src/str.js
 nolink
 

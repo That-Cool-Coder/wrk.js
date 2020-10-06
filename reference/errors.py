@@ -3,3 +3,6 @@ class FieldMissing(Exception):
 
 class ExtraFields(Exception):
     pass
+
+class CodeSectionNotClosed(Exception):
+    pass

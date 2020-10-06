@@ -1,4 +1,5 @@
 from referenceParser import *
+from codeSectionFormatter import *
 from errors import *
 
 # file read/write stuff
@@ -33,6 +34,8 @@ HTML_DOC_TEMPLATE = readFile('htmlDocTemplate.html')
 HTML_CONTENTS_TEMPLATE = readFile('htmlContentsTemplate.html')
 HTML_CONTENTS_ITEM_TEMPLATE = readFile('htmlContentsItemTemplate.html')
 CONTENTS_PAGE_NAME = OUTPUT_DIR + '/index.html'
+HTML_CODE_SECTION_OPEN = '<code>'
+HTML_CODE_SECTION_CLOSE = '</code>'
 
 def createFileNameFromItem(item, ):
     # Create a file name for the item based on its name
@@ -88,5 +91,6 @@ except ExtraFields:
     input('\nEnter to close') # It's been handled by the parser, so don't print error info
 
 initFiles(referenceItems)
+formatCodeSections(referenceItems, HTML_CODE_SECTION_OPEN, HTML_CODE_SECTION_CLOSE)
 createAndSaveReferencePages(referenceItems)
 createContentsPage(referenceItems)

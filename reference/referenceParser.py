@@ -1,14 +1,12 @@
+from referenceConsts import *
 from referenceItem import *
 from errors import *
-
-ITEM_SPLITTER = 'NEXTSECTION'
-FIELD_SPLITTER = '\n'
 
 def parseReference(reference):
     # Turn the reference from a raw string into a list of python objects
 
     # Split into items that need to be parsed
-    itemsInitiallySplit = reference.split(ITEM_SPLITTER)
+    itemsInitiallySplit = reference.split(MD_REFERENCE_ITEM_SPLITTER)
 
     # Parse each item in the list to turn it into an object
     referenceItems = []
@@ -34,7 +32,7 @@ def parseReferenceItem(itemStr):
     # Turn a single item from a string into a python object
 
     itemStr = itemStr.strip('\n') # clear leading and trailing newlines
-    itemFields = itemStr.split('\n') # split into fields
+    itemFields = itemStr.split(MD_REFERENCE_ITEM_FIELD_SPLITTER) # split into fields
     try:
         referenceItem = ReferenceItem(*itemFields)
 

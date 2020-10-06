@@ -1,5 +1,3 @@
-REFERENCE_ITEM_FIELDS = 6
-
 class ReferenceItem:
     def __init__(self, basicName, elaboratedName, example, description, definedIn, link):
         self.basicName = basicName
