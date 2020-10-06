@@ -11,7 +11,7 @@
 #### Contents:
 - [More about wrk.js]() (Doesn't exist yet)
 - [Markdown reference manual](/reference/reference.md) (Doesn't exist yet)
-- [HTML reference manual](https://wrkjs.thatcoolcoder.repl.co/reference/htmlReference/contentsPage.html)
+- [HTML reference manual](https://wrkjs.thatcoolcoder.repl.co/reference/htmlReference/contents.html)
 - [Code writing conventions](/documentation/codeWritingConventions.md)
 - [How to document](/documentation/howToDocument.md)
 - [cdn folder info](/documentation/cdn.md)
