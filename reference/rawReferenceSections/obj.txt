@@ -1,0 +1,6 @@
+wrk.obj.setValues()
+wrk.obj.setValues(obj, values)
+wrk.obj.setValues(userId, newUserIdList);
+A niche function. Sets the values of the existing keys of an object from the ```values``` array. Requires that the object has the same number of keys as the array has items. Recommended not to use.
+/src/obj.js
+nolink

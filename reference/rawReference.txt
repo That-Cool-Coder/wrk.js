@@ -1,0 +1,582 @@
+wrk.arr.highestIndex()
+wrk.arr.highestIndex(array=[])
+var highestIndex = wrk.arr.highestIndex([1, 4, 2, 3])
+Return the index of the highest item in the array. In the example given, the output would be 1. If there are multiple lowest items, return the index of the last one. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.lowestIndex()
+wrk.arr.lowestIndex(array=[])
+var lowestIndex = wrk.arr.lowestIndex([4, 1, 4, 2])
+Return the index of the lowest item in the array. In the example given, the output would be 1. If there are multiple lowest items, return the index of the last one. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.choose()
+wrk.arr.choose(array=[])
+var item = wrk.arr.choose(itemList)
+Return a random item from the array. If the array is empty or undefined, returns undefined;
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.sum()
+wrk.arr.sum(array=[])
+var total = wrk.arr.sum(scores)
+Return the sum of all of the items in the array. If the array is empty or undefined, returns 0. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.product()
+wrk.arr.product(array=[])
+var scoreMultiplier = wrk.arr.product(multipliers)
+Return the product of all of the items in the array. If the array is empty or undefined, returns 1. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.mean()
+wrk.arr.mean(array=[])
+var avgScore = wrk.arr.mean(scores)
+Returns the mean (average) of all of the items in the array. If the array is empty or undefined, returns NaN. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.median()
+wrk.arr.median(array=[])
+var avgScore = wrk.arr.median(scores)
+Returns the median (middle value) of all of the items in the array. If the array is empty or undefined, returns NaN. Recommended only for numbers.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.mode()
+wrk.arr.mode(array=[])
+No example as it doesn't run
+Has not been implemented yet due to difficulties (see source for details)
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude()
+wrk.attitude(heading, pitch, roll)
+var attitude = wrk.attitude(45, 0, 0)
+A three dimensional angle. ```yaw``` is left/right rotation (as in a car driving), ```pitch``` is up/down rotation and ```roll``` is rotating to put the left wing, for instance, down or up
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.copy()
+wrk.attitude.copy(a)
+var attitude2 = wrk.attitude.copy(attitude);
+Deep copy the attitude passed in. 
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.add()
+wrk.attitude.add(a1, a2)
+wrk.attitude.add(attitude, attitude2);
+Set the value of ```a1``` to the value of ```a1``` plus the value of ```a2```. Edits ```a1``` but not ```a2```.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.copyAdd()
+wrk.attitude.copyAdd(a1, a2)
+var attitude3 = wrk.attitude.copyAdd(attitude, attitude2);
+Return a new attitude that is the sum of ```a1``` and ```a2```. Doesn't edit ```a1``` or ```a2```.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.sub()
+wrk.attitude.sub(a1, a2)
+wrk.attitude.sub(attitude, attitude2);
+Set the value of ```a1``` to the value of ```a1``` minus the value of ```a2```. Edits ```a1``` but not ```a2```.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.copySub()
+wrk.attitude.copySub(a1, a2)
+var attitude3 = wrk.attitude.copySub(attitude, attitude2);
+Return a new attitude that is the difference between ```a1``` and ```a2```. Doesn't edit ```a1``` or ```a2```.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.mult()
+wrk.attitude.mult(a, amount)
+wrk.attitude.mult(attitude, 2);
+Multiply the heading, pitch and roll components of ```a``` by ```amount```. Edits ```a```.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.copyMult()
+wrk.attitude.copyMult(a, amount)
+wrk.attitude.copyMult(attitude, 2);
+Return a new attitude that is equivalent to ```a``` multiplied by ```amount``` in the same manner as wrk.attitude.mult. Doesn't edit ```a```.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.div()
+wrk.attitude.div(a, amount)
+wrk.attitude.div(attitude, 2);
+Divide the heading, pitch and roll components of ```a``` by ```amount```. Edits ```a```.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.attitude.copyDiv()
+wrk.attitude.copyDiv(a, amount)
+wrk.attitude.copyDiv(attitude, 2);
+Return a new attitude that is equivalent to ```a``` divided by ```amount``` in the same manner as wrk.attitude.div. Doesn't edit ```a```.
+/src/attitude.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.id()
+wrk.dom.id(id)
+var elem = wrk.dom.id('anElementId')
+A shorter way to call document.getElementById(). Returns the element with the id ```id```
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.viewportWidth()
+wrk.dom.viewportWidth()
+var width = wrk.dom.viewportWidth();
+Get the width of the viewport.
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.viewportHeight()
+wrk.dom.viewportHeight()
+var height = wrk.dom.viewportHeight();
+Get the height of the viewport.
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.viewportSize()
+wrk.dom.viewportSize()
+var size = wrk.dom.viewportSize();
+Get the size of the viewport in a wrk vector.
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.logPara
+wrk.dom.logPara
+var elem = wrk.dom.logPara
+A paragraph element which can be used to log data to. Only created when wrk.dom.logToPara is called. Has access methods wrk.dom.clearLogPara and wrk.dom.logToPara
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.clearLogPara()
+wrk.dom.clearLogPara();
+wrk.dom.clearLogPara();
+If wrk.dom.logPara is defined, clear it
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.dom.logToPara()
+wrk.dom.logToPara(data, label='No label');
+wrk.dom.logToPara(testResult, 'Test Result')
+Append to wrk.dom.logPara ```data``` and ```label```, formatted in this way: ```label : data```
+/src/dom.js
+nolink
+
+NEXTSECTION
+
+wrk.round()
+wrk.round(num, decimalPlaces=0)
+var result = wrk.round(1.15, 1)
+Round ```num``` so that the amount of decimal places is equal to ```decimalPlaces```. In this example the result would be 1.2.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.floor()
+wrk.floor(num, decimalPlaces=0)
+var result = wrk.floor(1.15, 1)
+Floor ```num``` so that the amount of decimal places is equal to ```decimalPlaces```. In this example the result would be 1.1.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.ceiling()
+wrk.ceiling(num, decimalPlaces=0)
+var result = wrk.ceiling(1.15, 1)
+Ceiling ```num``` so that the amount of decimal places is equal to ```decimalPlaces```. In this example the result would be 1.2.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.randflt()
+wrk.randflt(min, max)
+var result = wrk.randflt(0, 1)
+Returns a random float in the half-open range ```[min, max)```. This includes ```min``` but not ```max`. Possible results in the example would range from 0.0 to 0.999...
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.randint()
+wrk.randint(min, max)
+var result = wrk.randflt(0, 4)
+Returns a random integer in the half-open range ```[min, max)```. This includes ```min``` but not ```max```. Possible results from the example would be [0, 1, 2, 3].
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.sigmoid()
+wrk.sigmoid(x)
+EXAMPLE GOES HERE
+DESCRIPTION GOES HERE. FIND OUT SIGMOID DESCRIPTION.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.invSigmoid()
+wrk.invSigmoid(x)
+EXAMPLE GOES HERE
+DESCRIPTION GOES HERE. FIND OUT INVERSE SIGMOID DESCRIPTION.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.degrees()
+wrk.degrees(radians)
+var degrees = wrk.degrees(wrk.PI / 2)
+Convert an angle in radians (```radians```) into an angle in degrees. The example given would return 90.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.radians()
+wrk.radians(degrees)
+var radians = wrk.radians(90)
+Convert an angle in degrees (```degrees```) into an angle in radians. The example given would return 1.5707963267948966, or PI / 2.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.mean()
+wrk.mean(a, b)
+var mean = wrk.mean(4, 6)
+Return the arithmetic mean of ```a``` and ```b```. The example given would return 5. May be moved to another module at some point.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk._180DIVPI
+wrk._180DIVPI
+var radians = degrees / wrk._180DIVPI
+The value of 180 divided by ```wrk.PI``` (see wrk Math wrappers). Allows for efficient conversion from degrees to radians and vice versa.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk Math wrappers
+wrk Math wrappers
+var a = wrk.PI
+There is a wrk wrapper around every js Math function/value, EXCEPT for the values that are defined by wrk. An example of a Math method overwritten by wrk is ```wrk.round```, which is not identical to the Math variant.
+/src/core.js
+nolink
+
+NEXTSECTION
+
+wrk.uniqueId()
+wrk.uniqueId()
+var id = wrk.uniqueId()
+Use wrk.random() (wrapper of Math.random()) to generate a random, unique number, which is converted into a string. Ids are prefixed with an underscore to allow property naming, etc.
+/src/misc.js
+nolink
+
+NEXTSECTION
+
+wrk.randBoolean()
+wrk.randBoolean()
+var shouldThrow = wrk.randBoolean()
+Return either true or false. There is an equal chance of each.
+/src/misc.js
+nolink
+
+NEXTSECTION
+
+wrk.doNothing()
+wrk.doNothing()
+wrk.doNothing()
+Do nothing. Handy for indicating that nothing is supposed to be done in a particular circumstance.
+/src/misc.js
+nolink
+
+NEXTSECTION
+
+wrk.constrain()
+wrk.constrain(num, min, max)
+var clippedResult = constrain(result, minAllowable, maxAllowable)
+Constrain num to the inclusive range from min to max.
+/src/misc.js
+nolink
+
+NEXTSECTION
+
+wrk.wrapAround()
+wrk.wrapAround(num, min, max)
+var angle = wrk.wrapAround(angle, 0, 360);
+Make the number wrap around so that when it is above max it goes back around to min and vice versa. Not working, do not use!
+/src/misc.js
+nolink
+
+NEXTSECTION
+
+wrk.doNTimes()
+wrk.doNTimes(n, func)
+wrk.doNTimes(5, (i) => { newRecords[i] = records[i] });
+Run ```func``` n times. Pass the current loop count (from 0 to ```n - 1```) as an argument to func. Shorthand for ```for (var i = 0; i < n; i ++) func(i);```.
+/src/misc.js
+nolink
+
+NEXTSECTION
+
+wrk.mapNum()
+wrk.mapNum(num, oldMin, oldMax, newMin, newMax)
+var randomNumber = wrk.mapNum(Math.random(), 0, 1, 50, 120)
+Map ```num``` from the range of ```oldMin``` to ```oldMax``` to the range of ```newMin``` to ```newMax```.
+/src/misc.js
+nolink
+
+NEXTSECTION
+
+wrk.obj.setValues()
+wrk.obj.setValues(obj, values)
+wrk.obj.setValues(userId, newUserIdList);
+A niche function. Sets the values of the existing keys of an object from the ```values``` array. Requires that the object has the same number of keys as the array has items. Recommended not to use.
+/src/obj.js
+nolink
+
+NEXTSECTION
+
+wrk.NeuralNetwork()
+wrk.NeuralNetwork()
+new wrk.NeuralNetwork()
+A generic neural network class
+/src/machineLearning/neuralNetwork.js
+nolink
+
+NEXTSECTION
+
+wrk.NeuralNetwork.createInputLayer()
+wrk.NeuralNetwork.createInputLayer(size)
+network.addInputLayer(5)
+Create the input layer for the neural network with ```size``` neurons. Will overwrite an existing input layer if there is one in that network already.
+src/machineLearning/neuralNetwork.js
+nolink
+
+NEXTSECTION
+
+wrk.NeuralNetwork.addHiddenLayer()
+wrk.NeuralNetwork.addHiddenLayer(size)
+network.addHiddenLayer(10)
+Add a new hidden layer to the neural network with ```size``` neurons. Appends to the list of hidden layers.
+/src/machineLearning/neuralNetwork.js
+nolink
+
+NEXTSECTION
+
+wrk.NeuralNetwork.createOutputLayer()
+wrk.NeuralNetwork.createOutputLayer(size)
+network.createOutputLayer(2)
+Add the output layer for the neural network with ```size``` neurons. Will overwrite an existing output layer if there is one in that network already.
+/src/machineLearning/neuralNetwork.js
+nolink
+
+NEXTSECTION
+
+wrk.NeuralNetwork.connect()
+wrk.NeuralNetwork.connect()
+network.connect()
+Connect all of the neurons in the network together. Not recommended to call it multiple times if the network has been changed.
+/src/machineLearning/neuralNetwork.js
+nolink
+
+NEXTSECTION
+
+wrk.NeuralNetwork.activate()
+wrk.NeuralNetwork.activate(input)
+var results = network.activate([0, 1])
+Activate the neural network using ```input```.
+/src/machineLearning/neuralNetwork.js
+nolink
+
+NEXTSECTION
+
+wrk.NeuralNetwork.train()
+wrk.NeuralNetwork.train(dataset, iterations=1)
+network.train([{ inputs: [0,0], outputs: [0] }, { inputs: [0,1], outputs: [1] }, { inputs: [1,0], outputs: [1] }, { inputs: [1,1], outputs: [0] }])
+Train the network using ```dataset``` ```iterations``` times.
+/src/machineLearning/neuralNetwork.js
+nolink
+
+NEXTSECTION
+
+wrk.NeuralNetwork.propagate()
+wrk.NeuralNetwork.propagate(target)
+network.propagate([0, 1])
+Propagate how wrong you were (should this be in the public API or is it the network's private data?)
+/src/machineLearning/neuralNetwork.js
+nolink
+
+NEXTSECTION
+
+wrk.NeuralNetwork.saveTraining()
+wrk.NeuralNetwork.saveTraining()
+var savedTraining = network.saveTraining()
+Return a nested array containing the network's current state.
+/src/machineLearning/neuralNetwork.js
+nolink
+
+NEXTSECTION
+
+wrk.NeuralNetwork.loadTraining()
+wrk.NeuralNetwork.loadTraining(savedTraining)
+network.loadTraining(savedTraining)
+Load the training from a nested array in the form exported by ```wrk.NeuralNetwork.saveTraining()```. The network that is loading the training must have already had its layers created and connected. Fails if the network that saved the training doesn't have the same layer sizes and amounts as the one receiving the training.
+/src/machineLearning/neuralNetwork.js
+nolink
+
+NEXTSECTION
+
+wrk.Neuron()
+wrk.Neuron(bias=wrk.randflt(-1, 1))
+var neuron = new wrk.Neuron(0.2)
+A generic neuron class. Designed to primarily be used by wrk.neuralNetwork. ```bias``` shouldn't ever need to be set.
+/src/machineLearning/neuron.js
+nolink
+
+NEXTSECTION
+
+wrk.Neuron.connect()
+wrk.Neuron.connect(neuron, weight=wrk.randflt(0, 1))
+neuron.connect(neuron2, 0.3325)
+Form a connection between neuron being called (```neuron``` in the example) and the neuron being passed in (```neuron2``` in the example) such that neuron being called outputs to the neuron being passed.
+/src/machineLearning/neuron.js
+nolink
+
+NEXTSECTION
+
+wrk.Neuron.activate()
+wrk.Neuron.activate(input)
+var result = neuron.activate(input)
+Activate the neuron. Not recommended to call this directly. In short, read ```input```, find which neuron it was sent from, use the weight to change the value and then save the output before returning it.
+/src/machineLearning/neuron.js
+nolink
+
+NEXTSECTION
+
+wrk.Neuron.propagate()
+wrk.Neuron.propagate(target, rate=0.3)
+neuron.propagate(0.5, 0.5)
+Propagate the wrongness. Not recommended to call this directly. In short, read ```target```, find what you did wrong and change the weights, then make the other neurons change some weights. It's really confusing.
+/src/machineLearning/neuron.js
+nolink
+
+NEXTSECTION
+
+wrk.str.lowerAlphabet
+wrk.str.lowerAlphabet
+var letter = wrk.choose(wrk.str.lowerAlphabet)
+An array containing all of the lowercase English letters. In the example above, letter would be a random letter from the alphabet. All values: ```['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']```
+/src/str.js
+nolink
+
+NEXTSECTION
+
+wrk.str.upperAlphabet
+wrk.str.upperAlphabet
+var letter = wrk.choose(wrk.str.upperAlphabet)
+An array containing all of the uppercase English letters. In the example above, letter would be a random capital letter from the alphabet. All values: ```['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];```
+/src/str.js
+nolink
+
+NEXTSECTION
+
+wrk.str.digits
+wrk.str.digits
+var number = wrk.choose(wrk.str.digits)
+An array containing all of the digits. In the example above, number would be a random digit. All values: ```['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']```
+/src/str.js
+nolink
+
+NEXTSECTION
+
+wrk.str.symbols
+wrk.str.symbols
+var char = wrk.choose(wrk.str.symbols)
+An array containing all of the symbols on my keyboard. In the example above, number would be a random symbol. All values: ```['~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', '[', '{', ']', '}', '\\', '|', ';', ':', '\'', '"', ',', '<', '.', '>', '/', '?']```
+/src/str.js
+nolink
+
+NEXTSECTION
+
+wrk.str.randomFromArray()
+wrk.str.randomFromArray(length=1, charsToUse=[])
+var str = wrk.str.randomFromArray(5, ['1', '2', '3', '4'])
+Produce a random string of length ```length``` in which the leters are chosen randomly from ```charsToUse```. An example output from the example given would be '13421'.
+/src/str.js
+nolink
+
+NEXTSECTION
+
+wrk.str.random()
+wrk.str.random(length=1, lowercaseAllowed=true, uppercaseAllowed=true, digitsAllowed=true, symbolsAllowed=true)
+var str = wrk.str.random(5, true, true, true, false)
+Produce a random string of length ```length```. If ```lowercaseAllowed``` is true, then lowercase letters can be included. The same applies to ```uppercaseAllowed```, ```digitsAllowed``` and ```symbolsAllowed```. An output from the example given might be 'abAjQ'.
+/src/str.js
+nolink

@@ -12,12 +12,11 @@ def readFile(pathToFile):
 
 input('Did you remember to update the version number in /src/core.js (enter to compile)')
 
-INPUT_FILES = readFile('inputFiles.txt').split('\n')
+INPUT_FILES = readFile('inputFiles.txt').split('\n') # A list of files to join together
+OUTPUT_FILE = 'wrk.js' # Where to output the compiled product
 
-OUTPUT_FILE = 'wrk.js'
-
+# Go through the input files and join them together
 output = ''
-
 for fileIdx in range(len(INPUT_FILES)):
     filename = INPUT_FILES[fileIdx]
     if len(filename) > 0:

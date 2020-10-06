@@ -1,7 +1,0 @@
-rawReferenceSections/neuralNetwork.txt
-rawReferenceSections/neuron.txt
-rawReferenceSections/arr.txt
-rawReferenceSections/attitude.txt
-rawReferenceSections/dom.txt
-rawReferenceSections/math.txt
-rawReferenceSections/misc.txt

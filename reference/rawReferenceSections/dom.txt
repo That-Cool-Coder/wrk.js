@@ -1,7 +1,7 @@
 wrk.dom.id()
 wrk.dom.id(id)
 var elem = wrk.dom.id('anElementId')
-A shorter way to call document.getElementById()
+A shorter way to call document.getElementById(). Returns the element with the id ```id```
 /src/dom.js
 nolink
 
@@ -55,6 +55,6 @@ NEXTSECTION
 wrk.dom.logToPara()
 wrk.dom.logToPara(data, label='No label');
 wrk.dom.logToPara(testResult, 'Test Result')
-Append to wrk.dom.logPara the value of data, formatted in this way: label : data
+Append to wrk.dom.logPara ```data``` and ```label```, formatted in this way: ```label : data```
 /src/dom.js
 nolink

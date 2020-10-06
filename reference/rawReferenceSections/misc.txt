@@ -45,10 +45,8 @@ NEXTSECTION
 
 wrk.doNTimes()
 wrk.doNTimes(n, func)
-wrk.doNTimes(5, (i) => {
-    newRecords[i] = records[i];
-});
-Run `func` n times. Pass the current loop count (from 0 to `n - 1`) as an argument to func. Shorthand for `for (var i = 0; i < n; i ++) func(i);`.
+wrk.doNTimes(5, (i) => { newRecords[i] = records[i] });
+Run ```func``` n times. Pass the current loop count (from 0 to ```n - 1```) as an argument to func. Shorthand for ```for (var i = 0; i < n; i ++) func(i);```.
 /src/misc.js
 nolink
 
@@ -57,6 +55,6 @@ NEXTSECTION
 wrk.mapNum()
 wrk.mapNum(num, oldMin, oldMax, newMin, newMax)
 var randomNumber = wrk.mapNum(Math.random(), 0, 1, 50, 120)
-Map `num` from the range of `oldMin` to `oldMax` to the range of `newMin` to `newMax`.
+Map ```num``` from the range of ```oldMin``` to ```oldMax``` to the range of ```newMin``` to ```newMax```.
 /src/misc.js
 nolink

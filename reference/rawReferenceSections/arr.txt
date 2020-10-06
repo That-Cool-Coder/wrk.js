@@ -18,6 +18,7 @@ NEXTSECTION
 
 wrk.arr.choose()
 wrk.arr.choose(array=[])
+var item = wrk.arr.choose(itemList)
 Return a random item from the array. If the array is empty or undefined, returns undefined;
 /src/arr.js
 nolink
@@ -26,6 +27,7 @@ NEXTSECTION
 
 wrk.arr.sum()
 wrk.arr.sum(array=[])
+var total = wrk.arr.sum(scores)
 Return the sum of all of the items in the array. If the array is empty or undefined, returns 0. Recommended only for numbers.
 /src/arr.js
 nolink
@@ -34,6 +36,7 @@ NEXTSECTION
 
 wrk.arr.product()
 wrk.arr.product(array=[])
+var scoreMultiplier = wrk.arr.product(multipliers)
 Return the product of all of the items in the array. If the array is empty or undefined, returns 1. Recommended only for numbers.
 /src/arr.js
 nolink
@@ -42,6 +45,7 @@ NEXTSECTION
 
 wrk.arr.mean()
 wrk.arr.mean(array=[])
+var avgScore = wrk.arr.mean(scores)
 Returns the mean (average) of all of the items in the array. If the array is empty or undefined, returns NaN. Recommended only for numbers.
 /src/arr.js
 nolink
@@ -50,6 +54,7 @@ NEXTSECTION
 
 wrk.arr.median()
 wrk.arr.median(array=[])
+var avgScore = wrk.arr.median(scores)
 Returns the median (middle value) of all of the items in the array. If the array is empty or undefined, returns NaN. Recommended only for numbers.
 /src/arr.js
 nolink
@@ -58,6 +63,7 @@ NEXTSECTION
 
 wrk.arr.mode()
 wrk.arr.mode(array=[])
+No example as it doesn't run
 Has not been implemented yet due to difficulties (see source for details)
 /src/arr.js
 nolink

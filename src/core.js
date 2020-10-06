@@ -7,12 +7,11 @@ if (window.wrk !== undefined) {
     console.error('Warning: an instance of wrk.js is already running')
 }
 else {
-    var wrk = {};
-    window.wrk = wrk;
+    var wrk = {}; // Create an object to be the basis of wrk
+    window.wrk = wrk; // Make it global
 
     // Load the 'consts' from math
     Object.getOwnPropertyNames(Math).forEach(key => {
         wrk[key] = Math[key];
     });
-    wrk._180DIVPI = 180 / wrk.PI;
 }

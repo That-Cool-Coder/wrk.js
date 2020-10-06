@@ -9,8 +9,9 @@
 - Have a good name (unlike hlp.js)
 
 #### Contents:
-- [More about wrk.js]()
-- [Reference manual](/documentation/reference.md)
+- [More about wrk.js]() (Doesn't exist yet)
+- [Markdown reference manual](/reference/reference.md) (Doesn't exist yet)
+- [HTML reference manual](https://wrkjs.thatcoolcoder.repl.co/reference/htmlReference/contentsPage.html)
 - [Code writing conventions](/documentation/codeWritingConventions.md)
 - [How to document](/documentation/howToDocument.md)
 - [cdn folder info](/documentation/cdn.md)

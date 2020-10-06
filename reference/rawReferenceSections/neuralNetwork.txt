@@ -10,7 +10,7 @@ NEXTSECTION
 wrk.NeuralNetwork.createInputLayer()
 wrk.NeuralNetwork.createInputLayer(size)
 network.addInputLayer(5)
-Create the input layer for the neural network with size neurons. Will overwrite an existing input layer if there is one in that network already.
+Create the input layer for the neural network with ```size``` neurons. Will overwrite an existing input layer if there is one in that network already.
 src/machineLearning/neuralNetwork.js
 nolink
 
@@ -19,7 +19,7 @@ NEXTSECTION
 wrk.NeuralNetwork.addHiddenLayer()
 wrk.NeuralNetwork.addHiddenLayer(size)
 network.addHiddenLayer(10)
-Add a new hidden layer to the neural network with size neurons. Appends to the list of hidden layers.
+Add a new hidden layer to the neural network with ```size``` neurons. Appends to the list of hidden layers.
 /src/machineLearning/neuralNetwork.js
 nolink
 
@@ -28,7 +28,7 @@ NEXTSECTION
 wrk.NeuralNetwork.createOutputLayer()
 wrk.NeuralNetwork.createOutputLayer(size)
 network.createOutputLayer(2)
-Add the output layer for the neural network with size neurons. Will overwrite an existing output layer if there is one in that network already.
+Add the output layer for the neural network with ```size``` neurons. Will overwrite an existing output layer if there is one in that network already.
 /src/machineLearning/neuralNetwork.js
 nolink
 
@@ -46,7 +46,7 @@ NEXTSECTION
 wrk.NeuralNetwork.activate()
 wrk.NeuralNetwork.activate(input)
 var results = network.activate([0, 1])
-Activate the neural network using input.
+Activate the neural network using ```input```.
 /src/machineLearning/neuralNetwork.js
 nolink
 
@@ -55,8 +55,7 @@ NEXTSECTION
 wrk.NeuralNetwork.train()
 wrk.NeuralNetwork.train(dataset, iterations=1)
 network.train([{ inputs: [0,0], outputs: [0] }, { inputs: [0,1], outputs: [1] }, { inputs: [1,0], outputs: [1] }, { inputs: [1,1], outputs: [0] }])
-Train the network using the dataset iterations times.
-/src/machineLearning/neuralNetwork.js
+Train the network using ```dataset``` ```iterations``` times.
 /src/machineLearning/neuralNetwork.js
 nolink
 
@@ -65,7 +64,7 @@ NEXTSECTION
 wrk.NeuralNetwork.propagate()
 wrk.NeuralNetwork.propagate(target)
 network.propagate([0, 1])
-propagate how wrong you were (should this be in the public API or is it the network's private data?)
+Propagate how wrong you were (should this be in the public API or is it the network's private data?)
 /src/machineLearning/neuralNetwork.js
 nolink
 
@@ -83,6 +82,6 @@ NEXTSECTION
 wrk.NeuralNetwork.loadTraining()
 wrk.NeuralNetwork.loadTraining(savedTraining)
 network.loadTraining(savedTraining)
-Load the training from a nested array in the form exported by wrk.NeuralNetwork.saveTraining(). The network that is loading the training must have already had its layers created and connected. Fails if the network that saved the training doesn't have the same layer sizes and amounts as the one receiving the training.
+Load the training from a nested array in the form exported by ```wrk.NeuralNetwork.saveTraining()```. The network that is loading the training must have already had its layers created and connected. Fails if the network that saved the training doesn't have the same layer sizes and amounts as the one receiving the training.
 /src/machineLearning/neuralNetwork.js
 nolink

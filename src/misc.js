@@ -6,6 +6,8 @@ wrk.uniqueId = function() {
 }
 
 wrk.randBoolean = function() {
+    // Randomly return true or false
+
     return wrk.random() > 0.5;
 }
 
@@ -30,12 +32,14 @@ wrk.wrapAround = function(num, min, max) {
 }
 
 wrk.doNTimes = function(n, func) {
+    // Run func n times, with the loop counter as a parameter
     for (var i = 0; i < n; i ++) {
         func(i);
     }
 }
 
 wrk.mapNum = function(num, oldMin, oldMax, newMin, newMax) {
+    // Map num from the range [oldMin, oldMax] to the range [newMin, newMaxs]
     var slope = (newMax -  newMin) / (oldMax - oldMin);
     var output = newMin + slope * (num - oldMin);
     return output;

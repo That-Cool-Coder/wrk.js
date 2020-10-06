@@ -1,0 +1,105 @@
+wrk.round()
+wrk.round(num, decimalPlaces=0)
+var result = wrk.round(1.15, 1)
+Round ```num``` so that the amount of decimal places is equal to ```decimalPlaces```. In this example the result would be 1.2.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.floor()
+wrk.floor(num, decimalPlaces=0)
+var result = wrk.floor(1.15, 1)
+Floor ```num``` so that the amount of decimal places is equal to ```decimalPlaces```. In this example the result would be 1.1.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.ceiling()
+wrk.ceiling(num, decimalPlaces=0)
+var result = wrk.ceiling(1.15, 1)
+Ceiling ```num``` so that the amount of decimal places is equal to ```decimalPlaces```. In this example the result would be 1.2.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.randflt()
+wrk.randflt(min, max)
+var result = wrk.randflt(0, 1)
+Returns a random float in the half-open range ```[min, max)```. This includes ```min``` but not ```max`. Possible results in the example would range from 0.0 to 0.999...
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.randint()
+wrk.randint(min, max)
+var result = wrk.randflt(0, 4)
+Returns a random integer in the half-open range ```[min, max)```. This includes ```min``` but not ```max```. Possible results from the example would be [0, 1, 2, 3].
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.sigmoid()
+wrk.sigmoid(x)
+EXAMPLE GOES HERE
+DESCRIPTION GOES HERE. FIND OUT SIGMOID DESCRIPTION.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.invSigmoid()
+wrk.invSigmoid(x)
+EXAMPLE GOES HERE
+DESCRIPTION GOES HERE. FIND OUT INVERSE SIGMOID DESCRIPTION.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.degrees()
+wrk.degrees(radians)
+var degrees = wrk.degrees(wrk.PI / 2)
+Convert an angle in radians (```radians```) into an angle in degrees. The example given would return 90.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.radians()
+wrk.radians(degrees)
+var radians = wrk.radians(90)
+Convert an angle in degrees (```degrees```) into an angle in radians. The example given would return 1.5707963267948966, or PI / 2.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk.mean()
+wrk.mean(a, b)
+var mean = wrk.mean(4, 6)
+Return the arithmetic mean of ```a``` and ```b```. The example given would return 5. May be moved to another module at some point.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk._180DIVPI
+wrk._180DIVPI
+var radians = degrees / wrk._180DIVPI
+The value of 180 divided by ```wrk.PI``` (see wrk Math wrappers). Allows for efficient conversion from degrees to radians and vice versa.
+/src/math.js
+nolink
+
+NEXTSECTION
+
+wrk Math wrappers
+wrk Math wrappers
+var a = wrk.PI
+There is a wrk wrapper around every js Math function/value, EXCEPT for the values that are defined by wrk. An example of a Math method overwritten by wrk is ```wrk.round```, which is not identical to the Math variant.
+/src/core.js
+nolink
