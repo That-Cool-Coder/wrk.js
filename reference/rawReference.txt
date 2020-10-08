@@ -71,7 +71,7 @@ nolink
 NEXTSECTION
 
 wrk.attitude()
-wrk.attitude(heading, pitch, roll)
+wrk.attitude(yaw, pitch, roll)
 var attitude = wrk.attitude(45, 0, 0)
 A three dimensional angle. ```yaw``` is left/right rotation (as in a car driving), ```pitch``` is up/down rotation and ```roll``` is rotating to put the left wing, for instance, down or up
 /src/attitude.js
@@ -127,7 +127,7 @@ NEXTSECTION
 wrk.attitude.mult()
 wrk.attitude.mult(a, amount)
 wrk.attitude.mult(attitude, 2);
-Multiply the heading, pitch and roll components of ```a``` by ```amount```. Edits ```a```.
+Multiply the yaw, pitch and roll components of ```a``` by ```amount```. Edits ```a```.
 /src/attitude.js
 nolink
 
@@ -145,7 +145,7 @@ NEXTSECTION
 wrk.attitude.div()
 wrk.attitude.div(a, amount)
 wrk.attitude.div(attitude, 2);
-Divide the heading, pitch and roll components of ```a``` by ```amount```. Edits ```a```.
+Divide the yaw, pitch and roll components of ```a``` by ```amount```. Edits ```a```.
 /src/attitude.js
 nolink
 
