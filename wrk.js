@@ -1,4 +1,4 @@
-// wrk.js v0.4.0
+// wrk.js v1.0.0
 // Protected under GNU General Public License v3.0
 
 // Setup wrk instance
@@ -7,14 +7,13 @@ if (window.wrk !== undefined) {
     console.error('Warning: an instance of wrk.js is already running')
 }
 else {
-    var wrk = {};
-    window.wrk = wrk;
+    var wrk = {}; // Create an object to be the basis of wrk
+    window.wrk = wrk; // Make it global
 
     // Load the 'consts' from math
     Object.getOwnPropertyNames(Math).forEach(key => {
         wrk[key] = Math[key];
     });
-    wrk._180DIVPI = 180 / wrk.PI;
 }
 
 wrk.uniqueId = function() {
@@ -25,6 +24,8 @@ wrk.uniqueId = function() {
 }
 
 wrk.randBoolean = function() {
+    // Randomly return true or false
+
     return wrk.random() > 0.5;
 }
 
@@ -49,12 +50,14 @@ wrk.wrapAround = function(num, min, max) {
 }
 
 wrk.doNTimes = function(n, func) {
+    // Run func n times, with the loop counter as a parameter
     for (var i = 0; i < n; i ++) {
         func(i);
     }
 }
 
 wrk.mapNum = function(num, oldMin, oldMax, newMin, newMax) {
+    // Map num from the range [oldMin, oldMax] to the range [newMin, newMaxs]
     var slope = (newMax -  newMin) / (oldMax - oldMin);
     var output = newMin + slope * (num - oldMin);
     return output;
@@ -63,17 +66,19 @@ wrk.mapNum = function(num, oldMin, oldMax, newMin, newMax) {
 wrk.str = {};
 
 wrk.str.lowerAlphabet = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+    'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
 wrk.str.upperAlphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 
 wrk.str.digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
 
 wrk.str.symbols = ['~', '`', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_',
-'=', '+', '[', '{', ']', '}', '\\', '|', ';', ':', '\'', '"', ',', '<', '.', '>', '/', '?'];
+    '=', '+', '[', '{', ']', '}', '\\', '|', ';', ':', '\'', '"', ',', '<', '.', '>', '/', '?'];
 
-wrk.str.randomFromArray = function(length=1, charsToUse=[]) {  
+wrk.str.randomFromArray = function(length=1, charsToUse=[]) {
+    // Create a random string using the chars in charsToUse
+    
     var result = '';
     for (var i = 0; i < length; i ++) {
         result += wrk.arr.choose(charsToUse);
@@ -116,6 +121,8 @@ wrk.str.breakHtmlTags = function(str) {
     return str.replace(/</g, '<\u200c');
 }
 
+wrk._180DIVPI = 180 / wrk.PI; // speeds up degrees -> radians and vice versa
+
 wrk.round = function(num, decimalPlaces=0) {
     var numToRound = num * 10**decimalPlaces;
     return Math.round(numToRound) / 10**decimalPlaces;
@@ -132,27 +139,35 @@ wrk.ceiling = function(num, decimalPlaces=0) {
 }
 
 wrk.randflt = function(min, max) {
+    // Create a random float between min and max [min, max)
     var diff = max - min;
     return Math.random() * diff + min;
 }
 
 wrk.randint = function(min, max) {
+    // Create a random integer between min and max [min, max)
     return Math.floor(wrk.randflt(min, max));
 }
 
 wrk.sigmoid = function(x) {
+    // Do sigmoid
     return 1 / (1 + Math.exp(-x)); // f(x) = 1 / (1 + e^(-x))
 }
 
 wrk.invSigmoid = function(x) {
+    // Do inverse sigmoid
     return wrk.sigmoid(x) * (1 - wrk.sigmoid(x)); // f'(x) = f(x) * (1 - f(x))
 }
 
 wrk.degrees = function(radians) {
+    // Convert an angle in radians to degrees
+
     return radians * wrk._180DIVPI;
 }
 
 wrk.radians = function(degrees) {
+    // Convert an angle in degrees to radians
+
     return degrees / wrk._180DIVPI;
 }
 
@@ -197,9 +212,13 @@ wrk.dom.logToPara = function(data, label='No label') {
     }
 }
 
+// Create an empty object to add methods to
 wrk.arr = {};
 
 wrk.arr.highestIndex = function(array=[]) {
+    // Find the index of the highest number in the array
+    // (only intended for numbers)
+
     var highestIdx = null;
     var highestItem = 0;
     array.forEach((item, i) => {
@@ -212,6 +231,9 @@ wrk.arr.highestIndex = function(array=[]) {
 }
 
 wrk.arr.lowestIndex = function(array=[]) {
+    // Find the index of the lowest number in the array
+    // (only intended for numbers)
+
     var lowestIdx = null;
     var lowestItem = 0;
     array.forEach((item, i) => {
@@ -224,10 +246,16 @@ wrk.arr.lowestIndex = function(array=[]) {
 }
 
 wrk.arr.choose = function(array=[]) {
+    // Choose a random item from the array
+    // (only intended for numbers)
+
     return array[wrk.randint(0, array.length)];
 }
 
 wrk.arr.sum = function(array=[]) {
+    // Get the total of all of the items in the array added together
+    // (only intended for numbers)
+
     var sum = array.reduce(function(a, b){
         return a + b;
     }, 0);
@@ -235,6 +263,9 @@ wrk.arr.sum = function(array=[]) {
 }
 
 wrk.arr.product = function(array=[]) {
+    // Get the total of all of the items in the array multiplied together
+    // (only intended for numbers)
+
     var product = array.reduce(function(a, b){
         return a * b;
     }, 1);
@@ -242,12 +273,18 @@ wrk.arr.product = function(array=[]) {
 }
 
 wrk.arr.mean = function(array=[]) {
+    // Get the mean (average) value of all of the items in the array
+    // (only intended for numbers)
+
     var sum = wrk.arr.sum(array);
     var mean = sum / array.length;
     return mean;
 }
 
 wrk.arr.median = function(array=[]) {
+    // Get the item in the middle of the array
+    // (works for arrays of any type)
+
     // If it's even find the two middle numbers and find their mean
     if (array.length % 2 == 0) {
         var justBelowMiddle = array[array.length / 2 - 1];

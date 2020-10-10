@@ -1,4 +1,4 @@
-// wrk.js v0.4.0
+// wrk.js v1.0.0
 // Protected under GNU General Public License v3.0
 
 // Setup wrk instance
