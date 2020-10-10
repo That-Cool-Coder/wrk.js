@@ -7,3 +7,4 @@ rawReferenceSections/obj.txt
 rawReferenceSections/neuralNetwork.txt
 rawReferenceSections/neuron.txt
 rawReferenceSections/str.txt
+rawReferenceSections/vector.txt

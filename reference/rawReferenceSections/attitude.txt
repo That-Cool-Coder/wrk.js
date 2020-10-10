@@ -10,7 +10,7 @@ NEXTSECTION
 wrk.attitude.copy()
 wrk.attitude.copy(a)
 var attitude2 = wrk.attitude.copy(attitude);
-Deep copy the attitude passed in. 
+Deep copy the attitude passed in
 /src/attitude.js
 nolink
 
