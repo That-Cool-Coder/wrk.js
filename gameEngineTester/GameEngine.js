@@ -1,14 +1,11 @@
 wrk.GameEngine = class {
     constructor() {
-
-        this.scenes = [];
         this.crntScene = null;
-
-        this.layers = [];
+        this.managers = [];
     }
 
-    addScene(scene) {
-        this.scenes.push(scene);
+    addManager(manager) {
+        this.manager.push(scene);
     }
 
     selectScene(scene) {
@@ -20,6 +17,8 @@ wrk.GameEngine = class {
         }
 
         this.crntScene = scene;
-        this.crntScene.select();
+        if (this.crntScene != null) {
+            this.crntScene.select();
+        }
     }
 }
