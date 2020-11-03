@@ -11,6 +11,7 @@ if (window.wrk !== undefined) {
 }
 else {
     var wrk = {}; // Create an object to be the basis of wrk
+    wrk.VERSION = 'v1.1.0';
     window.wrk = wrk; // Make it global
 
     // Load the 'consts' from math

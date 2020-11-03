@@ -11,6 +11,7 @@ if (window.wrk !== undefined) {
 }
 else {
     var wrk = {}; // Create an object to be the basis of wrk
+    wrk.VERSION = 'v1.1.0';
     window.wrk = wrk; // Make it global
 
     // Load the 'consts' from math
@@ -224,6 +225,25 @@ wrk.dom.logToPara = function(data, label='No label') {
 
 // Create an empty object to add methods to
 wrk.arr = {};
+
+wrk.arr.removeItem = function(array, item) {
+    var index = array.indexOf(item);
+    if (index == -1) {
+        wrk.internalWarn(`Could not remove item ${item} from array as it is not in the array`);
+    }
+    else {
+        wrk.arr.removeIndex(array, index);
+    }
+}
+
+wrk.arr.removeIndex = function(array, index) {
+    if (index < 0 || index >= array.length) {
+        wrk.internalWarn(`Could not remove item at ${index} from array as the index is out of bounds`);
+    }
+    else {
+        array.splice(index, 1);
+    }
+}
 
 wrk.arr.highestIndex = function(array=[]) {
     // Find the index of the highest number in the array

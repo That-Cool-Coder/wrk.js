@@ -1,6 +1,6 @@
 wrk.NeuralNetwork()
 wrk.NeuralNetwork()
-new wrk.NeuralNetwork()
+var network = new wrk.NeuralNetwork()
 A generic neural network class
 /src/machineLearning/neuralNetwork.js
 nolink

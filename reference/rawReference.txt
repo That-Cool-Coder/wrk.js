@@ -1,3 +1,21 @@
+wrk.arr.removeItem()
+wrk.arr.removeItem(array, item)
+wrk.arr.removeItem(users, userToDelete)
+Try to remove ```item``` from ```array```. If ```array``` doesn't contain ```item```, creates a warning but doesn't break the program.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.removeIndex()
+wrk.arr.removeIndex(array, index)
+wrk.arr.removeIndex(users, userIndex)
+Try to remove the item at ```index``` from ```array```. If ```index``` is out of bounds, creates a warning but doesn't break the program.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
 wrk.arr.highestIndex()
 wrk.arr.highestIndex(array=[])
 var highestIndex = wrk.arr.highestIndex([1, 4, 2, 3])
@@ -326,6 +344,15 @@ wrk Math wrappers
 wrk Math wrappers
 var a = wrk.PI
 There is a wrk wrapper around every js Math function/value, EXCEPT for the values that are defined by wrk. An example of a Math method overwritten by wrk is ```wrk.round```, which is not identical to the Math variant.
+/src/core.js
+nolink
+
+NEXTSECTION
+
+wrk.VERSION
+wrk.VERSION
+var version = wrk.VERSION
+A string representation of the curent wrk version. An example would be ```'v1.1.0'```
 /src/core.js
 nolink
 

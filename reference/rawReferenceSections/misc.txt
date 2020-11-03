@@ -1,3 +1,12 @@
+wrk.VERSION
+wrk.VERSION
+var version = wrk.VERSION
+A string representation of the curent wrk version. An example would be ```'v1.1.0'```
+/src/core.js
+nolink
+
+NEXTSECTION
+
 wrk.uniqueId()
 wrk.uniqueId()
 var id = wrk.uniqueId()

@@ -1,3 +1,21 @@
+wrk.arr.removeItem()
+wrk.arr.removeItem(array, item)
+wrk.arr.removeItem(users, userToDelete)
+Try to remove ```item``` from ```array```. If ```array``` doesn't contain ```item```, creates a warning but doesn't break the program.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
+wrk.arr.removeIndex()
+wrk.arr.removeIndex(array, index)
+wrk.arr.removeIndex(users, userIndex)
+Try to remove the item at ```index``` from ```array```. If ```index``` is out of bounds, creates a warning but doesn't break the program.
+/src/arr.js
+nolink
+
+NEXTSECTION
+
 wrk.arr.highestIndex()
 wrk.arr.highestIndex(array=[])
 var highestIndex = wrk.arr.highestIndex([1, 4, 2, 3])

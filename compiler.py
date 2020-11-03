@@ -10,7 +10,7 @@ def readFile(pathToFile):
     file.close()
     return contents
 
-input('Did you remember to update the version number in /src/core.js (enter to compile)')
+input('Did you remember to update both version numbers in /src/core.js (enter to compile)')
 
 INPUT_FILES = readFile('inputFiles.txt').split('\n') # A list of files to join together
 OUTPUT_FILE = 'wrk.js' # Where to output the compiled product

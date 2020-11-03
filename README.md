@@ -10,8 +10,8 @@
 
 #### Contents:
 - [More about wrk.js]() (Doesn't exist yet)
-- [Markdown reference manual](/reference/reference.md) (Doesn't exist yet)
 - [HTML reference manual](https://naltonsoftware.com/wrkReference/)
+- [About the wrk.js reference](/documentation/aboutReference.md)
 - [Code writing conventions](/documentation/codeWritingConventions.md)
 - [How to document](/documentation/howToDocument.md)
 - [cdn folder info](/documentation/cdn.md)
