@@ -1,43 +1,30 @@
-wrk.GameEngine.Scene = class {
-    constructor(name) {
-        // maybe get rid of name, idk
-        this.name = name;
+wrk.GameEngine.Scene = class extends Entity {
+    constructor(name, parent, localPosition, localAngle) {
+        super(name, parent, localPosition, localAngle);
 
-        this.entities = [];
+        this.pixiContainer = new PIXI.Container();
+
+        this.isSelected = false;
     }
 
-    addEntity(entity) {
-        if (! this.entities.includes(entity)) {
-            this.entities.push(entity);
-        }
-        else {
-            wrk.internalWarn(`Could not add entity '${entity.name}' to scene '${this.name}' as it is already in the scene`);
-        }
-    }
+    addChild(child) {
+        var inheritedFunc = wrk.GameEngine.Entity.prototype.addChild.bind(this);
+        var childAdded = inheritedFunc(child);
 
-    removeEntity(entity) {
-        var index = this.entities.indexOf(entity);
-
-        // If the entity was found, remove it
-        if (index > -1) {
-            this.entities.splice(index, 1);
-        }
-        else {
-            wrk.internalWarn(`Could not remove entity '${entity.name}' from scene '${this.name}' as it is not in the scene`);
+        if (childAdded) {
+            this.pixiContainer.addChild(child.getDrawableChildren());
         }
     }
 
-    draw() {
-
+    /** Do not call this directly, call through wrk.GameEngine.selectScene() */
+    select(pixiApp) {
+        this.isSelected = true;
+        
+        pixiApp.stage.addChild(this.pixiContainer);
     }
 
-    select() {
-        // Call this from wrk.GameEngine.selectScene
-
-        // add contents to container
-    }
-
+    /** Do not call this directly, call through wrk.GameEngine.deselectScene() */
     deselect() {
-        // Call this from wrk.GameEngine.selectScene will null as arg
+        this.isSelected = false;
     }
 }
