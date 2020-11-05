@@ -743,3 +743,249 @@ wrk.Neuron = class {
     }
 }
 
+wrk.GameEngine = class {
+    constructor(canvasSize, globalScale, backgroundColor=0x000000) {
+        this.globalPosition = wrk.v(0, 0);
+        this.globalAngle = 0;
+
+        this.setGlobalScale(globalScale);
+
+        this.createPixiApp(canvasSize, backgroundColor);
+
+        this.deselectCrntScene();
+    }
+
+    // Pixi stuff and canvas stuff
+    // ---------------------------
+
+    createPixiApp(canvasSize, backgroundColor) {
+        this.pixiApp = new PIXI.Application({
+            width : canvasSize.x * this.globalScale,
+            height : canvasSize.y * this.globalScale,
+            backgroundColor : backgroundColor,
+            resolution : window.devicePixelRatio || 1
+        });
+        document.body.appendChild(this.pixiApp.view);
+
+        this.pixiApp.ticker.add(() => this.update());
+
+        this.setCanvasSize(canvasSize);
+    }
+
+    setCanvasSize(size) {
+        this.canvasSize = wrk.v.copy(size);
+
+        this.pixiApp.view.width = this.canvasSize.x * this.globalScale;
+        this.pixiApp.view.height = this.canvasSize.y * this.globalScale;
+    }
+
+    setGlobalScale(scale) {
+        this.globalScale = scale;
+    }
+
+    removeChildrenFromPixiApp() {
+        while(this.pixiApp.stage.children.length > 0) { 
+            this.pixiApp.stage.removeChild(this.pixiApp.stage.children[0]);
+        }
+    }
+
+    // Scenes
+    // ------
+
+    selectScene(scene) {
+        this.deselectCrntScene();
+        
+        this.crntScene = scene;
+        
+        if (scene != null) {
+            scene.select(this.pixiApp);
+            scene.setParent(this);
+        }
+    }
+
+    deselectCrntScene() {
+        if (this.crntScene != null) {
+            this.crntScene.deselect();
+            this.removeChildrenFromPixiApp();
+        }
+
+        this.crntScene = null;
+    }
+
+    // Main method
+    // -------------
+
+    update() {
+        if (this.crntScene != null) {
+            this.crntScene.update();
+        }
+    }
+}
+
+wrk.GameEngine.Entity = class {
+    constructor(name, localPosition, localAngle) {
+        this.rename(name);
+
+        this.setLocalPosition(localPosition);
+        this.setLocalAngle(localAngle);
+        
+        this.children = [];
+    }
+
+    // Misc
+    // ----
+
+    rename(name) {
+        this.name = name;
+    }
+
+    addToPixiContainer(container) {
+        // do nothing - overwrite in drawable entities
+        this.addChildrenToPixiContainer(container);
+    }
+
+    /** Do not call directly, call through wrk.GameEngine.Entity.addToPixiContainer */
+    addChildrenToPixiContainer(container) {
+        this.children.forEach(child => {
+            child.addToPixiContainer(container);
+        })
+    }
+
+    // Position
+    // --------
+
+    /** Try not to use this extensively because it's recursive and laggy */
+    get globalPosition() {
+        var rotatedLocalPosition = wrk.v.copy(this.localPosition);
+        wrk.v.rotate(rotatedLocalPosition, this.parent.localAngle);
+        return wrk.v.copyAdd(this.parent.globalPosition, rotatedLocalPosition);
+    }
+
+    setLocalPosition(position) {
+        this.localPosition = wrk.v.copy(position);
+    }
+
+    setGlobalPosition(position) {
+        this.position = wrk.v.copySub(position, this.parent.globalPosition);
+    }
+
+    // Angle
+    // -----
+
+    get globalAngle() {
+        return this.parent.globalAngle + this.localAngle;
+    }
+
+    setLocalAngle(angle) {
+        this.localAngle = angle;
+    }
+
+    setGlobalAngle(angle) {
+        this.localAngle = angle - this.parent.globalAngle;
+    }
+
+    // Children/parents
+    // ----------------
+
+    removeChildren() {
+        this.children = [];
+    }
+
+    addChild(entity) {
+        // If the entity is already a child, then don't do anything
+        if (this.children.includes(entity)) {
+            wrk.internalWarn(`Could not add entity '${entity.name}' to entity '${this.name}' as it is already a child`);
+            return false;
+        }
+        else {
+            this.children.push(entity);
+            entity.setParent(this);
+            return true;
+        }
+    }
+
+    removeChild(entity) {
+        var indexOfEntity = this.children.indexOf(entity);
+
+        // If the entity is not a child, then do nothing
+        if (indexOfEntity == -1) {
+            wrk.internalWarn(`Could not remove entity '${entity.name}' from entity '${this.name}' as it is not a child`);
+            return false;
+        }
+        else {
+            wrk.arr.removeItem(this.children, entity);
+            return true;
+        }
+    }
+
+    setParent(parent) {
+        this.parent = parent;
+    }
+
+    update() {
+        this.children.forEach(child => {
+            child.update();
+        });
+    }
+}
+
+wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
+    constructor(name, localPosition, localAngle) {
+        super(name, localPosition, localAngle);
+
+        this.pixiContainer = new PIXI.Container();
+
+        this.isSelected = false;
+    }
+
+    addChild(child) {
+        var inheritedFunc = wrk.GameEngine.Entity.prototype.addChild.bind(this);
+        var childAdded = inheritedFunc(child);
+
+        if (childAdded) {
+            child.addToPixiContainer(this.pixiContainer);
+        }
+    }
+
+    /** Do not call this directly, call through wrk.GameEngine.selectScene() */
+    select(pixiApp) {
+        this.isSelected = true;
+        
+        pixiApp.stage.addChild(this.pixiContainer);
+    }
+
+    /** Do not call this directly, call through wrk.GameEngine.deselectScene() */
+    deselect() {
+        this.isSelected = false;
+    }
+}
+
+wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
+    constructor(name, localPosition, localAngle, texture, textureSize) {
+        super(name, localPosition, localAngle);
+
+        this.setTextureSize(textureSize);
+
+        this.sprite = new PIXI.Sprite(texture);
+        this.sprite.width = this.textureSize.x;
+        this.sprite.height = this.textureSize.y;
+    }
+
+    setTextureSize(size) {
+        this.textureSize = wrk.v.copy(size);
+    }
+
+    addToPixiContainer(container) {
+        container.addChild(this.sprite);
+    }
+
+    update() {
+        var inheritedFunc = wrk.GameEngine.Entity.prototype.update.bind(this);
+        inheritedFunc();
+
+        var globalPosition = this.globalPosition;
+        this.sprite.position.set(globalPosition.x, globalPosition.y);
+        this.sprite.rotation = -this.globalAngle;
+    }
+}
+

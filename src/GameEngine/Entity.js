@@ -1,8 +1,6 @@
 wrk.GameEngine.Entity = class {
-    constructor(name, parent, localPosition, localAngle) {
+    constructor(name, localPosition, localAngle) {
         this.rename(name);
-
-        this.setParent(parent);
 
         this.setLocalPosition(localPosition);
         this.setLocalAngle(localAngle);
@@ -17,13 +15,25 @@ wrk.GameEngine.Entity = class {
         this.name = name;
     }
 
+    addToPixiContainer(container) {
+        // do nothing - overwrite in drawable entities
+        this.addChildrenToPixiContainer(container);
+    }
+
+    /** Do not call directly, call through wrk.GameEngine.Entity.addToPixiContainer */
+    addChildrenToPixiContainer(container) {
+        this.children.forEach(child => {
+            child.addToPixiContainer(container);
+        })
+    }
+
     // Position
     // --------
 
     /** Try not to use this extensively because it's recursive and laggy */
     get globalPosition() {
         var rotatedLocalPosition = wrk.v.copy(this.localPosition);
-        wrk.v.rotate(rotatedLocalPosition, this.localAngle);
+        wrk.v.rotate(rotatedLocalPosition, this.parent.localAngle);
         return wrk.v.copyAdd(this.parent.globalPosition, rotatedLocalPosition);
     }
 
@@ -86,5 +96,11 @@ wrk.GameEngine.Entity = class {
 
     setParent(parent) {
         this.parent = parent;
+    }
+
+    update() {
+        this.children.forEach(child => {
+            child.update();
+        });
     }
 }

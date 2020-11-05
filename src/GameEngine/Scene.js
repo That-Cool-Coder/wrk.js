@@ -1,6 +1,6 @@
-wrk.GameEngine.Scene = class extends Entity {
-    constructor(name, parent, localPosition, localAngle) {
-        super(name, parent, localPosition, localAngle);
+wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
+    constructor(name, localPosition, localAngle) {
+        super(name, localPosition, localAngle);
 
         this.pixiContainer = new PIXI.Container();
 
@@ -12,7 +12,7 @@ wrk.GameEngine.Scene = class extends Entity {
         var childAdded = inheritedFunc(child);
 
         if (childAdded) {
-            this.pixiContainer.addChild(child.getDrawableChildren());
+            child.addToPixiContainer(this.pixiContainer);
         }
     }
 

@@ -1,10 +1,13 @@
 wrk.GameEngine = class {
     constructor(canvasSize, globalScale, backgroundColor=0x000000) {
+        this.globalPosition = wrk.v(0, 0);
+        this.globalAngle = 0;
+
         this.setGlobalScale(globalScale);
 
         this.createPixiApp(canvasSize, backgroundColor);
 
-        this.deselectScene();
+        this.deselectCrntScene();
     }
 
     // Pixi stuff and canvas stuff
@@ -12,12 +15,14 @@ wrk.GameEngine = class {
 
     createPixiApp(canvasSize, backgroundColor) {
         this.pixiApp = new PIXI.Application({
-            width : 1,
-            height : 1,
+            width : canvasSize.x * this.globalScale,
+            height : canvasSize.y * this.globalScale,
             backgroundColor : backgroundColor,
             resolution : window.devicePixelRatio || 1
         });
         document.body.appendChild(this.pixiApp.view);
+
+        this.pixiApp.ticker.add(() => this.update());
 
         this.setCanvasSize(canvasSize);
     }
@@ -34,8 +39,8 @@ wrk.GameEngine = class {
     }
 
     removeChildrenFromPixiApp() {
-        while(this.pixiApp.children.length > 0) { 
-            this.pixiApp.removeChild(this.app.children[0]);
+        while(this.pixiApp.stage.children.length > 0) { 
+            this.pixiApp.stage.removeChild(this.pixiApp.stage.children[0]);
         }
     }
 
@@ -47,15 +52,17 @@ wrk.GameEngine = class {
         
         this.crntScene = scene;
         
-        scene.select(this.pixiApp);
+        if (scene != null) {
+            scene.select(this.pixiApp);
+            scene.setParent(this);
+        }
     }
 
     deselectCrntScene() {
         if (this.crntScene != null) {
             this.crntScene.deselect();
+            this.removeChildrenFromPixiApp();
         }
-
-        this.removeChildrenFromPixiApp();
 
         this.crntScene = null;
     }
@@ -65,7 +72,7 @@ wrk.GameEngine = class {
 
     update() {
         if (this.crntScene != null) {
-            this.crntScene.draw();
+            this.crntScene.update();
         }
     }
 }
