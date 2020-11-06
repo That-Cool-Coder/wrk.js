@@ -768,6 +768,7 @@ wrk.GameEngine = class {
         document.body.appendChild(this.pixiApp.view);
 
         this.pixiApp.ticker.add(() => this.update());
+        this.pixiApp.stage.parent = this.pixiApp; // give a link to the stage
 
         this.setCanvasSize(canvasSize);
     }
@@ -930,10 +931,13 @@ wrk.GameEngine.Entity = class {
 }
 
 wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
-    constructor(name, localPosition, localAngle) {
+    constructor(name, localPosition, localAngle, anchor=wrk.v(0.5, 0.5)) {
         super(name, localPosition, localAngle);
 
         this.pixiContainer = new PIXI.Container();
+        this.anchor = anchor;
+
+        this.parentAppPointer = null; // A pointer the parent pixi app
 
         this.isSelected = false;
     }
@@ -947,16 +951,33 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         }
     }
 
+    setAnchor(position) {
+        this.anchor = wrk.v.copy(position);
+
+        if (this.isSelected) {
+            var pixiApp = this.parentAppPointer;
+            this.pixiContainer.pivot.x = this.anchor.x * pixiApp.renderer.width;
+            this.pixiContainer.pivot.y = this.anchor.y * pixiApp.renderer.height;
+
+            this.pixiContainer.position.x = pixiApp.renderer.width / 2;
+            this.pixiContainer.position.y = pixiApp.renderer.height / 2;
+        }
+    }
+
     /** Do not call this directly, call through wrk.GameEngine.selectScene() */
     select(pixiApp) {
         this.isSelected = true;
+
+        this.parentAppPointer = pixiApp;
         
         pixiApp.stage.addChild(this.pixiContainer);
+        this.setAnchor(this.anchor);
     }
 
     /** Do not call this directly, call through wrk.GameEngine.deselectScene() */
     deselect() {
         this.isSelected = false;
+        this.parentAppPointer = null;
     }
 }
 
@@ -964,19 +985,32 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
     constructor(name, localPosition, localAngle, texture, textureSize) {
         super(name, localPosition, localAngle);
 
-        this.setTextureSize(textureSize);
-
-        this.sprite = new PIXI.Sprite(texture);
-        this.sprite.width = this.textureSize.x;
-        this.sprite.height = this.textureSize.y;
+        this.setTexture(texture, textureSize);
+        this.setAnchor(wrk.v(0.5, 0.5));
     }
 
     setTextureSize(size) {
         this.textureSize = wrk.v.copy(size);
+        this.sprite.width = this.textureSize.x;
+        this.sprite.height = this.textureSize.y;
     }
 
     addToPixiContainer(container) {
         container.addChild(this.sprite);
+    }
+
+    setTexture(texture, textureSize=null) {
+        this.sprite = new PIXI.Sprite(texture);
+        if (textureSize != null) {
+            this.setTextureSize(textureSize);
+        }
+    }
+
+    setAnchor(position) {
+        // from 0,0 to 1, 1
+
+        this.sprite.anchor.x = position.x;
+        this.sprite.anchor.y = position.y;
     }
 
     update() {

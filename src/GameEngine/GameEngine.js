@@ -23,6 +23,7 @@ wrk.GameEngine = class {
         document.body.appendChild(this.pixiApp.view);
 
         this.pixiApp.ticker.add(() => this.update());
+        this.pixiApp.stage.parent = this.pixiApp; // give a link to the stage
 
         this.setCanvasSize(canvasSize);
     }
