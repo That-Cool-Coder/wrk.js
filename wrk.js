@@ -958,9 +958,6 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
             var pixiApp = this.parentAppPointer;
             this.pixiContainer.pivot.x = this.anchor.x * pixiApp.renderer.width;
             this.pixiContainer.pivot.y = this.anchor.y * pixiApp.renderer.height;
-
-            this.pixiContainer.position.x = pixiApp.renderer.width / 2;
-            this.pixiContainer.position.y = pixiApp.renderer.height / 2;
         }
     }
 
