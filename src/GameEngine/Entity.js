@@ -16,7 +16,7 @@ wrk.GameEngine.Entity = class {
     }
 
     addToPixiContainer(container) {
-        // do nothing - overwrite in drawable entities
+        // do nothing except add children - overwrite in drawable entities
         this.addChildrenToPixiContainer(container);
     }
 
@@ -57,7 +57,7 @@ wrk.GameEngine.Entity = class {
     }
 
     setGlobalAngle(angle) {
-        this.localAngle = angle - this.parent.globalAngle;
+        this.setLocalAngle(angle - this.parent.globalAngle);
     }
 
     // Children/parents
@@ -98,9 +98,13 @@ wrk.GameEngine.Entity = class {
         this.parent = parent;
     }
 
-    update() {
+    updateChildren() {
         this.children.forEach(child => {
             child.update();
         });
+    }
+
+    update() {
+        this.updateChildren();
     }
 }

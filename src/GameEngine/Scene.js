@@ -3,9 +3,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         super(name, localPosition, localAngle);
 
         this.pixiContainer = new PIXI.Container();
-        this.anchor = anchor;
-
-        this.parentAppPointer = null; // A pointer the parent pixi app
+        this.setAnchor(anchor);
 
         this.isSelected = false;
     }
@@ -21,12 +19,6 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
 
     setAnchor(position) {
         this.anchor = wrk.v.copy(position);
-
-        if (this.isSelected) {
-            var pixiApp = this.parentAppPointer;
-            this.pixiContainer.pivot.x = this.anchor.x * pixiApp.renderer.width;
-            this.pixiContainer.pivot.y = this.anchor.y * pixiApp.renderer.height;
-        }
     }
 
     /** Do not call this directly, call through wrk.GameEngine.selectScene() */
@@ -43,5 +35,14 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
     deselect() {
         this.isSelected = false;
         this.parentAppPointer = null;
+    }
+
+    update() {
+        this.updateChildren();
+
+        this.pixiContainer.rotation = this.globalAngle;
+
+        var globalPosition = this.globalPosition;
+        this.pixiContainer.position.set(globalPosition.x, globalPosition.y);
     }
 }

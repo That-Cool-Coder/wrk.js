@@ -1,9 +1,9 @@
 wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
-    constructor(name, localPosition, localAngle, texture, textureSize) {
+    constructor(name, localPosition, localAngle, texture, textureSize, anchor=wrk.v(0.5, 0.5)) {
         super(name, localPosition, localAngle);
 
         this.setTexture(texture, textureSize);
-        this.setAnchor(wrk.v(0.5, 0.5));
+        this.setAnchor(anchor);
     }
 
     setTextureSize(size) {
@@ -31,11 +31,10 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
     }
 
     update() {
-        var inheritedFunc = wrk.GameEngine.Entity.prototype.update.bind(this);
-        inheritedFunc();
+        this.updateChildren();
 
         var globalPosition = this.globalPosition;
         this.sprite.position.set(globalPosition.x, globalPosition.y);
-        this.sprite.rotation = -this.globalAngle;
+        this.sprite.rotation = this.globalAngle;
     }
 }
