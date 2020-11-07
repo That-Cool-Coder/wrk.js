@@ -7,12 +7,18 @@ if (window.wrk !== undefined) {
 
     // This doesn't look like it should work (wrk is not defined yet in this file)...
     // ...but it will because wrk has already been defined (that's why we're warning the user!)
-    wrk.internalWarn('Warning: an instance of wrk.js is already running');
+    wrk.internalWarn('An instance of wrk.js is already running');
 }
 else {
     var wrk = {}; // Create an object to be the basis of wrk
     wrk.VERSION = 'v1.1.0';
+    wrk.consoleLogHeader = '  🔧🔧 ';
+    wrk.consoleLogStyling = 'background-color: #9cc8ff; display: block';
     window.wrk = wrk; // Make it global
+
+    // Make a 'hello' message
+    console.log(`%c  \n${wrk.consoleLogHeader} wrk.js ${wrk.VERSION}\n  `,
+        wrk.consoleLogStyling);
 
     // Load the 'consts' from math
     Object.getOwnPropertyNames(Math).forEach(key => {
@@ -20,9 +26,13 @@ else {
     });
 }
 
+wrk.internalLog = function(message) {
+    var fullMessage = '%c' + wrk.consoleLogHeader + message;
+    console.log(fullMessage, wrk.consoleLogStyling);
+}
+
 wrk.internalWarn = function(message) {
-    var fullMessage = 'wrk.js warning:\n' + 
-        message;
+    var fullMessage = `${wrk.consoleLogHeader} wrk.js warning:\n  ${message}`;
     console.warn(fullMessage);
     console.trace();
 }
@@ -745,6 +755,8 @@ wrk.Neuron = class {
 
 wrk.GameEngine = class {
     constructor(canvasSize, globalScale, backgroundColor=0x000000) {
+        wrk.internalWarn('wrk.GameEngine is an undocumented, untested festure. Use with caution');
+        
         this.globalPosition = wrk.v(0, 0);
         this.globalAngle = 0;
 
@@ -840,8 +852,11 @@ wrk.GameEngine.Entity = class {
         this.name = name;
     }
 
+    // Pixi
+    // ----
+
     addToPixiContainer(container) {
-        // do nothing - overwrite in drawable entities
+        // do nothing except add children - overwrite in drawable entities
         this.addChildrenToPixiContainer(container);
     }
 
@@ -850,6 +865,14 @@ wrk.GameEngine.Entity = class {
         this.children.forEach(child => {
             child.addToPixiContainer(container);
         })
+    }
+
+    removeFromPixiContainer() {
+        this.removeChildrenFromPixiContainer();
+    }
+
+    removeChildrenFromPixiContainer() {
+        this.children.forEach(child => child.removeFromPixiContainer());
     }
 
     // Position
@@ -889,7 +912,10 @@ wrk.GameEngine.Entity = class {
     // ----------------
 
     removeChildren() {
-        this.children = [];
+        // While there are children, remove the first child
+        while (this.children.length > 0) {
+            this.removeChild(this.children[0]);
+        }
     }
 
     addChild(entity) {
@@ -915,6 +941,8 @@ wrk.GameEngine.Entity = class {
         }
         else {
             wrk.arr.removeItem(this.children, entity);
+            entity.removeFromPixiContainer();
+            entity.removeParent();
             return true;
         }
     }
@@ -923,10 +951,18 @@ wrk.GameEngine.Entity = class {
         this.parent = parent;
     }
 
-    update() {
+    removeParent() {
+        this.setParent(null);
+    }
+
+    updateChildren() {
         this.children.forEach(child => {
             child.update();
         });
+    }
+
+    update() {
+        this.updateChildren();
     }
 }
 
@@ -966,12 +1002,12 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
     /** Do not call this directly, call through wrk.GameEngine.deselectScene() */
     deselect() {
         this.isSelected = false;
+        this.parentAppPointer.stage.removeChild(this.pixiContainer);
         this.parentAppPointer = null;
     }
 
     update() {
-        var inheritedFunc = wrk.GameEngine.Entity.prototype.update.bind(this);
-        inheritedFunc();
+        this.updateChildren();
 
         this.pixiContainer.rotation = this.globalAngle;
 
@@ -996,6 +1032,15 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
     addToPixiContainer(container) {
         container.addChild(this.sprite);
+        this.addChildrenToPixiContainer(container);
+    }
+
+    removeFromPixiContainer() {
+        var container = this.sprite.parent;
+        if (container != undefined) {
+            container.removeChild(this.sprite);
+            this.removeChildrenFromPixiContainer();
+        }
     }
 
     setTexture(texture, textureSize=null) {
@@ -1013,8 +1058,7 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
     }
 
     update() {
-        var inheritedFunc = wrk.GameEngine.Entity.prototype.update.bind(this);
-        inheritedFunc();
+        this.updateChildren();
 
         var globalPosition = this.globalPosition;
         this.sprite.position.set(globalPosition.x, globalPosition.y);

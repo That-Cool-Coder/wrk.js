@@ -15,6 +15,9 @@ wrk.GameEngine.Entity = class {
         this.name = name;
     }
 
+    // Pixi
+    // ----
+
     addToPixiContainer(container) {
         // do nothing except add children - overwrite in drawable entities
         this.addChildrenToPixiContainer(container);
@@ -25,6 +28,14 @@ wrk.GameEngine.Entity = class {
         this.children.forEach(child => {
             child.addToPixiContainer(container);
         })
+    }
+
+    removeFromPixiContainer() {
+        this.removeChildrenFromPixiContainer();
+    }
+
+    removeChildrenFromPixiContainer() {
+        this.children.forEach(child => child.removeFromPixiContainer());
     }
 
     // Position
@@ -64,7 +75,10 @@ wrk.GameEngine.Entity = class {
     // ----------------
 
     removeChildren() {
-        this.children = [];
+        // While there are children, remove the first child
+        while (this.children.length > 0) {
+            this.removeChild(this.children[0]);
+        }
     }
 
     addChild(entity) {
@@ -90,12 +104,18 @@ wrk.GameEngine.Entity = class {
         }
         else {
             wrk.arr.removeItem(this.children, entity);
+            entity.removeFromPixiContainer();
+            entity.removeParent();
             return true;
         }
     }
 
     setParent(parent) {
         this.parent = parent;
+    }
+
+    removeParent() {
+        this.setParent(null);
     }
 
     updateChildren() {

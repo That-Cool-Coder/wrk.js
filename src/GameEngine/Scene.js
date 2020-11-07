@@ -34,6 +34,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
     /** Do not call this directly, call through wrk.GameEngine.deselectScene() */
     deselect() {
         this.isSelected = false;
+        this.parentAppPointer.stage.removeChild(this.pixiContainer);
         this.parentAppPointer = null;
     }
 
