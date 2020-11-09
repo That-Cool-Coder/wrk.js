@@ -17,7 +17,7 @@ else {
     window.wrk = wrk; // Make it global
 
     // Make a 'hello' message
-    console.log(`%c  \n${wrk.consoleLogHeader} wrk.js ${wrk.VERSION}\n  `,
+    console.log(`%c  \n${wrk.consoleLogHeader} wrk.js ${wrk.VERSION}  \n  `,
         wrk.consoleLogStyling);
 
     // Load the 'consts' from math
@@ -34,5 +34,4 @@ wrk.internalLog = function(message) {
 wrk.internalWarn = function(message) {
     var fullMessage = `${wrk.consoleLogHeader} wrk.js warning:\n  ${message}`;
     console.warn(fullMessage);
-    console.trace();
 }

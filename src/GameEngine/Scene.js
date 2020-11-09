@@ -1,11 +1,35 @@
 wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
-    constructor(name, localPosition, localAngle, anchor=wrk.v(0.5, 0.5)) {
+    constructor(name, localPosition, localAngle) {
         super(name, localPosition, localAngle);
 
-        this.pixiContainer = new PIXI.Container();
-        this.setAnchor(anchor);
+        this.container = new PIXI.Container();
 
         this.isSelected = false;
+    }
+
+    get globalAngle() {
+        return 0;
+    }
+
+    setBackgroundSound(sound) {
+        this.backgroundSound = sound;
+        wrk.internalLog('Does this need a copy or something?');
+
+        if (this.isSelected) {
+            this.startBackgroundSound();
+        }
+    }
+
+    startBackgroundSound() {
+        if (this.backgroundSound != null) {
+            this.backgroundSound.loop();
+        }
+    }
+
+    stopBackgroundSound() {
+        if (this.backgroundSound != null) {
+            this.backgroundSound.stop();
+        }
     }
 
     addChild(child) {
@@ -13,12 +37,8 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         var childAdded = inheritedFunc(child);
 
         if (childAdded) {
-            child.addToPixiContainer(this.pixiContainer);
+            child.addToPixiContainer(this.container);
         }
-    }
-
-    setAnchor(position) {
-        this.anchor = wrk.v.copy(position);
     }
 
     /** Do not call this directly, call through wrk.GameEngine.selectScene() */
@@ -27,23 +47,25 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
 
         this.parentAppPointer = pixiApp;
         
-        pixiApp.stage.addChild(this.pixiContainer);
-        this.setAnchor(this.anchor);
+        pixiApp.stage.addChild(this.container);
+        //this.setAnchor(this.anchor);
+        wrk.internalLog('A line has been commented out here, maybe it needs to be back in');
+
+        this.startBackgroundSound();
     }
 
-    /** Do not call this directly, call through wrk.GameEngine.deselectScene() */
+    /** Do not call this directly, call through wrk.GameEngine.deselectCrntScene() */
     deselect() {
         this.isSelected = false;
-        this.parentAppPointer.stage.removeChild(this.pixiContainer);
+        this.parentAppPointer.stage.removeChild(this.container);
         this.parentAppPointer = null;
+
+        this.stopBackgroundSound();
     }
 
     update() {
         this.updateChildren();
 
-        this.pixiContainer.rotation = this.globalAngle;
-
-        var globalPosition = this.globalPosition;
-        this.pixiContainer.position.set(globalPosition.x, globalPosition.y);
+        this.container.rotation = this.localAngle;
     }
 }

@@ -55,3 +55,12 @@ wrk.str.randomDigits = function(length=1) {
 wrk.str.breakHtmlTags = function(str) {
     return str.replace(/</g, '<\u200c');
 }
+
+wrk.str.mult = function(str, amount) {
+    // return str repeated amount times
+    var result = '';
+    for (var i = 0; i < amount; i ++) {
+        result += str;
+    }
+    return result;
+}

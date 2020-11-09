@@ -9,6 +9,8 @@ src/obj.js
 src/vector.js
 src/attitude.js
 
+src/Sound.js
+
 src/machineLearning/neuralNetwork.js
 src/machineLearning/neuron.js
 
