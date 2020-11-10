@@ -1,14 +1,5 @@
 wrk.GameEngine = class {
-    static pixiApp;
-    static canvasSize;
-    
-    static globalPosition;
-    static globalAngle;
-    static globalScale;
-
-    static crntScene;
-
-    static init(canvasSize, globalScale, backgroundColor=0x000000) {
+    constructor(canvasSize, globalScale, backgroundColor=0x000000) {
         wrk.internalWarn('wrk.GameEngine is an undocumented, untested festure. Use with caution');
         
         this.globalPosition = wrk.v(0, 0);
@@ -24,7 +15,7 @@ wrk.GameEngine = class {
     // Pixi stuff and canvas stuff
     // ---------------------------
 
-    static createPixiApp(canvasSize, backgroundColor) {
+    createPixiApp(canvasSize, backgroundColor) {
         this.pixiApp = new PIXI.Application({
             width : canvasSize.x * this.globalScale,
             height : canvasSize.y * this.globalScale,
@@ -39,18 +30,18 @@ wrk.GameEngine = class {
         this.setCanvasSize(canvasSize);
     }
 
-    static setCanvasSize(size) {
+    setCanvasSize(size) {
         this.canvasSize = wrk.v.copy(size);
 
         this.pixiApp.view.width = this.canvasSize.x * this.globalScale;
         this.pixiApp.view.height = this.canvasSize.y * this.globalScale;
     }
 
-    static setGlobalScale(scale) {
+    setGlobalScale(scale) {
         this.globalScale = scale;
     }
 
-    static removeChildrenFromPixiApp() {
+    removeChildrenFromPixiApp() {
         while(this.pixiApp.stage.children.length > 0) { 
             this.pixiApp.stage.removeChild(this.pixiApp.stage.children[0]);
         }
@@ -59,7 +50,7 @@ wrk.GameEngine = class {
     // Scenes
     // ------
 
-    static selectScene(scene) {
+    selectScene(scene) {
         this.deselectCrntScene();
         
         this.crntScene = scene;
@@ -70,7 +61,7 @@ wrk.GameEngine = class {
         }
     }
 
-    static deselectCrntScene() {
+    deselectCrntScene() {
         if (this.crntScene != null) {
             this.crntScene.deselect();
             this.removeChildrenFromPixiApp();
@@ -82,7 +73,7 @@ wrk.GameEngine = class {
     // Main method
     // -------------
 
-    static update() {
+    update() {
         if (this.crntScene != null) {
             this.crntScene.update();
         }

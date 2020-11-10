@@ -17,7 +17,7 @@ else {
     window.wrk = wrk; // Make it global
 
     // Make a 'hello' message
-    console.log(`%c  \n${wrk.consoleLogHeader} wrk.js ${wrk.VERSION}\n  `,
+    console.log(`%c  \n${wrk.consoleLogHeader} wrk.js ${wrk.VERSION}  \n  `,
         wrk.consoleLogStyling);
 
     // Load the 'consts' from math
@@ -772,7 +772,16 @@ wrk.Neuron = class {
 }
 
 wrk.GameEngine = class {
-    constructor(canvasSize, globalScale, backgroundColor=0x000000) {
+    static pixiApp;
+    static canvasSize;
+    
+    static globalPosition;
+    static globalAngle;
+    static globalScale;
+
+    static crntScene;
+
+    static init(canvasSize, globalScale, backgroundColor=0x000000) {
         wrk.internalWarn('wrk.GameEngine is an undocumented, untested festure. Use with caution');
         
         this.globalPosition = wrk.v(0, 0);
@@ -788,7 +797,7 @@ wrk.GameEngine = class {
     // Pixi stuff and canvas stuff
     // ---------------------------
 
-    createPixiApp(canvasSize, backgroundColor) {
+    static createPixiApp(canvasSize, backgroundColor) {
         this.pixiApp = new PIXI.Application({
             width : canvasSize.x * this.globalScale,
             height : canvasSize.y * this.globalScale,
@@ -803,18 +812,18 @@ wrk.GameEngine = class {
         this.setCanvasSize(canvasSize);
     }
 
-    setCanvasSize(size) {
+    static setCanvasSize(size) {
         this.canvasSize = wrk.v.copy(size);
 
         this.pixiApp.view.width = this.canvasSize.x * this.globalScale;
         this.pixiApp.view.height = this.canvasSize.y * this.globalScale;
     }
 
-    setGlobalScale(scale) {
+    static setGlobalScale(scale) {
         this.globalScale = scale;
     }
 
-    removeChildrenFromPixiApp() {
+    static removeChildrenFromPixiApp() {
         while(this.pixiApp.stage.children.length > 0) { 
             this.pixiApp.stage.removeChild(this.pixiApp.stage.children[0]);
         }
@@ -823,7 +832,7 @@ wrk.GameEngine = class {
     // Scenes
     // ------
 
-    selectScene(scene) {
+    static selectScene(scene) {
         this.deselectCrntScene();
         
         this.crntScene = scene;
@@ -834,7 +843,7 @@ wrk.GameEngine = class {
         }
     }
 
-    deselectCrntScene() {
+    static deselectCrntScene() {
         if (this.crntScene != null) {
             this.crntScene.deselect();
             this.removeChildrenFromPixiApp();
@@ -846,7 +855,7 @@ wrk.GameEngine = class {
     // Main method
     // -------------
 
-    update() {
+    static update() {
         if (this.crntScene != null) {
             this.crntScene.update();
         }
