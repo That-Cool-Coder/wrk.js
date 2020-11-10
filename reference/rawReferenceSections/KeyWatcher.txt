@@ -1,0 +1,15 @@
+wrk.KeyWatcher
+wrk.KeyWatcher(elem=document)
+var keyWatcher = new wrk.KeyWatcher(mainDiv)
+Create a KeyWatcher object that watches ```elem```. If elem is undefined, then it watches ```document```.
+/src/KeyWatcher.js
+nolink
+
+NEXTSECTION
+
+wrk.KeyWatcher.keyIsDown
+wrk.KeyWatcher.keyIsDown(code)
+var shouldJump = keyWatcher.keyIsDown('ArrowUp')
+Check if the key that has the code ```code``` is currently pressed. (The codes are those matching to ```event.code``` in an event listener)
+/src/KeyWatcher.js
+nolink

@@ -1,4 +1,4 @@
-wrk.NeuralNetwork()
+wrk.NeuralNetwork
 wrk.NeuralNetwork()
 var network = new wrk.NeuralNetwork()
 A generic neural network class

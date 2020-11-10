@@ -11,8 +11,10 @@ src/attitude.js
 
 src/Sound.js
 
-src/machineLearning/neuralNetwork.js
-src/machineLearning/neuron.js
+src/KeyWatcher.js
+
+src/machineLearning/NeuralNetwork.js
+src/machineLearning/Neuron.js
 
 src/GameEngine/GameEngine.js
 src/GameEngine/Entity.js

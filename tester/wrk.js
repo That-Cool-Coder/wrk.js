@@ -17,7 +17,7 @@ else {
     window.wrk = wrk; // Make it global
 
     // Make a 'hello' message
-    console.log(`%c  \n${wrk.consoleLogHeader} wrk.js ${wrk.VERSION}\n  `,
+    console.log(`%c  \n${wrk.consoleLogHeader} wrk.js ${wrk.VERSION}  \n  `,
         wrk.consoleLogStyling);
 
     // Load the 'consts' from math
@@ -34,7 +34,6 @@ wrk.internalLog = function(message) {
 wrk.internalWarn = function(message) {
     var fullMessage = `${wrk.consoleLogHeader} wrk.js warning:\n  ${message}`;
     console.warn(fullMessage);
-    console.trace();
 }
 
 wrk.uniqueId = function() {
@@ -140,6 +139,15 @@ wrk.str.randomDigits = function(length=1) {
 
 wrk.str.breakHtmlTags = function(str) {
     return str.replace(/</g, '<\u200c');
+}
+
+wrk.str.mult = function(str, amount) {
+    // return str repeated amount times
+    var result = '';
+    for (var i = 0; i < amount; i ++) {
+        result += str;
+    }
+    return result;
 }
 
 wrk._180DIVPI = 180 / wrk.PI; // speeds up degrees -> radians and vice versa
@@ -546,6 +554,39 @@ wrk.attitude.copyDiv = function(a, amount) {
     return a2;
 }
 
+wrk.Sound = class extends Audio {
+    constructor(url) {
+        super(url);
+    }
+
+    loop() {
+        this.onended = () => this.play();
+    }
+}
+
+wrk.KeyWatcher = class {
+    constructor(elem=document) {
+        this.elem = elem;
+
+        this.keysDown = {};
+        this.setupListeners();
+    }
+
+    setupListeners() {
+        this.elem.addEventListener('keydown', event => {
+            this.keysDown[event.code] = true;
+        });
+        this.elem.addEventListener('keyup', event => {
+            this.keysDown[event.code] = false;
+        });
+    }
+
+    keyIsDown(code) {
+        if (this.keysDown[code] != undefined) return this.keysDown[code];
+        else return false;
+    }
+}
+
 wrk.NeuralNetwork = class {
     constructor() {
         this.inputs = [];
@@ -754,7 +795,16 @@ wrk.Neuron = class {
 }
 
 wrk.GameEngine = class {
-    constructor(canvasSize, globalScale, backgroundColor=0x000000) {
+    static pixiApp;
+    static canvasSize;
+    
+    static globalPosition;
+    static globalAngle;
+    static globalScale;
+
+    static crntScene;
+
+    static init(canvasSize, globalScale, backgroundColor=0x000000) {
         wrk.internalWarn('wrk.GameEngine is an undocumented, untested festure. Use with caution');
         
         this.globalPosition = wrk.v(0, 0);
@@ -765,12 +815,14 @@ wrk.GameEngine = class {
         this.createPixiApp(canvasSize, backgroundColor);
 
         this.deselectCrntScene();
+
+        this.keyboard = new wrk.KeyWatcher();
     }
 
     // Pixi stuff and canvas stuff
     // ---------------------------
 
-    createPixiApp(canvasSize, backgroundColor) {
+    static createPixiApp(canvasSize, backgroundColor) {
         this.pixiApp = new PIXI.Application({
             width : canvasSize.x * this.globalScale,
             height : canvasSize.y * this.globalScale,
@@ -785,18 +837,18 @@ wrk.GameEngine = class {
         this.setCanvasSize(canvasSize);
     }
 
-    setCanvasSize(size) {
+    static setCanvasSize(size) {
         this.canvasSize = wrk.v.copy(size);
 
         this.pixiApp.view.width = this.canvasSize.x * this.globalScale;
         this.pixiApp.view.height = this.canvasSize.y * this.globalScale;
     }
 
-    setGlobalScale(scale) {
+    static setGlobalScale(scale) {
         this.globalScale = scale;
     }
 
-    removeChildrenFromPixiApp() {
+    static removeChildrenFromPixiApp() {
         while(this.pixiApp.stage.children.length > 0) { 
             this.pixiApp.stage.removeChild(this.pixiApp.stage.children[0]);
         }
@@ -805,7 +857,7 @@ wrk.GameEngine = class {
     // Scenes
     // ------
 
-    selectScene(scene) {
+    static selectScene(scene) {
         this.deselectCrntScene();
         
         this.crntScene = scene;
@@ -816,7 +868,7 @@ wrk.GameEngine = class {
         }
     }
 
-    deselectCrntScene() {
+    static deselectCrntScene() {
         if (this.crntScene != null) {
             this.crntScene.deselect();
             this.removeChildrenFromPixiApp();
@@ -828,7 +880,7 @@ wrk.GameEngine = class {
     // Main method
     // -------------
 
-    update() {
+    static update() {
         if (this.crntScene != null) {
             this.crntScene.update();
         }
@@ -967,13 +1019,37 @@ wrk.GameEngine.Entity = class {
 }
 
 wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
-    constructor(name, localPosition, localAngle, anchor=wrk.v(0.5, 0.5)) {
+    constructor(name, localPosition, localAngle) {
         super(name, localPosition, localAngle);
 
-        this.pixiContainer = new PIXI.Container();
-        this.setAnchor(anchor);
+        this.container = new PIXI.Container();
 
         this.isSelected = false;
+    }
+
+    get globalAngle() {
+        return 0;
+    }
+
+    setBackgroundSound(sound) {
+        this.backgroundSound = sound;
+        wrk.internalLog('Does this need a copy or something?');
+
+        if (this.isSelected) {
+            this.startBackgroundSound();
+        }
+    }
+
+    startBackgroundSound() {
+        if (this.backgroundSound != null) {
+            this.backgroundSound.loop();
+        }
+    }
+
+    stopBackgroundSound() {
+        if (this.backgroundSound != null) {
+            this.backgroundSound.stop();
+        }
     }
 
     addChild(child) {
@@ -981,12 +1057,8 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         var childAdded = inheritedFunc(child);
 
         if (childAdded) {
-            child.addToPixiContainer(this.pixiContainer);
+            child.addToPixiContainer(this.container);
         }
-    }
-
-    setAnchor(position) {
-        this.anchor = wrk.v.copy(position);
     }
 
     /** Do not call this directly, call through wrk.GameEngine.selectScene() */
@@ -995,24 +1067,26 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
 
         this.parentAppPointer = pixiApp;
         
-        pixiApp.stage.addChild(this.pixiContainer);
-        this.setAnchor(this.anchor);
+        pixiApp.stage.addChild(this.container);
+        //this.setAnchor(this.anchor);
+        wrk.internalLog('A line has been commented out here, maybe it needs to be back in');
+
+        this.startBackgroundSound();
     }
 
-    /** Do not call this directly, call through wrk.GameEngine.deselectScene() */
+    /** Do not call this directly, call through wrk.GameEngine.deselectCrntScene() */
     deselect() {
         this.isSelected = false;
-        this.parentAppPointer.stage.removeChild(this.pixiContainer);
+        this.parentAppPointer.stage.removeChild(this.container);
         this.parentAppPointer = null;
+
+        this.stopBackgroundSound();
     }
 
     update() {
         this.updateChildren();
 
-        this.pixiContainer.rotation = this.globalAngle;
-
-        var globalPosition = this.globalPosition;
-        this.pixiContainer.position.set(globalPosition.x, globalPosition.y);
+        this.container.rotation = this.localAngle;
     }
 }
 

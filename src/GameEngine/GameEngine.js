@@ -19,6 +19,8 @@ wrk.GameEngine = class {
         this.createPixiApp(canvasSize, backgroundColor);
 
         this.deselectCrntScene();
+
+        this.keyboard = new wrk.KeyWatcher();
     }
 
     // Pixi stuff and canvas stuff

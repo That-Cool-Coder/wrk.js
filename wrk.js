@@ -564,6 +564,29 @@ wrk.Sound = class extends Audio {
     }
 }
 
+wrk.KeyWatcher = class {
+    constructor(elem=document) {
+        this.elem = elem;
+
+        this.keysDown = {};
+        this.setupListeners();
+    }
+
+    setupListeners() {
+        this.elem.addEventListener('keydown', event => {
+            this.keysDown[event.code] = true;
+        });
+        this.elem.addEventListener('keyup', event => {
+            this.keysDown[event.code] = false;
+        });
+    }
+
+    keyIsDown(code) {
+        if (this.keysDown[code] != undefined) return this.keysDown[code];
+        else return false;
+    }
+}
+
 wrk.NeuralNetwork = class {
     constructor() {
         this.inputs = [];
@@ -792,6 +815,8 @@ wrk.GameEngine = class {
         this.createPixiApp(canvasSize, backgroundColor);
 
         this.deselectCrntScene();
+
+        this.keyboard = new wrk.KeyWatcher();
     }
 
     // Pixi stuff and canvas stuff

@@ -1,4 +1,4 @@
-wrk.Neuron()
+wrk.Neuron
 wrk.Neuron(bias=wrk.randflt(-1, 1))
 var neuron = new wrk.Neuron(0.2)
 A generic neuron class. Designed to primarily be used by wrk.neuralNetwork. ```bias``` shouldn't ever need to be set.
