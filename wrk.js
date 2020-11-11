@@ -1007,15 +1007,21 @@ wrk.GameEngine.Entity = class {
         this.setParent(null);
     }
 
+    // Update
+
     updateChildren() {
         this.children.forEach(child => {
-            child.update();
+            child.internalUpdate();
         });
     }
 
-    update() {
+    internalUpdate() {
         this.updateChildren();
+        this.update();
     }
+
+    // To be overwritten by the libarry user - just here as a safety
+    update() {}
 }
 
 wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
@@ -1131,8 +1137,9 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         this.sprite.anchor.y = position.y;
     }
 
-    update() {
+    internalUpdate() {
         this.updateChildren();
+        this.update();
 
         var globalPosition = this.globalPosition;
         this.sprite.position.set(globalPosition.x, globalPosition.y);

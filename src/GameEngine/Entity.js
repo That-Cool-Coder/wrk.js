@@ -118,13 +118,19 @@ wrk.GameEngine.Entity = class {
         this.setParent(null);
     }
 
+    // Update
+
     updateChildren() {
         this.children.forEach(child => {
-            child.update();
+            child.internalUpdate();
         });
     }
 
-    update() {
+    internalUpdate() {
         this.updateChildren();
+        this.update();
     }
+
+    // To be overwritten by the libarry user - just here as a safety
+    update() {}
 }

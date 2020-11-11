@@ -39,8 +39,9 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         this.sprite.anchor.y = position.y;
     }
 
-    update() {
+    internalUpdate() {
         this.updateChildren();
+        this.update();
 
         var globalPosition = this.globalPosition;
         this.sprite.position.set(globalPosition.x, globalPosition.y);
