@@ -48,8 +48,6 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         this.parentAppPointer = pixiApp;
         
         pixiApp.stage.addChild(this.container);
-        //this.setAnchor(this.anchor);
-        wrk.internalLog('A line has been commented out here, maybe it needs to be back in');
 
         this.startBackgroundSound();
     }
