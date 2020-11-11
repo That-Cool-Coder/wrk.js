@@ -1,4 +1,4 @@
-// wrk.js v1.1.0
+// wrk.js v1.1.1
 // Protected under GNU General Public License v3.0
 
 // Setup wrk instance
@@ -11,7 +11,7 @@ if (window.wrk !== undefined) {
 }
 else {
     var wrk = {}; // Create an object to be the basis of wrk
-    wrk.VERSION = 'v1.1.0';
+    wrk.VERSION = 'v1.1.1';
     wrk.consoleLogHeader = '  🔧🔧 ';
     wrk.consoleLogStyling = 'background-color: #9cc8ff; display: block';
     window.wrk = wrk; // Make it global
@@ -1073,8 +1073,6 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         this.parentAppPointer = pixiApp;
         
         pixiApp.stage.addChild(this.container);
-        //this.setAnchor(this.anchor);
-        wrk.internalLog('A line has been commented out here, maybe it needs to be back in');
 
         this.startBackgroundSound();
     }
