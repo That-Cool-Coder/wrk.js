@@ -103,7 +103,6 @@ wrk.v.rotate = function(v, angle=0, useDegrees=false) {
     if (useDegrees) {
         angle = wrk.radians(angle);
     }
-    angle *= -1; // make it go clockwise
     
     var cos = wrk.cos(angle);
     var sin = wrk.sin(angle);

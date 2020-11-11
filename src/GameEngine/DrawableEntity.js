@@ -45,6 +45,6 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
         var globalPosition = this.globalPosition;
         this.sprite.position.set(globalPosition.x, globalPosition.y);
-        this.sprite.rotation = this.globalAngle;
+        this.sprite.rotation = this.globalAngle + wrk.PI;
     }
 }
