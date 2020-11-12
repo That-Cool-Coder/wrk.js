@@ -53,7 +53,7 @@ wrk.GameEngine.Entity = class {
     }
 
     setGlobalPosition(position) {
-        this.position = wrk.v.copySub(position, this.parent.globalPosition);
+        this.setLocalPosition(wrk.v.copySub(position, this.parent.globalPosition));
     }
 
     // Angle

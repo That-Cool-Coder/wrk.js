@@ -90,8 +90,9 @@ wrk.v.dist = function(v1, v2) {
 }
 
 wrk.v.mean = function(v1, v2) {
-    var dist = wrk.v.dist(v1, v2);
-    return wrk.v.copyAdd(v1, dist);
+    var displacement = wrk.v.copySub(v2, v1);
+    wrk.v.div(displacement, 2);
+    return wrk.v.copyAdd(v1, displacement);
 }
 
 wrk.v.normalize = function(v) {
@@ -116,7 +117,7 @@ wrk.v.rotate = function(v, angle=0, useDegrees=false) {
 }
 
 wrk.v.heading = function(v, useDegrees=false) {
-    var heading = wrk.atan2(v.x, v.y);
+    var heading = wrk.atan2(v.y, v.x);
     if (useDegrees) heading = wrk.degrees(heading);
     return heading;
 }
