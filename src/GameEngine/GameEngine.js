@@ -11,6 +11,7 @@ wrk.GameEngine = class {
     static init(canvasSize, globalScale, backgroundColor=0x000000) {
         wrk.internalWarn('wrk.GameEngine is an undocumented, untested festure. Use with caution');
         
+        // Set these so the children know where they are
         this.globalPosition = wrk.v(0, 0);
         this.globalAngle = 0;
 

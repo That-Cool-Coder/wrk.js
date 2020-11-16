@@ -1,4 +1,4 @@
-// wrk.js v1.1.1
+// wrk.js v1.1.2
 // Protected under GNU General Public License v3.0
 
 // Setup wrk instance
@@ -11,7 +11,7 @@ if (window.wrk !== undefined) {
 }
 else {
     var wrk = {}; // Create an object to be the basis of wrk
-    wrk.VERSION = 'v1.1.1';
+    wrk.VERSION = 'v1.1.2';
     wrk.consoleLogHeader = '  🔧🔧 ';
     wrk.consoleLogStyling = 'background-color: #9cc8ff; display: block';
     window.wrk = wrk; // Make it global
@@ -964,7 +964,7 @@ wrk.GameEngine.Entity = class {
     }
 
     setGlobalPosition(position) {
-        this.localPosition = wrk.v.copySub(position, this.parent.globalPosition);
+        this.setLocalPosition(wrk.v.copySub(position, this.parent.globalPosition));
     }
 
     // Angle

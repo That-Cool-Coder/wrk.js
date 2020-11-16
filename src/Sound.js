@@ -1,12 +1,21 @@
 wrk.Sound = class {
-    constructor(url) {
-        fetch(url)
-            .then(function(response) {return response.blob()})
-            .then(function(blob) {
-                this.fileBlob = URL.createObjectURL(blob);
-                this.audio = new Audio(fileBlob); // forces a request for the blob
-            });
-        
+    constructor(data, dataIsUrl=true) {
+        // Create a sound using data
+        // If dataIsUrl is true, then treat data as a url and load the sound from there
+        // else treat data as a fileBlob and use that to create sound
+
+        if (dataIsUrl) {
+            fetch(data)
+                .then(response => {return response.blob()})
+                .then(blob => {
+                    this.fileBlob = URL.createObjectURL(blob);
+                    this.audio = new Audio(this.fileBlob); // forces a request for the blob
+                });
+        }
+        else {
+            this.fileBlob = data;
+            this.audio = new Audio(this.fileBlob);
+        }
     }
 
     play() {
@@ -14,7 +23,9 @@ wrk.Sound = class {
     }
 
     stop() {
-        this.audio.stop();
+        this.audio.pause();
+        this.audio.currentTime = 0;
+        this.onended = () => {};
     }
 
     pause() {
@@ -22,10 +33,15 @@ wrk.Sound = class {
     }
 
     loop() {
+        this.play();
         this.onended = () => this.play();
     }
 
     set onended(val) {
         this.audio.onended = val;
+    }
+
+    copy() {
+        return new wrk.Sound(this.fileBlob, false);
     }
 }

@@ -19,4 +19,5 @@ src/machineLearning/Neuron.js
 src/GameEngine/GameEngine.js
 src/GameEngine/Entity.js
 src/GameEngine/Scene.js
+src/GameEngine/Texture.js
 src/GameEngine/DrawableEntity.js

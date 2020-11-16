@@ -1,4 +1,4 @@
-// wrk.js v1.1.1
+// wrk.js v1.1.2
 // Protected under GNU General Public License v3.0
 
 // Setup wrk instance
@@ -11,7 +11,7 @@ if (window.wrk !== undefined) {
 }
 else {
     var wrk = {}; // Create an object to be the basis of wrk
-    wrk.VERSION = 'v1.1.1';
+    wrk.VERSION = 'v1.1.2';
     wrk.consoleLogHeader = '  🔧🔧 ';
     wrk.consoleLogStyling = 'background-color: #9cc8ff; display: block';
     window.wrk = wrk; // Make it global
@@ -555,14 +555,23 @@ wrk.attitude.copyDiv = function(a, amount) {
 }
 
 wrk.Sound = class {
-    constructor(url) {
-        fetch(url)
-            .then(function(response) {return response.blob()})
-            .then(function(blob) {
-                this.fileBlob = URL.createObjectURL(blob);
-                this.audio = new Audio(fileBlob); // forces a request for the blob
-            });
-        
+    constructor(data, dataIsUrl=true) {
+        // Create a sound using data
+        // If dataIsUrl is true, then treat data as a url and load the sound from there
+        // else treat data as a fileBlob and use that to create sound
+
+        if (dataIsUrl) {
+            fetch(data)
+                .then(response => {return response.blob()})
+                .then(blob => {
+                    this.fileBlob = URL.createObjectURL(blob);
+                    this.audio = new Audio(this.fileBlob); // forces a request for the blob
+                });
+        }
+        else {
+            this.fileBlob = data;
+            this.audio = new Audio(this.fileBlob);
+        }
     }
 
     play() {
@@ -570,7 +579,9 @@ wrk.Sound = class {
     }
 
     stop() {
-        this.audio.stop();
+        this.audio.pause();
+        this.audio.currentTime = 0;
+        this.onended = () => {};
     }
 
     pause() {
@@ -578,11 +589,16 @@ wrk.Sound = class {
     }
 
     loop() {
+        this.play();
         this.onended = () => this.play();
     }
 
     set onended(val) {
         this.audio.onended = val;
+    }
+
+    copy() {
+        return new wrk.Sound(this.fileBlob, false);
     }
 }
 
@@ -829,6 +845,7 @@ wrk.GameEngine = class {
     static init(canvasSize, globalScale, backgroundColor=0x000000) {
         wrk.internalWarn('wrk.GameEngine is an undocumented, untested festure. Use with caution');
         
+        // Set these so the children know where they are
         this.globalPosition = wrk.v(0, 0);
         this.globalAngle = 0;
 
@@ -964,7 +981,7 @@ wrk.GameEngine.Entity = class {
     }
 
     setGlobalPosition(position) {
-        this.localPosition = wrk.v.copySub(position, this.parent.globalPosition);
+        this.setLocalPosition(wrk.v.copySub(position, this.parent.globalPosition));
     }
 
     // Angle
@@ -1114,6 +1131,12 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
 
         this.container.rotation = this.localAngle;
     }
+}
+
+wrk.GameEngine.Texture = {};
+
+wrk.GameEngine.Texture.fromUrl = function(url) {
+    return PIXI.Texture.from(url);
 }
 
 wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
