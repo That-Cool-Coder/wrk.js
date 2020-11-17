@@ -9,6 +9,7 @@ rawReferenceSections/vector.txt
 rawReferenceSections/attitude.txt
 
 rawReferenceSections/KeyWatcher.txt
+rawReferenceSections/FunctionGroup.txt
 
 rawReferenceSections/NeuralNetwork.txt
 rawReferenceSections/Neuron.txt

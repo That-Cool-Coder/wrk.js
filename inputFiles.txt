@@ -10,8 +10,8 @@ src/vector.js
 src/attitude.js
 
 src/Sound.js
-
 src/KeyWatcher.js
+src/FunctionGroup.js
 
 src/machineLearning/NeuralNetwork.js
 src/machineLearning/Neuron.js
@@ -21,3 +21,4 @@ src/GameEngine/Entity.js
 src/GameEngine/Scene.js
 src/GameEngine/Texture.js
 src/GameEngine/DrawableEntity.js
+src/GameEngine/Button.js

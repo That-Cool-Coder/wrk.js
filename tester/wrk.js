@@ -1,4 +1,4 @@
-// wrk.js v1.1.0
+// wrk.js v1.1.2
 // Protected under GNU General Public License v3.0
 
 // Setup wrk instance
@@ -11,7 +11,7 @@ if (window.wrk !== undefined) {
 }
 else {
     var wrk = {}; // Create an object to be the basis of wrk
-    wrk.VERSION = 'v1.1.0';
+    wrk.VERSION = 'v1.1.2';
     wrk.consoleLogHeader = '  🔧🔧 ';
     wrk.consoleLogStyling = 'background-color: #9cc8ff; display: block';
     window.wrk = wrk; // Make it global
@@ -451,8 +451,9 @@ wrk.v.dist = function(v1, v2) {
 }
 
 wrk.v.mean = function(v1, v2) {
-    var dist = wrk.v.dist(v1, v2);
-    return wrk.v.copyAdd(v1, dist);
+    var displacement = wrk.v.copySub(v2, v1);
+    wrk.v.div(displacement, 2);
+    return wrk.v.copyAdd(v1, displacement);
 }
 
 wrk.v.normalize = function(v) {
@@ -464,7 +465,6 @@ wrk.v.rotate = function(v, angle=0, useDegrees=false) {
     if (useDegrees) {
         angle = wrk.radians(angle);
     }
-    angle *= -1; // make it go clockwise
     
     var cos = wrk.cos(angle);
     var sin = wrk.sin(angle);
@@ -478,7 +478,7 @@ wrk.v.rotate = function(v, angle=0, useDegrees=false) {
 }
 
 wrk.v.heading = function(v, useDegrees=false) {
-    var heading = wrk.atan2(v.x, v.y);
+    var heading = wrk.atan2(v.y, v.x);
     if (useDegrees) heading = wrk.degrees(heading);
     return heading;
 }
@@ -554,13 +554,51 @@ wrk.attitude.copyDiv = function(a, amount) {
     return a2;
 }
 
-wrk.Sound = class extends Audio {
-    constructor(url) {
-        super(url);
+wrk.Sound = class {
+    constructor(data, dataIsUrl=true) {
+        // Create a sound using data
+        // If dataIsUrl is true, then treat data as a url and load the sound from there
+        // else treat data as a fileBlob and use that to create sound
+
+        if (dataIsUrl) {
+            fetch(data)
+                .then(response => {return response.blob()})
+                .then(blob => {
+                    this.fileBlob = URL.createObjectURL(blob);
+                    this.audio = new Audio(this.fileBlob); // forces a request for the blob
+                });
+        }
+        else {
+            this.fileBlob = data;
+            this.audio = new Audio(this.fileBlob);
+        }
+    }
+
+    play() {
+        this.audio.play();
+    }
+
+    stop() {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+        this.onended = () => {};
+    }
+
+    pause() {
+        this.audio.pause();
     }
 
     loop() {
+        this.play();
         this.onended = () => this.play();
+    }
+
+    set onended(val) {
+        this.audio.onended = val;
+    }
+
+    copy() {
+        return new wrk.Sound(this.fileBlob, false);
     }
 }
 
@@ -584,6 +622,34 @@ wrk.KeyWatcher = class {
     keyIsDown(code) {
         if (this.keysDown[code] != undefined) return this.keysDown[code];
         else return false;
+    }
+}
+
+wrk.FunctionGroup = class {
+    /** Warning! This is undocumented.
+     * It is basically a collection of functions that can be 
+    */
+    constructor(initialFunctions=[]) {
+        this.functions = new Set(initialFunctions);
+    }
+
+    add(f) {
+        this.functions.add(f);
+    }
+
+    addBulk(functionArray) {
+        functionArray.forEach(f => this.add(f));
+    }
+
+    remove(f) {
+        return this.functions.delete(f);
+    }
+
+    /** Call this with the arguments for the functions. */
+    call() {
+        this.functions.forEach(f => {
+            f.call(...arguments);
+        });
     }
 }
 
@@ -807,6 +873,7 @@ wrk.GameEngine = class {
     static init(canvasSize, globalScale, backgroundColor=0x000000) {
         wrk.internalWarn('wrk.GameEngine is an undocumented, untested festure. Use with caution');
         
+        // Set these so the children know where they are
         this.globalPosition = wrk.v(0, 0);
         this.globalAngle = 0;
 
@@ -942,7 +1009,7 @@ wrk.GameEngine.Entity = class {
     }
 
     setGlobalPosition(position) {
-        this.position = wrk.v.copySub(position, this.parent.globalPosition);
+        this.setLocalPosition(wrk.v.copySub(position, this.parent.globalPosition));
     }
 
     // Angle
@@ -1007,15 +1074,21 @@ wrk.GameEngine.Entity = class {
         this.setParent(null);
     }
 
+    // Update
+
     updateChildren() {
         this.children.forEach(child => {
-            child.update();
+            child.internalUpdate();
         });
     }
 
-    update() {
+    internalUpdate() {
         this.updateChildren();
+        this.update();
     }
+
+    // To be overwritten by the libarry user - just here as a safety
+    update() {}
 }
 
 wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
@@ -1068,8 +1141,6 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         this.parentAppPointer = pixiApp;
         
         pixiApp.stage.addChild(this.container);
-        //this.setAnchor(this.anchor);
-        wrk.internalLog('A line has been commented out here, maybe it needs to be back in');
 
         this.startBackgroundSound();
     }
@@ -1088,6 +1159,12 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
 
         this.container.rotation = this.localAngle;
     }
+}
+
+wrk.GameEngine.Texture = {};
+
+wrk.GameEngine.Texture.fromUrl = function(url) {
+    return PIXI.Texture.from(url);
 }
 
 wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
@@ -1131,12 +1208,33 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         this.sprite.anchor.y = position.y;
     }
 
-    update() {
+    internalUpdate() {
         this.updateChildren();
+        this.update();
 
         var globalPosition = this.globalPosition;
         this.sprite.position.set(globalPosition.x, globalPosition.y);
-        this.sprite.rotation = this.globalAngle;
+        this.sprite.rotation = this.globalAngle + wrk.PI;
+    }
+}
+
+wrk.GameEngine.Button = class extends wrk.GameEngine.DrawableEntity {
+    /** Buttons are very limited at the moment. 
+     * They are just rectangles. Keep them horizontal (at angle 0 or pi)
+     * or the mouse checking will be off
+    */
+    constructor(name, localPosition, localAngle, texture, textureSize,
+        clickAreaSize=wrk.v.copy(textureSize), anchor) {
+        super(name, localPosition, localAngle, texture, textureSize, anchor);
+
+        this.clickAreaSize = wrk.v.copy(clickAreaSize);
+
+        this.mouseDownCallbacks = new wrk.FunctionGroup();
+        this.mouseUpCallbacks = new wrk.FunctionGroup();
+
+        this.sprite.interactive = true;
+        this.sprite.mousedown = data => this.mouseDownCallbacks.call(data);
+        this.sprite.mouseup = data => this.mouseUpCallbacks.call(data);
     }
 }
 

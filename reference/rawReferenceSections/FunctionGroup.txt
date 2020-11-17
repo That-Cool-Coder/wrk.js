@@ -1,0 +1,42 @@
+wrk.FunctionGroup
+wrk.FunctionGroup(initialFunctions=[])
+var functionGroup = new wrk.FunctionGroup([updateEmployees, updateUsers])
+A group of functions that can be called together.
+/src/machineLearning/FunctionGroup.js
+nolink
+
+NEXTSECTION
+
+wrk.FunctionGroup.add()
+wrk.FunctionGroup.add(f)
+functionGroup.add(updateUI)
+Add a new function to the group
+/src/machineLearning/FunctionGroup.js
+nolink
+
+NEXTSECTION
+
+wrk.FunctionGroup.addBulk()
+wrk.FunctionGroup.addBulk(functionArray)
+functionGroup.addBulk([updateRates, updateRetirement])
+Add an array of new functions to the group.
+/src/machineLearning/FunctionGroup.js
+nolink
+
+NEXTSECTION
+
+wrk.FunctionGroup.remove()
+wrk.FunctionGroup.remove(f)
+functionGroup.remove(updateUI)
+Remove ```f``` from the group. Note: a handle to the function to remove is required - passing an identical function will not work.
+/src/machineLearning/FunctionGroup.js
+nolink
+
+NEXTSECTION
+
+wrk.FunctionGroup.call()
+wrk.FunctionGroup.call()
+functionGroup.call(wages, reports, errors)
+Call all of the functions in the group using the arguments passed. Reads the whole arguments list
+/src/machineLearning/FunctionGroup.js
+nolink

@@ -625,6 +625,34 @@ wrk.KeyWatcher = class {
     }
 }
 
+wrk.FunctionGroup = class {
+    /** Warning! This is undocumented.
+     * It is basically a collection of functions that can be 
+    */
+    constructor(initialFunctions=[]) {
+        this.functions = new Set(initialFunctions);
+    }
+
+    add(f) {
+        this.functions.add(f);
+    }
+
+    addBulk(functionArray) {
+        functionArray.forEach(f => this.add(f));
+    }
+
+    remove(f) {
+        return this.functions.delete(f);
+    }
+
+    /** Call this with the arguments for the functions. */
+    call() {
+        this.functions.forEach(f => {
+            f.call(...arguments);
+        });
+    }
+}
+
 wrk.NeuralNetwork = class {
     constructor() {
         this.inputs = [];
@@ -1187,6 +1215,26 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         var globalPosition = this.globalPosition;
         this.sprite.position.set(globalPosition.x, globalPosition.y);
         this.sprite.rotation = this.globalAngle + wrk.PI;
+    }
+}
+
+wrk.GameEngine.Button = class extends wrk.GameEngine.DrawableEntity {
+    /** Buttons are very limited at the moment. 
+     * They are just rectangles. Keep them horizontal (at angle 0 or pi)
+     * or the mouse checking will be off
+    */
+    constructor(name, localPosition, localAngle, texture, textureSize,
+        clickAreaSize=wrk.v.copy(textureSize), anchor) {
+        super(name, localPosition, localAngle, texture, textureSize, anchor);
+
+        this.clickAreaSize = wrk.v.copy(clickAreaSize);
+
+        this.mouseDownCallbacks = new wrk.FunctionGroup();
+        this.mouseUpCallbacks = new wrk.FunctionGroup();
+
+        this.sprite.interactive = true;
+        this.sprite.mousedown = data => this.mouseDownCallbacks.call(data);
+        this.sprite.mouseup = data => this.mouseUpCallbacks.call(data);
     }
 }
 

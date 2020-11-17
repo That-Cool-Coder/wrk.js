@@ -39,6 +39,10 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         this.sprite.anchor.y = position.y;
     }
 
+    setVisibile(state) {
+        this.sprite.visibile = state;
+    }
+
     internalUpdate() {
         this.updateChildren();
         this.update();
