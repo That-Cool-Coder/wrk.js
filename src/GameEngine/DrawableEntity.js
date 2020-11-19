@@ -4,6 +4,32 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
         this.setTexture(texture, textureSize);
         this.setAnchor(anchor);
+
+        this.setupMouseInteraction();
+    }
+
+    setupMouseInteraction() {
+        this.mouseHovering = false;
+
+        this.sprite.interactive = true;
+
+        this.mouseDownCallbacks = new wrk.FunctionGroup();
+        this.sprite.mousedown = data => this.mouseDownCallbacks.call(data);
+        
+        this.mouseUpCallbacks = new wrk.FunctionGroup();
+        this.sprite.mouseup = data => this.mouseUpCallbacks.call(data);
+
+        this.mouseOverCallbacks = new wrk.FunctionGroup();
+        this.sprite.mouseover = data => {
+            this.mouseHovering = true;
+            this.mouseOverCallbacks.call(data);
+        }
+
+        this.mouseOutCallbacks = new wrk.FunctionGroup();
+        this.sprite.mouseout = data => {
+            this.mouseHovering = false;
+            this.mouseOutCallbacks.call(data);
+        }
     }
 
     setTextureSize(size) {

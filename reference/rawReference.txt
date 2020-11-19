@@ -331,10 +331,37 @@ nolink
 
 NEXTSECTION
 
+wrk.obj.keys()
+wrk.obj.keys(obj)
+wrk.obj.keys(user).forEach(key => console.log(key, user[key]))
+A wrapper for Object.keys(), because who has time to write a capital O.
+/src/obj.js
+nolink
+
+NEXTSECTION
+
+wrk.obj.values()
+wrk.obj.values(obj)
+wrk.obj.keys(user).forEach(value => console.log(value))
+A wrapper for Object.values(), because who has time to write a capital O.
+/src/obj.js
+nolink
+
+NEXTSECTION
+
 wrk.obj.setValues()
 wrk.obj.setValues(obj, values)
-wrk.obj.setValues(userId, newUserIdList);
-A niche function. Sets the values of the existing keys of an object from the ```values``` array. Requires that the object has the same number of keys as the array has items. Recommended not to use.
+wrk.obj.setValues(userId, newUserIdList)
+A niche function. Sets the values of the existing keys of an object from the ```values``` array. Requires that the object has the same number of keys as the array has items. Also the order might get weird. Recommended not to use.
+/src/obj.js
+nolink
+
+NEXTSECTION
+
+wrk.obj.oneLevelCopy()
+wrk.obj.oneLevelCopy(obj)
+var newUser = wrk.obj.oneLevelCopy(user)
+Deep copy a one-layer object. (in that all of the values of that object are primitives). If the object is multi-layered, then a new object will be formed with references to the objects in the initial object as the values.
 /src/obj.js
 nolink
 
@@ -709,11 +736,56 @@ nolink
 
 NEXTSECTION
 
+wrk.FunctionGroup
+wrk.FunctionGroup(initialFunctions=[])
+var functionGroup = new wrk.FunctionGroup([updateEmployees, updateUsers])
+A group of functions that can be called together.
+/src/machineLearning/FunctionGroup.js
+nolink
+
+NEXTSECTION
+
+wrk.FunctionGroup.add()
+wrk.FunctionGroup.add(f)
+functionGroup.add(updateUI)
+Add a new function to the group
+/src/machineLearning/FunctionGroup.js
+nolink
+
+NEXTSECTION
+
+wrk.FunctionGroup.addBulk()
+wrk.FunctionGroup.addBulk(functionArray)
+functionGroup.addBulk([updateRates, updateRetirement])
+Add an array of new functions to the group.
+/src/machineLearning/FunctionGroup.js
+nolink
+
+NEXTSECTION
+
+wrk.FunctionGroup.remove()
+wrk.FunctionGroup.remove(f)
+functionGroup.remove(updateUI)
+Remove ```f``` from the group. Note: a handle to the function to remove is required - passing an identical function will not work.
+/src/machineLearning/FunctionGroup.js
+nolink
+
+NEXTSECTION
+
+wrk.FunctionGroup.call()
+wrk.FunctionGroup.call()
+functionGroup.call(wages, reports, errors)
+Call all of the functions in the group using the arguments passed. Reads the whole arguments list
+/src/machineLearning/FunctionGroup.js
+nolink
+
+NEXTSECTION
+
 wrk.NeuralNetwork
 wrk.NeuralNetwork()
 var network = new wrk.NeuralNetwork()
 A generic neural network class
-/src/machineLearning/neuralNetwork.js
+/src/machineLearning/NeuralNetwork.js
 nolink
 
 NEXTSECTION
@@ -722,7 +794,7 @@ wrk.NeuralNetwork.createInputLayer()
 wrk.NeuralNetwork.createInputLayer(size)
 network.addInputLayer(5)
 Create the input layer for the neural network with ```size``` neurons. Will overwrite an existing input layer if there is one in that network already.
-src/machineLearning/neuralNetwork.js
+src/machineLearning/NeuralNetwork.js
 nolink
 
 NEXTSECTION
@@ -731,7 +803,7 @@ wrk.NeuralNetwork.addHiddenLayer()
 wrk.NeuralNetwork.addHiddenLayer(size)
 network.addHiddenLayer(10)
 Add a new hidden layer to the neural network with ```size``` neurons. Appends to the list of hidden layers.
-/src/machineLearning/neuralNetwork.js
+/src/machineLearning/NeuralNetwork.js
 nolink
 
 NEXTSECTION
@@ -740,7 +812,7 @@ wrk.NeuralNetwork.createOutputLayer()
 wrk.NeuralNetwork.createOutputLayer(size)
 network.createOutputLayer(2)
 Add the output layer for the neural network with ```size``` neurons. Will overwrite an existing output layer if there is one in that network already.
-/src/machineLearning/neuralNetwork.js
+/src/machineLearning/NeuralNetwork.js
 nolink
 
 NEXTSECTION
@@ -749,7 +821,7 @@ wrk.NeuralNetwork.connect()
 wrk.NeuralNetwork.connect()
 network.connect()
 Connect all of the neurons in the network together. Not recommended to call it multiple times if the network has been changed.
-/src/machineLearning/neuralNetwork.js
+/src/machineLearning/NeuralNetwork.js
 nolink
 
 NEXTSECTION
@@ -758,7 +830,7 @@ wrk.NeuralNetwork.activate()
 wrk.NeuralNetwork.activate(input)
 var results = network.activate([0, 1])
 Activate the neural network using ```input```.
-/src/machineLearning/neuralNetwork.js
+/src/machineLearning/NeuralNetwork.js
 nolink
 
 NEXTSECTION
@@ -767,7 +839,7 @@ wrk.NeuralNetwork.train()
 wrk.NeuralNetwork.train(dataset, iterations=1)
 network.train([{ inputs: [0,0], outputs: [0] }, { inputs: [0,1], outputs: [1] }, { inputs: [1,0], outputs: [1] }, { inputs: [1,1], outputs: [0] }])
 Train the network using ```dataset``` ```iterations``` times.
-/src/machineLearning/neuralNetwork.js
+/src/machineLearning/NeuralNetwork.js
 nolink
 
 NEXTSECTION
@@ -776,7 +848,7 @@ wrk.NeuralNetwork.propagate()
 wrk.NeuralNetwork.propagate(target)
 network.propagate([0, 1])
 Propagate how wrong you were (should this be in the public API or is it the network's private data?)
-/src/machineLearning/neuralNetwork.js
+/src/machineLearning/NeuralNetwork.js
 nolink
 
 NEXTSECTION
@@ -785,7 +857,7 @@ wrk.NeuralNetwork.saveTraining()
 wrk.NeuralNetwork.saveTraining()
 var savedTraining = network.saveTraining()
 Return a nested array containing the network's current state.
-/src/machineLearning/neuralNetwork.js
+/src/machineLearning/NeuralNetwork.js
 nolink
 
 NEXTSECTION
@@ -794,7 +866,7 @@ wrk.NeuralNetwork.loadTraining()
 wrk.NeuralNetwork.loadTraining(savedTraining)
 network.loadTraining(savedTraining)
 Load the training from a nested array in the form exported by ```wrk.NeuralNetwork.saveTraining()```. The network that is loading the training must have already had its layers created and connected. Fails if the network that saved the training doesn't have the same layer sizes and amounts as the one receiving the training.
-/src/machineLearning/neuralNetwork.js
+/src/machineLearning/NeuralNetwork.js
 nolink
 
 NEXTSECTION
@@ -803,7 +875,7 @@ wrk.Neuron
 wrk.Neuron(bias=wrk.randflt(-1, 1))
 var neuron = new wrk.Neuron(0.2)
 A generic neuron class. Designed to primarily be used by wrk.neuralNetwork. ```bias``` shouldn't ever need to be set.
-/src/machineLearning/neuron.js
+/src/machineLearning/Neuron.js
 nolink
 
 NEXTSECTION
@@ -812,7 +884,7 @@ wrk.Neuron.connect()
 wrk.Neuron.connect(neuron, weight=wrk.randflt(0, 1))
 neuron.connect(neuron2, 0.3325)
 Form a connection between neuron being called (```neuron``` in the example) and the neuron being passed in (```neuron2``` in the example) such that neuron being called outputs to the neuron being passed.
-/src/machineLearning/neuron.js
+/src/machineLearning/Neuron.js
 nolink
 
 NEXTSECTION
@@ -821,7 +893,7 @@ wrk.Neuron.activate()
 wrk.Neuron.activate(input)
 var result = neuron.activate(input)
 Activate the neuron. Not recommended to call this directly. In short, read ```input```, find which neuron it was sent from, use the weight to change the value and then save the output before returning it.
-/src/machineLearning/neuron.js
+/src/machineLearning/Neuron.js
 nolink
 
 NEXTSECTION
@@ -830,5 +902,5 @@ wrk.Neuron.propagate()
 wrk.Neuron.propagate(target, rate=0.3)
 neuron.propagate(0.5, 0.5)
 Propagate the wrongness. Not recommended to call this directly. In short, read ```target```, find what you did wrong and change the weights, then make the other neurons change some weights. It's really confusing.
-/src/machineLearning/neuron.js
+/src/machineLearning/Neuron.js
 nolink

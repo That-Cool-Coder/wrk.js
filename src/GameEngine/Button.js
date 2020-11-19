@@ -1,34 +1,36 @@
 wrk.GameEngine.Button = class extends wrk.GameEngine.DrawableEntity {
-    /** Buttons are very limited at the moment. 
-     * They are just rectangles. Keep them horizontal (at angle 0 or pi)
-     * or the mouse checking will be off
-    */
-    constructor(name, localPosition, localAngle, texture, textureSize,
-        clickAreaSize=wrk.v.copy(textureSize), anchor) {
-        super(name, localPosition, localAngle, texture, textureSize, anchor);
-
-        this.clickAreaSize = wrk.v.copy(clickAreaSize);
-
-        this.mouseHovering = false;
-
-        this.sprite.interactive = true;
-
-        this.mouseDownCallbacks = new wrk.FunctionGroup();
-        this.sprite.mousedown = data => this.mouseDownCallbacks.call(data);
+    constructor(name, localPosition, localAngle, size, text, textFormat,
+        background=PIXI.Texture.Empty, anchor) {
+        super(name, localPosition, localAngle, background, size, anchor);
         
-        this.mouseUpCallbacks = new wrk.FunctionGroup();
-        this.sprite.mouseup = data => this.mouseUpCallbacks.call(data);
+        this.setTextFormat(textFormat);
+        this.setText(text);
+    }
 
-        this.mouseOverCallbacks = new wrk.FunctionGroup();
-        this.sprite.mouseover = data => {
-            this.mouseHovering = true;
-            this.mouseOverCallbacks(data);
+    setTextFormat(format) {
+        this.textFormat = wrk.obj.oneLevelCopy(format);
+        
+        // Protection for before the text is set
+        if (this.text != undefined) {
+            
+            this.updateTextSprite();
         }
+    }
 
-        this.mouseOutCallbacks = new wrk.FunctionGroup();
-        this.sprite.mouseover = data => {
-            this.mouseHovering = false;
-            this.mouseOutCallbacks(data);
+    setText(text) {
+        this.text = text;
+
+        // Protection for before the text format is set
+        if (this.text != undefined) {
+            
+            this.updateTextSprite();
         }
+    }
+
+    updateTextSprite() {
+        // Quite slow so don't call if you don't need to
+
+        this.textSprite = new PIXI.Text(this.text, this.textFormat);
+        this.addC
     }
 }

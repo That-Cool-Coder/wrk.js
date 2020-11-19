@@ -350,13 +350,30 @@ wrk.arr.mode = function(){}; // do nothing because thinking about whether this s
 
 wrk.obj = {};
 
+wrk.obj.keys = function(obj) {
+    return Object.keys(obj);
+}
+
+wrk.obj.values = function(obj) {
+    return Object.values(obj);
+}
+
 wrk.obj.setValues = function(obj, values) {
     // change the values of an object without changing the keys
     // assumes that keys and values are same length, etc
-    var keys = Object.keys(obj);
+    var keys = wrk.obj.keys(obj);
     keys.forEach((key, i) => {
         obj[key] = values[i];
     });
+}
+
+wrk.obj.oneLevelCopy = function(obj) {
+    var newObj = {};
+    var keys = wrk.obj.keys(obj);
+    keys.forEach(key => {
+        newObj[key] = obj[key];
+    });
+    return newObj;
 }
 
 wrk.v = function(x, y, z=0) {
@@ -1173,6 +1190,32 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
         this.setTexture(texture, textureSize);
         this.setAnchor(anchor);
+
+        this.setupMouseInteraction();
+    }
+
+    setupMouseInteraction() {
+        this.mouseHovering = false;
+
+        this.sprite.interactive = true;
+
+        this.mouseDownCallbacks = new wrk.FunctionGroup();
+        this.sprite.mousedown = data => this.mouseDownCallbacks.call(data);
+        
+        this.mouseUpCallbacks = new wrk.FunctionGroup();
+        this.sprite.mouseup = data => this.mouseUpCallbacks.call(data);
+
+        this.mouseOverCallbacks = new wrk.FunctionGroup();
+        this.sprite.mouseover = data => {
+            this.mouseHovering = true;
+            this.mouseOverCallbacks.call(data);
+        }
+
+        this.mouseOutCallbacks = new wrk.FunctionGroup();
+        this.sprite.mouseout = data => {
+            this.mouseHovering = false;
+            this.mouseOutCallbacks.call(data);
+        }
     }
 
     setTextureSize(size) {
@@ -1208,6 +1251,10 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         this.sprite.anchor.y = position.y;
     }
 
+    setVisibile(state) {
+        this.sprite.visibile = state;
+    }
+
     internalUpdate() {
         this.updateChildren();
         this.update();
@@ -1219,22 +1266,17 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 }
 
 wrk.GameEngine.Button = class extends wrk.GameEngine.DrawableEntity {
-    /** Buttons are very limited at the moment. 
-     * They are just rectangles. Keep them horizontal (at angle 0 or pi)
-     * or the mouse checking will be off
-    */
-    constructor(name, localPosition, localAngle, texture, textureSize,
-        clickAreaSize=wrk.v.copy(textureSize), anchor) {
-        super(name, localPosition, localAngle, texture, textureSize, anchor);
+    constructor(name, localPosition, localAngle, size, text, textFormat,
+        background=PIXI.Texture.Empty, anchor) {
+        super(name, localPosition, localAngle, background, size, anchor);
+        
+        this.setTextFormat(textFormat);
+        this.setText(text);
+    }
 
-        this.clickAreaSize = wrk.v.copy(clickAreaSize);
-
-        this.mouseDownCallbacks = new wrk.FunctionGroup();
-        this.mouseUpCallbacks = new wrk.FunctionGroup();
-
-        this.sprite.interactive = true;
-        this.sprite.mousedown = data => this.mouseDownCallbacks.call(data);
-        this.sprite.mouseup = data => this.mouseUpCallbacks.call(data);
+    setTextFormat(format) {
+        this.textFormat = format;
+        
     }
 }
 
