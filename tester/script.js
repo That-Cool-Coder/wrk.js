@@ -233,7 +233,12 @@ class MenuScreen extends wrk.GameEngine.Scene {
 
 wrk.GameEngine.init(wrk.v(wrk.dom.viewportWidth() * 0.9, wrk.dom.viewportHeight() * 0.9), 1, 0x3ca538);
 
-var playScreen = new PlayScreen();
-var menuScreen = new MenuScreen();
+var mainScene = new wrk.GameEngine.Scene('scene');
 
-wrk.GameEngine.selectScene(menuScreen);
+var label = new wrk.GameEngine.Label('test label', wrk.v.copyDiv(wrk.GameEngine.canvasSize, 2),
+    0, 'hello');
+
+//var playScreen = new PlayScreen();
+//var menuScreen = new MenuScreen();
+
+//wrk.GameEngine.selectScene(menuScreen);

@@ -1,5 +1,5 @@
 wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
-    constructor(name, localPosition, localAngle) {
+    constructor(name, localPosition=wrk.v(0, 0), localAngle=0) {
         super(name, localPosition, localAngle);
 
         this.container = new PIXI.Container();

@@ -21,4 +21,5 @@ src/GameEngine/Entity.js
 src/GameEngine/Scene.js
 src/GameEngine/Texture.js
 src/GameEngine/DrawableEntity.js
+src/GameEngine/Label.js
 src/GameEngine/Button.js
