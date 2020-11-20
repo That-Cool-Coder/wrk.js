@@ -61,8 +61,9 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         this.stopBackgroundSound();
     }
 
-    update() {
+    internalUpdate() {
         this.updateChildren();
+        this.update();
 
         this.container.rotation = this.localAngle;
     }

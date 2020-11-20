@@ -571,12 +571,13 @@ wrk.attitude.copyDiv = function(a, amount) {
     return a2;
 }
 
+/*
 wrk.Sound = class {
     constructor(data, dataIsUrl=true) {
         // Create a sound using data
         // If dataIsUrl is true, then treat data as a url and load the sound from there
         // else treat data as a fileBlob and use that to create sound
-
+        console.log('reciever', data, dataIsUrl)
         if (dataIsUrl) {
             fetch(data)
                 .then(response => {return response.blob()})
@@ -589,6 +590,7 @@ wrk.Sound = class {
             this.fileBlob = data;
             this.audio = new Audio(this.fileBlob);
         }
+        console.log('receiver', this.fileBlob);
     }
 
     play() {
@@ -615,7 +617,43 @@ wrk.Sound = class {
     }
 
     copy() {
+        console.log('copyer', this.fileBlob);
         return new wrk.Sound(this.fileBlob, false);
+    }
+}
+*/
+
+wrk.Sound = class {
+    constructor(url) {
+        this.url = url;
+        this.audio = new Audio(url);
+    }
+
+    play() {
+        this.audio.play();
+    }
+
+    stop() {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+        this.onended = () => {};
+    }
+
+    pause() {
+        this.audio.pause();
+    }
+
+    loop() {
+        this.play();
+        this.onended = () => this.play();
+    }
+
+    set onended(val) {
+        this.audio.onended = val;
+    }
+
+    copy() {
+        return new wrk.Sound(this.url);
     }
 }
 
@@ -639,6 +677,20 @@ wrk.KeyWatcher = class {
     keyIsDown(code) {
         if (this.keysDown[code] != undefined) return this.keysDown[code];
         else return false;
+    }
+}
+
+wrk.MouseWatcher = class {
+    constructor(elem=document) {
+        this.elem = elem;
+
+        this.position = wrk.v(0, 0);
+        
+        this.elem.addEventListener('mousemove', e => {
+            var rect = e.target.getBoundingClientRect();
+            this.position.x = e.x - rect.left;
+            this.position.y = e.y - rect.top;
+        });
     }
 }
 
@@ -901,6 +953,7 @@ wrk.GameEngine = class {
         this.deselectCrntScene();
 
         this.keyboard = new wrk.KeyWatcher();
+        this.mouse = new wrk.MouseWatcher(this.pixiApp.view);
     }
 
     // Pixi stuff and canvas stuff
@@ -916,7 +969,6 @@ wrk.GameEngine = class {
         document.body.appendChild(this.pixiApp.view);
 
         this.pixiApp.ticker.add(() => this.update());
-        this.pixiApp.stage.parent = this.pixiApp; // give a link to the stage
 
         this.setCanvasSize(canvasSize);
     }
@@ -966,7 +1018,7 @@ wrk.GameEngine = class {
 
     static update() {
         if (this.crntScene != null) {
-            this.crntScene.update();
+            this.crntScene.internalUpdate();
         }
     }
 }
@@ -1171,8 +1223,9 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         this.stopBackgroundSound();
     }
 
-    update() {
+    internalUpdate() {
         this.updateChildren();
+        this.update();
 
         this.container.rotation = this.localAngle;
     }
@@ -1190,6 +1243,7 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
         this.setTexture(texture, textureSize);
         this.setAnchor(anchor);
+        this.setTint(0xffffff);
 
         this.setupMouseInteraction();
     }
@@ -1238,9 +1292,29 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
     }
 
     setTexture(texture, textureSize=null) {
+        if (this.sprite != undefined) {
+            var container = this.sprite.parent;
+
+            var anchor = this.sprite.anchor;
+
+            if (container != undefined) {
+                this.removeFromPixiContainer(); // remove old sprite
+            }
+        }
+
         this.sprite = new PIXI.Sprite(texture);
         if (textureSize != null) {
             this.setTextureSize(textureSize);
+        }
+        if (this.tint != undefined) {
+            this.setTint(this.tint);
+        }
+
+        if (container != undefined) {
+            this.addToPixiContainer(container); // add new container
+        }
+        if (anchor != undefined) {
+            this.setAnchor(anchor);
         }
     }
 
@@ -1249,6 +1323,11 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
         this.sprite.anchor.x = position.x;
         this.sprite.anchor.y = position.y;
+    }
+
+    setTint(tint) {
+        this.tint = tint;
+        this.sprite.tint = tint;
     }
 
     setVisibile(state) {
@@ -1266,22 +1345,24 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 }
 
 wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
-    constructor(name, localPosition, localAngle, text, format={}) {
+    constructor(name, text, localPosition, localAngle,
+        format={}, anchor=wrk.v(0.5, 0.5)) {
         super(name, localPosition, localAngle);
 
         this.setTextFormat(format);
         this.setText(text);
+        this.setAnchor(anchor);
     }
 
     addToPixiContainer(container) {
-        container.addChild(this.sprite);
+        container.addChild(this.textSprite);
         this.addChildrenToPixiContainer(container);
     }
 
     removeFromPixiContainer() {
-        var container = this.sprite.parent;
+        var container = this.textSprite.parent;
         if (container != undefined) {
-            container.removeChild(this.sprite);
+            container.removeChild(this.textSprite);
             this.removeChildrenFromPixiContainer();
         }
     }
@@ -1306,8 +1387,15 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
         }
     }
 
+    setAnchor(position) {
+        // from 0,0 to 1,1
+
+        this.textSprite.anchor.x = position.x;
+        this.textSprite.anchor.y = position.y;
+    }
+
     setVisibile(state) {
-        this.sprite.visibile = state;
+        this.textSprite.visibile = state;
     }
 
     internalUpdate() {
@@ -1327,13 +1415,40 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
 }
 
 wrk.GameEngine.Button = class extends wrk.GameEngine.DrawableEntity {
-    constructor(name, localPosition, localAngle, size, text, textFormat={},
-        background=PIXI.Texture.Empty, anchor) {
+    constructor(name, localPosition, localAngle, size, background=null,
+        text='', textFormat={}, anchor) {
+
+        if (background === null) background = PIXI.Texture.Empty;
 
         super(name, localPosition, localAngle, background, size, anchor);
         
-        this.label = new wrk.GameEngine.Label(this.name + 'label',
-            this.localPosition, this.localAngle, text, textFormat);
+        this.label = new wrk.GameEngine.Label(this.name + ' label', text,
+            wrk.v(0, 0), 0, textFormat);
+        this.addChild(this.label)
+    }
+}
+
+wrk.GameEngine.BaseCollider = class extends wrk.GameEngine.Entity {
+    constructor(name, localPosition, localAngle) {
+        super(name, localPosition, localAngle);
+
+        this.colliding = false;
+
+        this.collideStartCallbacks = new wrk.FunctionGroup();
+        this.collideEndCallbacks = new wrk.FunctionGroup();
+    }
+}
+
+wrk.GameEngine.CircleCollider = class extends wrk.GameEngine.BaseCollider {
+    constructor(name, localPosition, radius) {
+        super(name, localPosition, 0);
+
+        this.radius = radius;
+    }
+
+    isTouching(collider) {
+        var distSq = wrk.v.distSq(this.globalPosition, collider.globalPosition);
+        return (distSq < this.radius ** 2 + collider.radius ** 2);
     }
 }
 

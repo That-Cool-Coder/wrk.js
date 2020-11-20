@@ -4,6 +4,7 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
         this.setTexture(texture, textureSize);
         this.setAnchor(anchor);
+        this.setTint(0xffffff);
 
         this.setupMouseInteraction();
     }
@@ -52,9 +53,29 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
     }
 
     setTexture(texture, textureSize=null) {
+        if (this.sprite != undefined) {
+            var container = this.sprite.parent;
+
+            var anchor = this.sprite.anchor;
+
+            if (container != undefined) {
+                this.removeFromPixiContainer(); // remove old sprite
+            }
+        }
+
         this.sprite = new PIXI.Sprite(texture);
         if (textureSize != null) {
             this.setTextureSize(textureSize);
+        }
+        if (this.tint != undefined) {
+            this.setTint(this.tint);
+        }
+
+        if (container != undefined) {
+            this.addToPixiContainer(container); // add new container
+        }
+        if (anchor != undefined) {
+            this.setAnchor(anchor);
         }
     }
 
@@ -63,6 +84,11 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
         this.sprite.anchor.x = position.x;
         this.sprite.anchor.y = position.y;
+    }
+
+    setTint(tint) {
+        this.tint = tint;
+        this.sprite.tint = tint;
     }
 
     setVisibile(state) {

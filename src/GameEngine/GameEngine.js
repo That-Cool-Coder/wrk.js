@@ -22,6 +22,7 @@ wrk.GameEngine = class {
         this.deselectCrntScene();
 
         this.keyboard = new wrk.KeyWatcher();
+        this.mouse = new wrk.MouseWatcher(this.pixiApp.view);
     }
 
     // Pixi stuff and canvas stuff
@@ -37,7 +38,6 @@ wrk.GameEngine = class {
         document.body.appendChild(this.pixiApp.view);
 
         this.pixiApp.ticker.add(() => this.update());
-        this.pixiApp.stage.parent = this.pixiApp; // give a link to the stage
 
         this.setCanvasSize(canvasSize);
     }
@@ -87,7 +87,7 @@ wrk.GameEngine = class {
 
     static update() {
         if (this.crntScene != null) {
-            this.crntScene.update();
+            this.crntScene.internalUpdate();
         }
     }
 }

@@ -11,6 +11,7 @@ src/attitude.js
 
 src/Sound.js
 src/KeyWatcher.js
+src/MouseWatcher.js
 src/FunctionGroup.js
 
 src/machineLearning/NeuralNetwork.js
@@ -23,3 +24,5 @@ src/GameEngine/Texture.js
 src/GameEngine/DrawableEntity.js
 src/GameEngine/Label.js
 src/GameEngine/Button.js
+src/GameEngine/BaseCollider.js
+src/GameEngine/CircleCollider.js

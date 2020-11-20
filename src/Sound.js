@@ -1,9 +1,10 @@
+/*
 wrk.Sound = class {
     constructor(data, dataIsUrl=true) {
         // Create a sound using data
         // If dataIsUrl is true, then treat data as a url and load the sound from there
         // else treat data as a fileBlob and use that to create sound
-
+        console.log('reciever', data, dataIsUrl)
         if (dataIsUrl) {
             fetch(data)
                 .then(response => {return response.blob()})
@@ -16,6 +17,7 @@ wrk.Sound = class {
             this.fileBlob = data;
             this.audio = new Audio(this.fileBlob);
         }
+        console.log('receiver', this.fileBlob);
     }
 
     play() {
@@ -42,6 +44,42 @@ wrk.Sound = class {
     }
 
     copy() {
+        console.log('copyer', this.fileBlob);
         return new wrk.Sound(this.fileBlob, false);
+    }
+}
+*/
+
+wrk.Sound = class {
+    constructor(url) {
+        this.url = url;
+        this.audio = new Audio(url);
+    }
+
+    play() {
+        this.audio.play();
+    }
+
+    stop() {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+        this.onended = () => {};
+    }
+
+    pause() {
+        this.audio.pause();
+    }
+
+    loop() {
+        this.play();
+        this.onended = () => this.play();
+    }
+
+    set onended(val) {
+        this.audio.onended = val;
+    }
+
+    copy() {
+        return new wrk.Sound(this.url);
     }
 }

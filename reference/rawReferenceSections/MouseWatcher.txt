@@ -1,0 +1,15 @@
+wrk.MouseWatcher
+wrk.MouseWatcher(elem=document)
+var watcher = new wrk.MouseWatcher(canvas);
+Create a watcher to watch the mouse and get info like position. Everything is relative to ```elem```
+/src/MouseWatcher.js
+nolink
+
+NEXTSECTION
+
+wrk.MouseWatcher.position
+wrk.MouseWatcher.position
+var mousePos = watcher.position.
+The position of the mouse relative to the ```elem``` set in constructor
+/src/MouseWatcher.js
+nolink

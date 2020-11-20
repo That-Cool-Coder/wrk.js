@@ -8,6 +8,7 @@ rawReferenceSections/str.txt
 rawReferenceSections/vector.txt
 rawReferenceSections/attitude.txt
 
+rawReferenceSections/MouseWatcher.txt
 rawReferenceSections/KeyWatcher.txt
 rawReferenceSections/FunctionGroup.txt
 

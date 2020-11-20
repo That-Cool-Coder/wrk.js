@@ -2,7 +2,7 @@ class Car extends wrk.GameEngine.DrawableEntity {
     size = wrk.v(10, 30);
 
     topSpeed = 250;
-    acceleration = 1.5;
+    acceleration = 2;
     coastDeceleration = 0.5;
     brakeStrength = 2.5;
 
@@ -11,12 +11,27 @@ class Car extends wrk.GameEngine.DrawableEntity {
     steerReturnSpeed = 0.004;
     steerInducedFriction = 0.5;
 
+    glowColor = 0xccffcc;
+
     constructor(name, position, angle, texture) {
         super(name, position, angle, texture, wrk.v(1, 1));
         this.setTextureSize(this.size);
 
         this.steerAngle = 0;
         this.speed = 0;
+        this.beingDragged = false;
+
+        this.mouseDownCallbacks.add(() => {
+            this.beingDragged = true;
+        });
+
+        this.mouseUpCallbacks.add(() => {
+            this.beingDragged = false;
+        });
+
+        this.collider = new wrk.GameEngine.CircleCollider('car collider',
+            wrk.v(0, 0), wrk.mean(this.textureSize.x, this.textureSize.y));
+        this.addChild(this.collider);
     }
 
     brake(speed) {   
@@ -40,7 +55,7 @@ class Car extends wrk.GameEngine.DrawableEntity {
         this.speed -= goalAccel;
     }
 
-    update() {
+    handleSpeed() {
         if (wrk.abs(this.speed) < this.topSpeed) {
             if (wrk.GameEngine.keyboard.keyIsDown('ArrowUp')) {
                 this.speed += this.acceleration;
@@ -54,6 +69,10 @@ class Car extends wrk.GameEngine.DrawableEntity {
             this.brake(this.brakeStrength);
         }
 
+        this.brake(this.coastDeceleration);
+    }
+
+    handleSteering() {
         if (wrk.abs(this.steerAngle) < this.maxSteerAngle) {
             if (wrk.GameEngine.keyboard.keyIsDown('ArrowLeft')) {
                 this.steerAngle -= this.steerSpeed;
@@ -71,16 +90,63 @@ class Car extends wrk.GameEngine.DrawableEntity {
         }
         else this.steerAngle = 0;
 
-        this.brake(this.coastDeceleration);
-
         this.steer(this.steerAngle);
+    }
 
+    move() {
         var dist = wrk.v(0, this.speed);
         wrk.v.rotate(dist, this.localAngle);
         wrk.v.mult(dist, 1 / 60);
         wrk.v.add(this.localPosition, dist);
     }
+
+    collideObstacles(obstacles) {
+        obstacles.forEach(obstacle => {
+            if (this.collider.isTouching(obstacle.collider)) {
+                this.speed *= -0.5;
+                this.move();
+                obstacle.onCollide();
+            }
+        });
+    }
+
+    update() {
+        this.handleSpeed();
+        this.handleSteering();
+        this.move();
+
+        if (this.mouseHovering) this.setTint(this.glowColor);
+        else this.setTint(0xffffff);
+
+        if (this.beingDragged) {
+            this.setGlobalPosition(wrk.GameEngine.mouse.position);
+            this.speed = 0;
+            this.steerAngle = 0;
+        }
+    }
 }
+
+class Obstacle extends wrk.GameEngine.DrawableEntity {
+    diameter = 20;
+
+    constructor(position) {
+        super('obstacle', position, 0, Obstacle.texture, wrk.v(0, 0));
+
+        this.setTextureSize(wrk.v(this.diameter, this.diameter));
+
+        this.collider = new wrk.GameEngine.CircleCollider('obstacle collider',
+            wrk.v(0, 0), this.diameter / 2);
+        this.addChild(this.collider);
+
+        this.collideNoise = Obstacle.collideNoise.copy();
+    }
+
+    onCollide() {
+        this.collideNoise.play();
+    }
+}
+Obstacle.texture = wrk.GameEngine.Texture.fromUrl('assets/obstacle.png');
+Obstacle.collideNoise = new wrk.Sound('assets/bong.wav');
 
 class AngleIndicator extends wrk.GameEngine.DrawableEntity {
     // An indicator which aligns itself with the angle of the trackedObject
@@ -186,13 +252,24 @@ class PositionArrow extends wrk.GameEngine.DrawableEntity {
 }
 
 class PlayScreen extends wrk.GameEngine.Scene {
+    obstacleAmount = 10;
+
     constructor() {
         super('main scene',  wrk.v(0, 0), 0);
-        
+
+        this.createCar();
+        this.createControls();
+        this.createObstacles();
+        this.createButtons();
+    }
+
+    createCar() {   
         var texture = wrk.GameEngine.Texture.fromUrl('assets/car.png');
         this.car = new Car('Vroomer', wrk.v(250, 250), 0, texture);
         this.addChild(this.car);
-        
+    }
+
+    createControls() {
         this.controls = new wrk.GameEngine.Entity('controls', wrk.v(0, 0), 0);
 
         var pos = wrk.v.copySub(wrk.GameEngine.canvasSize, wrk.v(100, 100));
@@ -206,11 +283,28 @@ class PlayScreen extends wrk.GameEngine.Scene {
         this.controls.addChild(angleIndicator);
         this.controls.addChild(positionArrow);
         this.addChild(this.controls);
+    }
 
+    createObstacles() {
+        this.obstacles = [];
+        wrk.doNTimes(this.obstacleAmount, () => {
+            var pos = wrk.v.random(wrk.v(0, 0), wrk.GameEngine.canvasSize);
+            var obstacle = new Obstacle(pos);
+            this.obstacles.push(obstacle);
+            this.addChild(obstacle);
+        })
+    }
+
+    createButtons()  {
         var texture = wrk.GameEngine.Texture.fromUrl('assets/back.png');
-        this.backButton = new wrk.GameEngine.Button('Back Button', wrk.v(70, 40), wrk.PI, texture, wrk.v(120, 40));
+        this.backButton = new wrk.GameEngine.Button('Back Button', wrk.v(70, 40), wrk.PI,
+            wrk.v(120, 40), texture);
         this.backButton.mouseDownCallbacks.add(() => wrk.GameEngine.selectScene(menuScreen));
         this.addChild(this.backButton);
+    }
+
+    update() {
+        this.car.collideObstacles(this.obstacles);
     }
 }
 
@@ -219,10 +313,15 @@ class MenuScreen extends wrk.GameEngine.Scene {
         super('Menu Scene', wrk.v(0, 0), 0);
         this.bg = new wrk.GameEngine.DrawableEntity('Menu bg', wrk.v.copyDiv(wrk.GameEngine.canvasSize, 2), 0,
             PIXI.Texture.WHITE, wrk.GameEngine.canvasSize);
+        this.bg.sprite.tint = 0x000000;
         this.addChild(this.bg);
         
         var texture = wrk.GameEngine.Texture.fromUrl('assets/play.png');
-        this.playButton = new wrk.GameEngine.Button('Play Button', wrk.v(wrk.GameEngine.canvasSize.x / 2, 100), wrk.PI, texture, wrk.v(140, 40));
+        this.playButton = new wrk.GameEngine.Button('Play Button',
+            wrk.v(wrk.GameEngine.canvasSize.x / 2, 100), wrk.PI,
+            wrk.v(140, 40), PIXI.Texture.WHITE, 'Play', {fill: 0x000000});
+        this.playButton.setTint(0xff0000);
+
         this.playButton.mouseDownCallbacks.add(() => wrk.GameEngine.selectScene(playScreen));
         this.addChild(this.playButton);
     }
@@ -233,12 +332,7 @@ class MenuScreen extends wrk.GameEngine.Scene {
 
 wrk.GameEngine.init(wrk.v(wrk.dom.viewportWidth() * 0.9, wrk.dom.viewportHeight() * 0.9), 1, 0x3ca538);
 
-var mainScene = new wrk.GameEngine.Scene('scene');
+var playScreen = new PlayScreen();
+var menuScreen = new MenuScreen();
 
-var label = new wrk.GameEngine.Label('test label', wrk.v.copyDiv(wrk.GameEngine.canvasSize, 2),
-    0, 'hello');
-
-//var playScreen = new PlayScreen();
-//var menuScreen = new MenuScreen();
-
-//wrk.GameEngine.selectScene(menuScreen);
+wrk.GameEngine.selectScene(menuScreen);
