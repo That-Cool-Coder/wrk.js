@@ -64,6 +64,16 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
     updateTextSprite() {
         // Quite slow so don't call if you don't need to
 
+        if (this.textSprite != undefined) {
+            // Remove the old sprite
+            var oldParent = this.textSprite.parent;
+            oldParent.removeChild(this.textSprite);
+        }
+
         this.textSprite = new PIXI.Text(this.text, this.textFormat);
+
+        if (oldParent != undefined) {
+            oldParent.addChild(this.textSprite);
+        }
     }
 }

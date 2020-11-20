@@ -939,6 +939,8 @@ wrk.GameEngine = class {
 
     static crntScene;
 
+    static deltaTime;
+
     static init(canvasSize, globalScale, backgroundColor=0x000000) {
         wrk.internalWarn('wrk.GameEngine is an undocumented, untested festure. Use with caution');
         
@@ -970,7 +972,10 @@ wrk.GameEngine = class {
 
         this.pixiApp.ticker.add(() => this.update());
 
+        this.pixiApp.stage.pivot.set(0.5, 0.5);
+
         this.setCanvasSize(canvasSize);
+        this.setGlobalScale(this.globalScale);
     }
 
     static setCanvasSize(size) {
@@ -978,10 +983,19 @@ wrk.GameEngine = class {
 
         this.pixiApp.view.width = this.canvasSize.x * this.globalScale;
         this.pixiApp.view.height = this.canvasSize.y * this.globalScale;
+
+        this.pixiApp.renderer.resize(this.canvasSize.x * this.globalScale,
+            this.canvasSize.y * this.globalScale)
     }
 
     static setGlobalScale(scale) {
         this.globalScale = scale;
+        if (this.pixiApp != undefined) {
+            this.pixiApp.stage.scale.set(this.globalScale, this.globalScale);
+        }
+        if (this.canvasSize != undefined) {
+            this.setCanvasSize(this.canvasSize);
+        }
     }
 
     static removeChildrenFromPixiApp() {
@@ -1017,6 +1031,8 @@ wrk.GameEngine = class {
     // -------------
 
     static update() {
+        this.deltaTime = this.pixiApp.ticker.elapsedMS / 1000;
+
         if (this.crntScene != null) {
             this.crntScene.internalUpdate();
         }
@@ -1410,7 +1426,17 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
     updateTextSprite() {
         // Quite slow so don't call if you don't need to
 
+        if (this.textSprite != undefined) {
+            // Remove the old sprite
+            var oldParent = this.textSprite.parent;
+            oldParent.removeChild(this.textSprite);
+        }
+
         this.textSprite = new PIXI.Text(this.text, this.textFormat);
+
+        if (oldParent != undefined) {
+            oldParent.addChild(this.textSprite);
+        }
     }
 }
 
