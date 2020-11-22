@@ -11,10 +11,12 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
     addToPixiContainer(container) {
         container.addChild(this.textSprite);
         this.addChildrenToPixiContainer(container);
+        this.setParentContainer(container);
     }
 
     removeFromPixiContainer() {
         var container = this.textSprite.parent;
+        this.setParentContainer(null);
         if (container != undefined) {
             container.removeChild(this.textSprite);
             this.removeChildrenFromPixiContainer();
@@ -65,12 +67,18 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
         // Quite slow so don't call if you don't need to
 
         if (this.textSprite != undefined) {
-            // Remove the old sprite
-            var oldParent = this.textSprite.parent;
-            oldParent.removeChild(this.textSprite);
+            if (this.textSprite.parent != undefined) {
+                // Remove the old sprite
+                var oldParent = this.textSprite.parent;
+                oldParent.removeChild(this.textSprite);
+            }
+            var oldAnchor = this.textSprite.anchor;
         }
-
         this.textSprite = new PIXI.Text(this.text, this.textFormat);
+
+        if (oldAnchor != undefined) {
+            this.setAnchor(oldAnchor);
+        }
 
         if (oldParent != undefined) {
             oldParent.addChild(this.textSprite);

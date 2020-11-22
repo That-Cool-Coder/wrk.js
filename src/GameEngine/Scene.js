@@ -3,6 +3,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         super(name, localPosition, localAngle);
 
         this.container = new PIXI.Container();
+        this.setParentContainer(this.container);
 
         this.isSelected = false;
     }
@@ -59,6 +60,10 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         this.parentAppPointer = null;
 
         this.stopBackgroundSound();
+    }
+
+    setParent(gameEngine) {
+        this.parent = gameEngine;
     }
 
     internalUpdate() {

@@ -1045,6 +1045,8 @@ wrk.GameEngine.Entity = class {
 
         this.setLocalPosition(localPosition);
         this.setLocalAngle(localAngle);
+
+        this.setParentContainer(null); // specify that this 
         
         this.children = [];
     }
@@ -1061,6 +1063,7 @@ wrk.GameEngine.Entity = class {
 
     addToPixiContainer(container) {
         // do nothing except add children - overwrite in drawable entities
+        this.setParentContainer(container);
         this.addChildrenToPixiContainer(container);
     }
 
@@ -1068,15 +1071,24 @@ wrk.GameEngine.Entity = class {
     addChildrenToPixiContainer(container) {
         this.children.forEach(child => {
             child.addToPixiContainer(container);
-        })
+        });
     }
 
     removeFromPixiContainer() {
         this.removeChildrenFromPixiContainer();
+        this.setParentContainer(null)
     }
 
     removeChildrenFromPixiContainer() {
-        this.children.forEach(child => child.removeFromPixiContainer());
+        this.children.forEach(child => {
+            child.removeFromPixiContainer()
+        });
+    }
+
+    setParentContainer(container=null) {
+        // Internal
+
+        this.parentContainer = container;
     }
 
     // Position
@@ -1153,10 +1165,23 @@ wrk.GameEngine.Entity = class {
 
     setParent(parent) {
         this.parent = parent;
+        
+        if (this.parent != null) {
+            this.setParentContainer(this.parent.parentContainer);
+
+            if (this.parent.parentContainer != null) {
+                this.addToPixiContainer(this.parent.parentContainer);
+            }
+
+        }
+        else {
+            this.setParentContainer(null);
+        }
     }
 
     removeParent() {
         this.setParent(null);
+        this.setParentContainer(null);
     }
 
     // Update
@@ -1181,6 +1206,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         super(name, localPosition, localAngle);
 
         this.container = new PIXI.Container();
+        this.setParentContainer(this.container);
 
         this.isSelected = false;
     }
@@ -1237,6 +1263,10 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         this.parentAppPointer = null;
 
         this.stopBackgroundSound();
+    }
+
+    setParent(gameEngine) {
+        this.parent = gameEngine;
     }
 
     internalUpdate() {
@@ -1296,11 +1326,13 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
     addToPixiContainer(container) {
         container.addChild(this.sprite);
+        this.setParentContainer(container);
         this.addChildrenToPixiContainer(container);
     }
 
     removeFromPixiContainer() {
         var container = this.sprite.parent;
+        this.setParentContainer(null);
         if (container != undefined) {
             container.removeChild(this.sprite);
             this.removeChildrenFromPixiContainer();
@@ -1373,10 +1405,12 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
     addToPixiContainer(container) {
         container.addChild(this.textSprite);
         this.addChildrenToPixiContainer(container);
+        this.setParentContainer(container);
     }
 
     removeFromPixiContainer() {
         var container = this.textSprite.parent;
+        this.setParentContainer(null);
         if (container != undefined) {
             container.removeChild(this.textSprite);
             this.removeChildrenFromPixiContainer();
@@ -1427,12 +1461,18 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
         // Quite slow so don't call if you don't need to
 
         if (this.textSprite != undefined) {
-            // Remove the old sprite
-            var oldParent = this.textSprite.parent;
-            oldParent.removeChild(this.textSprite);
+            if (this.textSprite.parent != undefined) {
+                // Remove the old sprite
+                var oldParent = this.textSprite.parent;
+                oldParent.removeChild(this.textSprite);
+            }
+            var oldAnchor = this.textSprite.anchor;
         }
-
         this.textSprite = new PIXI.Text(this.text, this.textFormat);
+
+        if (oldAnchor != undefined) {
+            this.setAnchor(oldAnchor);
+        }
 
         if (oldParent != undefined) {
             oldParent.addChild(this.textSprite);

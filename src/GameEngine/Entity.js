@@ -4,6 +4,8 @@ wrk.GameEngine.Entity = class {
 
         this.setLocalPosition(localPosition);
         this.setLocalAngle(localAngle);
+
+        this.setParentContainer(null); // specify that this 
         
         this.children = [];
     }
@@ -20,6 +22,7 @@ wrk.GameEngine.Entity = class {
 
     addToPixiContainer(container) {
         // do nothing except add children - overwrite in drawable entities
+        this.setParentContainer(container);
         this.addChildrenToPixiContainer(container);
     }
 
@@ -27,15 +30,24 @@ wrk.GameEngine.Entity = class {
     addChildrenToPixiContainer(container) {
         this.children.forEach(child => {
             child.addToPixiContainer(container);
-        })
+        });
     }
 
     removeFromPixiContainer() {
         this.removeChildrenFromPixiContainer();
+        this.setParentContainer(null)
     }
 
     removeChildrenFromPixiContainer() {
-        this.children.forEach(child => child.removeFromPixiContainer());
+        this.children.forEach(child => {
+            child.removeFromPixiContainer()
+        });
+    }
+
+    setParentContainer(container=null) {
+        // Internal
+
+        this.parentContainer = container;
     }
 
     // Position
@@ -112,10 +124,23 @@ wrk.GameEngine.Entity = class {
 
     setParent(parent) {
         this.parent = parent;
+        
+        if (this.parent != null) {
+            this.setParentContainer(this.parent.parentContainer);
+
+            if (this.parent.parentContainer != null) {
+                this.addToPixiContainer(this.parent.parentContainer);
+            }
+
+        }
+        else {
+            this.setParentContainer(null);
+        }
     }
 
     removeParent() {
         this.setParent(null);
+        this.setParentContainer(null);
     }
 
     // Update
