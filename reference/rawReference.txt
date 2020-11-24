@@ -729,8 +729,35 @@ NEXTSECTION
 
 wrk.MouseWatcher.position
 wrk.MouseWatcher.position
-var mousePos = watcher.position.
-The position of the mouse relative to the ```elem``` set in constructor
+var mousePos = watcher.position
+The position of the mouse relative to the ```watcher.elem``` set in constructor
+/src/MouseWatcher.js
+nolink
+
+NEXTSECTION
+
+wrk.MouseWatcher.mouseDown
+wrk.MouseWatcher.mouseDown
+var canJump = watcher.mouseDown
+Boolean that states whether the mouse is down in ```watcher.elem```. Note: this only tracks mouse, not touchscreen. For a boolean responding to both mouse and touchscree, see ```wrk.MouseWatcher.pointerDown```.
+/src/MouseWatcher.js
+nolink
+
+NEXTSECTION
+
+wrk.MouseWatcher.touchDown
+wrk.MouseWatcher.touchDown
+var canJump = watcher.mouseDown
+Boolean that states whether the touchscreen is being touched in ```watcher.elem```. Note: this only tracks the touchscreen, not mouse For a boolean responding to both mouse and touchscree, see ```wrk.MouseWatcher.pointerDown```.
+/src/MouseWatcher.js
+nolink
+
+NEXTSECTION
+
+wrk.MouseWatcher.pointerDown
+wrk.MouseWatcher.pointerDown
+var canJump = watcher.pointerDown
+Boolean that states whether the mouse is down or the screen is touched in ```watcher.elem```. Note: this tracks both mouse and touchscreen. For individual listeners, see ```wrk.MouseWatcher.mouseDown``` and ```wrk.MouseWatcher.touchDown```.
 /src/MouseWatcher.js
 nolink
 
