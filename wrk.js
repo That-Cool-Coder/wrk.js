@@ -1301,9 +1301,11 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
         this.mouseDownCallbacks = new wrk.FunctionGroup();
         this.sprite.mousedown = data => this.mouseDownCallbacks.call(data);
+        this.sprite.touchstart = data => this.mouseDownCallbacks.call(data);
         
         this.mouseUpCallbacks = new wrk.FunctionGroup();
         this.sprite.mouseup = data => this.mouseUpCallbacks.call(data);
+        this.sprite.touchend = data => this.mouseUpCallbacks.call(data);
 
         this.mouseOverCallbacks = new wrk.FunctionGroup();
         this.sprite.mouseover = data => {
