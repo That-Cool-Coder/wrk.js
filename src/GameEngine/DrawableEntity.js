@@ -95,8 +95,8 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         this.sprite.tint = tint;
     }
 
-    setVisibile(state) {
-        this.sprite.visibile = state;
+    setVisible(state) {
+        this.sprite.visible = state;
     }
 
     internalUpdate() {

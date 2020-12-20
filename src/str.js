@@ -34,7 +34,7 @@ wrk.str.random = function(length=1, lowercaseAllowed=true, uppercaseAllowed=true
 }
 
 wrk.str.randomLetters = function(length=1, lowercaseAllowed=true, uppercaseAllowed=true) { 
-    var charsToUse = [];
+    var charsToUse = wrk.str.symbols;
     if (lowercaseAllowed) charsToUse = charsToUse.concat(wrk.str.lowerAlphabet);
     if (uppercaseAllowed) charsToUse = charsToUse.concat(wrk.str.upperAlphabet);
     
@@ -42,7 +42,7 @@ wrk.str.randomLetters = function(length=1, lowercaseAllowed=true, uppercaseAllow
 }
 
 wrk.str.randomSymbols = function(length=1, digitsAllowed=false) { 
-    var charsToUse = [];
+    var charsToUse = wrk.str.symbols;
     if (digitsAllowed) charsToUse = charsToUse.concat(wrk.str.digits);
     
     return wrk.str.randomFromArray(length, charsToUse);

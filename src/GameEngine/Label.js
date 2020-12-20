@@ -50,8 +50,8 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
         this.textSprite.anchor.y = position.y;
     }
 
-    setVisibile(state) {
-        this.textSprite.visibile = state;
+    setVisible(state) {
+        this.textSprite.visible = state;
     }
 
     internalUpdate() {
