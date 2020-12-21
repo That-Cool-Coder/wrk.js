@@ -15,7 +15,7 @@ wrk.dom.viewportHeight = function() {
 }
 
 wrk.dom.viewportSize = function() {
-    return wrk.v(wrk.dom.viewportWidth, wrk.dom.viewportHeight);
+    return wrk.v(wrk.dom.viewportWidth(), wrk.dom.viewportHeight());
 }
 
 wrk.dom.clearLogPara = function() {

@@ -119,7 +119,7 @@ wrk.str.random = function(length=1, lowercaseAllowed=true, uppercaseAllowed=true
 }
 
 wrk.str.randomLetters = function(length=1, lowercaseAllowed=true, uppercaseAllowed=true) { 
-    var charsToUse = [];
+    var charsToUse = wrk.str.symbols;
     if (lowercaseAllowed) charsToUse = charsToUse.concat(wrk.str.lowerAlphabet);
     if (uppercaseAllowed) charsToUse = charsToUse.concat(wrk.str.upperAlphabet);
     
@@ -127,7 +127,7 @@ wrk.str.randomLetters = function(length=1, lowercaseAllowed=true, uppercaseAllow
 }
 
 wrk.str.randomSymbols = function(length=1, digitsAllowed=false) { 
-    var charsToUse = [];
+    var charsToUse = wrk.str.symbols;
     if (digitsAllowed) charsToUse = charsToUse.concat(wrk.str.digits);
     
     return wrk.str.randomFromArray(length, charsToUse);
@@ -222,7 +222,7 @@ wrk.dom.viewportHeight = function() {
 }
 
 wrk.dom.viewportSize = function() {
-    return wrk.v(wrk.dom.viewportWidth, wrk.dom.viewportHeight);
+    return wrk.v(wrk.dom.viewportWidth(), wrk.dom.viewportHeight());
 }
 
 wrk.dom.clearLogPara = function() {
@@ -1408,8 +1408,8 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         this.sprite.tint = tint;
     }
 
-    setVisibile(state) {
-        this.sprite.visibile = state;
+    setVisible(state) {
+        this.sprite.visible = state;
     }
 
     internalUpdate() {
@@ -1474,8 +1474,8 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
         this.textSprite.anchor.y = position.y;
     }
 
-    setVisibile(state) {
-        this.textSprite.visibile = state;
+    setVisible(state) {
+        this.textSprite.visible = state;
     }
 
     internalUpdate() {
