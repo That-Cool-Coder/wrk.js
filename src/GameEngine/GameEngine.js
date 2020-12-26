@@ -73,6 +73,14 @@ wrk.GameEngine = class {
         }
     }
 
+    static get backgroundColor() {
+        return this.pixiApp.renderer.backgroundColor;
+    }
+
+    static setBackgroundColor(color) {
+        this.pixiApp.renderer.backgroundColor = color;
+    }
+
     // Scenes
     // ------
 
