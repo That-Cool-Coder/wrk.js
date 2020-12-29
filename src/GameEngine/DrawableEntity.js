@@ -100,11 +100,14 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
     }
 
     internalUpdate() {
-        this.updateChildren();
-        this.update();
-
         var globalPosition = this.globalPosition;
         this.sprite.position.set(globalPosition.x, globalPosition.y);
         this.sprite.rotation = this.globalAngle + wrk.PI;
+
+        // This needs to be after the block above - 
+        // otherwise, if this entity's parent gets removed in update(),
+        // the call to globalPosition above will break
+        this.updateChildren();
+        this.update();
     }
 }
