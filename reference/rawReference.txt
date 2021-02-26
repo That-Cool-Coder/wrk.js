@@ -430,6 +430,15 @@ nolink
 
 NEXTSECTION
 
+wrk.str.replaceAll()
+wrk.str.mult(str, pattern, replacement='')
+var cleanedString = wrk.str.replaceAll(userInput, '$ ', '$')
+Replace all instances of ```pattern``` in ```str``` with ```replacement```. If ```replacement``` is undefined then remove all occurences of ```pattern```. Pattern can be a string or a regex. Does not modify ```str```. This is a polyfill for ```String.replaceAll``` and functions identically.
+/src/str.js
+nolink
+
+NEXTSECTION
+
 wrk.v()
 wrk.v(x, y, z=0)
 var v = wrk.v(5, 10)

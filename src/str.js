@@ -64,3 +64,17 @@ wrk.str.mult = function(str, amount) {
     }
     return result;
 }
+
+wrk.str.replaceAll = function(str, pattern, replacement='') {
+    // If string.replaceAll is supported, use it
+    if (typeof str.replaceAll == 'function') {
+        return str.replaceAll(pattern, replacement);
+    }
+    // Else do it the lazy way
+    else {
+        while (str.includes(pattern)) {
+            str = str.replace(pattern, replacement);
+        }
+        return str;
+    }
+}

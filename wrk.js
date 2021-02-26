@@ -1,4 +1,4 @@
-// wrk.js v1.2.0
+// wrk.js v1.3.0
 // Protected under GNU General Public License v3.0
 
 // Setup wrk instance
@@ -11,7 +11,7 @@ if (window.wrk !== undefined) {
 }
 else {
     var wrk = {}; // Create an object to be the basis of wrk
-    wrk.VERSION = 'v1.2.0';
+    wrk.VERSION = 'v1.3.0';
     wrk.consoleLogHeader = '  🔧🔧 ';
     wrk.consoleLogStyling = 'background-color: #9cc8ff; display: block';
     window.wrk = wrk; // Make it global
@@ -148,6 +148,20 @@ wrk.str.mult = function(str, amount) {
         result += str;
     }
     return result;
+}
+
+wrk.str.replaceAll = function(str, pattern, replacement='') {
+    // If string.replaceAll is supported, use it
+    if (typeof str.replaceAll == 'function') {
+        return str.replaceAll(pattern, replacement);
+    }
+    // Else do it the lazy way
+    else {
+        while (str.includes(pattern)) {
+            str = str.replace(pattern, replacement);
+        }
+        return str;
+    }
 }
 
 wrk._180DIVPI = 180 / wrk.PI; // speeds up degrees -> radians and vice versa
