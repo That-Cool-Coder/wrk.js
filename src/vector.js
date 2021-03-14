@@ -1,3 +1,8 @@
+// You'll notice that a lot of the functions in this file could use the other ones
+// But this carries a severe speed penalty, so I've put things inline if that speeds it up
+// Vector operations are often the slowest thing in an application,
+// so making them fast is critical
+
 wrk.v = function(x, y, z=0) {
     // simple and (hopefully) fast
     return {x : x, y : y, z : z};
@@ -31,8 +36,10 @@ wrk.v.add = function(v1, v2) {
 }
 
 wrk.v.copyAdd = function(v1, v2) {
-    var v3 = wrk.v.copy(v1);
-    wrk.v.add(v3, v2);
+    var v3 = wrk.v(
+        v1.x + v2.x,
+        v1.y + v2.y,
+        v1.z + v2.z);
     return v3;
 }
 
@@ -43,8 +50,10 @@ wrk.v.sub = function(v1, v2) {
 }
 
 wrk.v.copySub = function(v1, v2) {
-    var v3 = wrk.v.copy(v1);
-    wrk.v.sub(v3, v2);
+    var v3 = wrk.v(
+        v1.x / v2.x,
+        v1.y / v2.y,
+        v1.z / v2.z);
     return v3;
 }
 
@@ -55,8 +64,10 @@ wrk.v.mult = function(v, amount) {
 }
 
 wrk.v.copyMult = function(v, amount) {
-    var v2 = wrk.v.copy(v);
-    wrk.v.mult(v2, amount);
+    var v2 = wrk.v(
+        v.x * amount,
+        v.y * amount,
+        v.z * amount);
     return v2;
 }
 
@@ -67,8 +78,10 @@ wrk.v.div = function(v, amount) {
 }
 
 wrk.v.copyDiv = function(v, amount) {
-    var v2 = wrk.v.copy(v);
-    wrk.v.div(v2, amount);
+    var v2 = wrk.v(
+        v.x / amount,
+        v.y / amount,
+        v.z / amount);
     return v2;
 }
 
@@ -77,32 +90,44 @@ wrk.v.magSq = function(v) {
 }
 
 wrk.v.mag = function(v) {
-    return wrk.sqrt(wrk.v.magSq(v));
+    return wrk.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2);
 }
 
 wrk.v.distSq = function(v1, v2) {
-    var v3 = wrk.v.copySub(v2, v1);
-    return wrk.v.magSq(v3);
+    var displacementX = v2.x - v1.x;
+    var displacementY = v2.y - v1.y;
+    var displacementZ = v2.z - v1.z;
+    return displacementX ** 2 + displacementY ** 2 + displacementZ ** 2;
 }
 
 wrk.v.dist = function(v1, v2) {
-    return wrk.sqrt(wrk.v.distSq(v1, v2));
+    var displacementX = v2.x - v1.x;
+    var displacementY = v2.y - v1.y;
+    var displacementZ = v2.z - v1.z;
+    return wrk.sqrt(displacementX ** 2 + displacementY ** 2 + displacementZ ** 2);
 }
 
 wrk.v.mean = function(v1, v2) {
-    var displacement = wrk.v.copySub(v2, v1);
-    wrk.v.div(displacement, 2);
-    return wrk.v.copyAdd(v1, displacement);
+    var halfDisplacementX = (v2.x - v1.x) / 2;
+    var halfDisplacementY = (v2.y - v1.y) / 2;
+    var halfDisplacementZ = (v2.z - v1.z) / 2;
+
+    return wrk.v(
+        v1.x + halfDisplacementX,
+        v1.y + halfDisplacementY,
+        v1.z + halfDisplacementZ);
 }
 
 wrk.v.normalize = function(v) {
-    var mag = wrk.v.mag(v);
-    wrk.v.div(v, mag);
+    var mag = wrk.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2)
+    v.x /= mag;
+    v.y /= mag;
+    v.z /= mag;
 }
 
 wrk.v.rotate = function(v, angle=0, useDegrees=false) {
     if (useDegrees) {
-        angle = wrk.radians(angle);
+        angle /= wrk._180DIVPI;
     }
     
     var cos = wrk.cos(angle);
@@ -118,7 +143,7 @@ wrk.v.rotate = function(v, angle=0, useDegrees=false) {
 
 wrk.v.heading = function(v, useDegrees=false) {
     var heading = wrk.atan2(v.y, v.x);
-    if (useDegrees) heading = wrk.degrees(heading);
+    if (useDegrees) heading *= wrk._180DIVPI;
     return heading;
 }
 
