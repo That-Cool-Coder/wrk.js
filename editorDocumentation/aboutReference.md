@@ -2,15 +2,22 @@
 
 [Back to README](/README.md)
 
-#### A quick guide to editing the reference
-1. Find the file in `/reference/rawReferenceSections/` that most matches the feature you want to document.
-If a file doesn't exist, create it.
-2. Add the feature, according to the syntax in [Raw reference sections](#raw-reference-sections)
-3. Make sure that the file you put the feature in is listed in `/reference/inputFiles.txt`
-4. Run `/reference/referenceCompiler.py`
-5. To update the HTML reference, run `/reference/htmlDocMaker.py` (remember to update the version number in `/reference/htmlContentsTemplate.html`)
+#### Overview
+The wrk.js user reference is stored in `/userReference`. Every public feature or constant of wrk.js is documented here. The basic reference is stored as a series of text files in `/userReference/rawReferenceSections`. Each of the text files corresponds roughly to one JS source file. These seperate files are then appended together using `/userReference/rawReferenceSections/rawReferenceCompiler.py`. From here, different programs can be used to make reference manuals in different formats, eg HTML or markdown.
 
-#### Raw reference sections
+#### Editing the raw reference
+1. Find the file in `/userReference/rawReferenceSections/` that corresponds to the feature that you are documenting.
+2. Add the feature, following the syntax in [Reference syntax](#reference-syntax)
+3. Make sure that the raw reference file you edited in is listed in `/userReference/rawReferenceFiles.txt`
+4. Run `/userReference/rawReferenceCompiler.py` to join all of the sections together
+
+#### Updating the html reference
+
+1. Make sure that `/userReference/rawReference.txt` is up to date by following the instructions above.
+2. Update the version number in `/userReference/htmlContentsTemplate.html` to the current wrk version
+3. Run `/userReference/htmlReferenceMaker.py`
+
+#### Reference syntax
 At its most basic, the reference is stored as a series of text files in `/reference/rawReferenceSections/`. Each one corresponds roughly to a JS source file. The files are made up of sections.
 
 Each section in the files is one feature/function of wrk.js. The sections are seperated by 
@@ -28,7 +35,7 @@ The sections are divided into parts, too. The parts are seperated by a line brea
 - file defined
 - link to a full reference page on that item (not implemented yet, may never be implemented - instead might be added by the compiler, using its own page system)
 
-To make code sections, put three backticks around the block as in markdown (` ``` `).
+To make code sections, put three backticks on either size of the block (` ``` `).
 
 Example:
 ```
@@ -48,6 +55,3 @@ Create the input layer for the neural network with ```size``` neurons. Will over
 src/machineLearning/neuralNetwork.js
 nolink
 ```
-
-#### Compiled raw reference
-The raw reference sections are then compiled into a single file by `/reference/referenceCompiler.py`. This does nothing more than paste the files together. It outputs the reference to `/reference/rawReference.txt`. The input files for the reference compiler are specified in `/reference/inputFiles.txt` with a line break between each file.

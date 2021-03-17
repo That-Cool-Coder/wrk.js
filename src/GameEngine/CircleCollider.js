@@ -6,7 +6,10 @@ wrk.GameEngine.CircleCollider = class extends wrk.GameEngine.BaseCollider {
     }
 
     isTouching(collider) {
-        var distSq = wrk.v.distSq(this.globalPosition, collider.globalPosition);
-        return (distSq < this.radius ** 2 + collider.radius ** 2);
+        switch(collider.type) {
+            case wrk.GameEngine.colliderTypes.circle:
+                var distSq = wrk.v.distSq(this.globalPosition, collider.globalPosition);
+                return (distSq < this.radius ** 2 + collider.radius ** 2);
+        }
     }
 }

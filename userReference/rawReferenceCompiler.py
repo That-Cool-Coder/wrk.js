@@ -12,7 +12,7 @@ def readFile(pathToFile):
     file.close()
     return contents
 
-INPUT_FILES = readFile('inputFiles.txt').split('\n') # A list of files to compile is
+INPUT_FILES = readFile('rawReferenceFiles.txt').split('\n') # A list of files to compile is
 OUTPUT_FILE = 'rawReference.txt' # Where the compiled reference is saved
 
 # Go through the input files and join them together

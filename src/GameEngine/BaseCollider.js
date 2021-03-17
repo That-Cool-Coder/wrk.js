@@ -1,3 +1,7 @@
+wrk.GameEngine.colliderTypes = {
+    circle : 'circle'
+}
+
 wrk.GameEngine.BaseCollider = class extends wrk.GameEngine.Entity {
     constructor(name, localPosition, localAngle) {
         super(name, localPosition, localAngle);
