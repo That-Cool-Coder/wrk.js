@@ -1,3 +1,5 @@
+// git test
+
 function testSpeed(func, samples) {
     var meanTime = 0;
     for (var i = 0; i < samples; i ++) {
