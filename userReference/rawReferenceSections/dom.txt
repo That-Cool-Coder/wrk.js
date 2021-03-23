@@ -58,3 +58,12 @@ wrk.dom.logToPara(testResult, 'Test Result')
 Append to wrk.dom.logPara ```data``` and ```label```, formatted in this way: ```label : data```
 /src/dom.js
 nolink
+
+NEXTSECTION
+
+wrk.dom.delete()
+wrk.dom.delete(id)
+wrk.dom.delete()
+Delete (fully remove) the HTML element with the id ```id```. If no element with the id is found, then nothing will happen.
+/src/dom.js
+nolink

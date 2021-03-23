@@ -255,13 +255,6 @@ wrk.dom.logToPara = function(data, label='No label') {
     }
 }
 
-wrk.dom.delete = function(id) {
-    var elem = wrk.dom.id(id);
-    if (elem != undefined) {
-        elem.remove();
-    }
-}
-
 // Create an empty object to add methods to
 wrk.arr = {};
 
@@ -397,11 +390,6 @@ wrk.obj.oneLevelCopy = function(obj) {
     return newObj;
 }
 
-// You'll notice that a lot of the functions in this file could use the other ones
-// But this carries a severe speed penalty, so I've put things inline if that speeds it up
-// Vector operations are often the slowest thing in an application,
-// so making them fast is critical
-
 wrk.v = function(x, y, z=0) {
     // simple and (hopefully) fast
     return {x : x, y : y, z : z};
@@ -424,15 +412,6 @@ wrk.v.copy = function(v) {
     return wrk.v(v.x, v.y, v.z);
 }
 
-wrk.v.prettyPrint = function(v, verbose=false) {
-    if (verbose) {
-        return `wrk.v: {x : ${v.x}, y : ${v.y}, z : ${v.z}}`;
-    }
-    else {
-        return `{x:${v.x},y:${v.y},z:${v.z}}`;
-    }
-}
-
 wrk.v.equal = function(v1, v2) {
     return (v1.x == v2.x && v1.y == v2.y && v1.z == v1.z);
 }
@@ -444,10 +423,8 @@ wrk.v.add = function(v1, v2) {
 }
 
 wrk.v.copyAdd = function(v1, v2) {
-    var v3 = wrk.v(
-        v1.x + v2.x,
-        v1.y + v2.y,
-        v1.z + v2.z);
+    var v3 = wrk.v.copy(v1);
+    wrk.v.add(v3, v2);
     return v3;
 }
 
@@ -458,10 +435,8 @@ wrk.v.sub = function(v1, v2) {
 }
 
 wrk.v.copySub = function(v1, v2) {
-    var v3 = wrk.v(
-        v1.x / v2.x,
-        v1.y / v2.y,
-        v1.z / v2.z);
+    var v3 = wrk.v.copy(v1);
+    wrk.v.sub(v3, v2);
     return v3;
 }
 
@@ -472,10 +447,8 @@ wrk.v.mult = function(v, amount) {
 }
 
 wrk.v.copyMult = function(v, amount) {
-    var v2 = wrk.v(
-        v.x * amount,
-        v.y * amount,
-        v.z * amount);
+    var v2 = wrk.v.copy(v);
+    wrk.v.mult(v2, amount);
     return v2;
 }
 
@@ -486,10 +459,8 @@ wrk.v.div = function(v, amount) {
 }
 
 wrk.v.copyDiv = function(v, amount) {
-    var v2 = wrk.v(
-        v.x / amount,
-        v.y / amount,
-        v.z / amount);
+    var v2 = wrk.v.copy(v);
+    wrk.v.div(v2, amount);
     return v2;
 }
 
@@ -498,44 +469,32 @@ wrk.v.magSq = function(v) {
 }
 
 wrk.v.mag = function(v) {
-    return wrk.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2);
+    return wrk.sqrt(wrk.v.magSq(v));
 }
 
 wrk.v.distSq = function(v1, v2) {
-    var displacementX = v2.x - v1.x;
-    var displacementY = v2.y - v1.y;
-    var displacementZ = v2.z - v1.z;
-    return displacementX ** 2 + displacementY ** 2 + displacementZ ** 2;
+    var v3 = wrk.v.copySub(v2, v1);
+    return wrk.v.magSq(v3);
 }
 
 wrk.v.dist = function(v1, v2) {
-    var displacementX = v2.x - v1.x;
-    var displacementY = v2.y - v1.y;
-    var displacementZ = v2.z - v1.z;
-    return wrk.sqrt(displacementX ** 2 + displacementY ** 2 + displacementZ ** 2);
+    return wrk.sqrt(wrk.v.distSq(v1, v2));
 }
 
 wrk.v.mean = function(v1, v2) {
-    var halfDisplacementX = (v2.x - v1.x) / 2;
-    var halfDisplacementY = (v2.y - v1.y) / 2;
-    var halfDisplacementZ = (v2.z - v1.z) / 2;
-
-    return wrk.v(
-        v1.x + halfDisplacementX,
-        v1.y + halfDisplacementY,
-        v1.z + halfDisplacementZ);
+    var displacement = wrk.v.copySub(v2, v1);
+    wrk.v.div(displacement, 2);
+    return wrk.v.copyAdd(v1, displacement);
 }
 
 wrk.v.normalize = function(v) {
-    var mag = wrk.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2)
-    v.x /= mag;
-    v.y /= mag;
-    v.z /= mag;
+    var mag = wrk.v.mag(v);
+    wrk.v.div(v, mag);
 }
 
 wrk.v.rotate = function(v, angle=0, useDegrees=false) {
     if (useDegrees) {
-        angle /= wrk._180DIVPI;
+        angle = wrk.radians(angle);
     }
     
     var cos = wrk.cos(angle);
@@ -551,7 +510,7 @@ wrk.v.rotate = function(v, angle=0, useDegrees=false) {
 
 wrk.v.heading = function(v, useDegrees=false) {
     var heading = wrk.atan2(v.y, v.x);
-    if (useDegrees) heading *= wrk._180DIVPI;
+    if (useDegrees) heading = wrk.degrees(heading);
     return heading;
 }
 
@@ -750,7 +709,7 @@ wrk.MouseWatcher = class {
             this.position.x = e.x - rect.left;
             this.position.y = e.y - rect.top;
         });
-        
+
         this.elem.addEventListener('mousedown', e => {
             this.mouseDown = true;
         });
@@ -1336,10 +1295,6 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         }
     }
 
-    onSelected() {
-        // Overwrite
-    }
-
     /** Do not call this directly, call through wrk.GameEngine.selectScene() */
     select(pixiApp) {
         this.isSelected = true;
@@ -1349,11 +1304,6 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         pixiApp.stage.addChild(this.container);
 
         this.startBackgroundSound();
-        this.onSelected();
-    }
-
-    onDeselected() {
-        // Overwrite
     }
 
     /** Do not call this directly, call through wrk.GameEngine.deselectCrntScene() */
@@ -1363,7 +1313,6 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         this.parentAppPointer = null;
 
         this.stopBackgroundSound();
-        this.onDeselected();
     }
 
     setParent(gameEngine) {
@@ -1600,10 +1549,6 @@ wrk.GameEngine.Button = class extends wrk.GameEngine.DrawableEntity {
     }
 }
 
-wrk.GameEngine.colliderTypes = {
-    circle : 'circle'
-}
-
 wrk.GameEngine.BaseCollider = class extends wrk.GameEngine.Entity {
     constructor(name, localPosition, localAngle) {
         super(name, localPosition, localAngle);
@@ -1623,11 +1568,8 @@ wrk.GameEngine.CircleCollider = class extends wrk.GameEngine.BaseCollider {
     }
 
     isTouching(collider) {
-        switch(collider.type) {
-            case wrk.GameEngine.colliderTypes.circle:
-                var distSq = wrk.v.distSq(this.globalPosition, collider.globalPosition);
-                return (distSq < this.radius ** 2 + collider.radius ** 2);
-        }
+        var distSq = wrk.v.distSq(this.globalPosition, collider.globalPosition);
+        return (distSq < this.radius ** 2 + collider.radius ** 2);
     }
 }
 

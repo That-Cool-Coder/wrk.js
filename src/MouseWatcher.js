@@ -13,7 +13,7 @@ wrk.MouseWatcher = class {
             this.position.x = e.x - rect.left;
             this.position.y = e.y - rect.top;
         });
-
+        
         this.elem.addEventListener('mousedown', e => {
             this.mouseDown = true;
         });

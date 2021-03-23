@@ -9,6 +9,7 @@
 - Have a good name
 
 #### Main Contents:
+- [Get started](tutorials/getStarted)
 - [More about wrk.js]() (Doesn't exist yet)
 - [Online user reference manual](https://naltonsoftware.com/wrkReference/)
 - [Information for editors](editorDocumentation/README.md)

@@ -33,3 +33,10 @@ wrk.dom.logToPara = function(data, label='No label') {
         wrk.dom.logPara.innerText += `${label} : ${data}\n`;
     }
 }
+
+wrk.dom.delete = function(id) {
+    var elem = wrk.dom.id(id);
+    if (elem != undefined) {
+        elem.remove();
+    }
+}

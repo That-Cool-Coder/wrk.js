@@ -30,7 +30,7 @@ def createFile(pathToFile, contents=''):
 INPUT_FILE = 'rawReference.txt'
 OUTPUT_DIR = 'htmlReference'
 
-HTML_DOC_TEMPLATE = readFile('htmlDocTemplate.html')
+HTML_DOC_TEMPLATE = readFile('htmlReferenceTemplate.html')
 HTML_CONTENTS_TEMPLATE = readFile('htmlContentsTemplate.html')
 HTML_CONTENTS_ITEM_TEMPLATE = readFile('htmlContentsItemTemplate.html')
 CONTENTS_PAGE_NAME = OUTPUT_DIR + '/index.html'

@@ -223,6 +223,15 @@ nolink
 
 NEXTSECTION
 
+wrk.dom.delete()
+wrk.dom.delete(id)
+wrk.dom.delete()
+Delete (fully remove) the HTML element with the id ```id```. If no element with the id is found, then nothing will happen.
+/src/dom.js
+nolink
+
+NEXTSECTION
+
 wrk.round()
 wrk.round(num, decimalPlaces=0)
 var result = wrk.round(1.15, 1)
@@ -452,6 +461,15 @@ wrk.v.random()
 wrk.v.random(min, max, floatsAllowed=true)
 var v = wrk.v.random(wrk.v(0, 0), wrk.v(10, 10), false)
 Create a ```wrk.v``` with x in the range of ```min.x``` to ```max.x```, and the equivalent for ```y``` and ```z```. If ```floatsAllowed``` is false, the components of the output vector will be integers. Otherwise they may be integers or floats.
+/src/vector.js
+nolink
+
+NEXTSECTION
+
+wrk.v.prettyPrint()
+wrk.v.prettyPrint(v, verbose=false)
+console.log(wrk.v.prettyPrint(playerPosition));
+Turn ```v``` into a string for debugging or basic display. If verbose is true, the output is in this format: ```wrk.v: {x : 1, y : 2, z : 3}```. Otherwise, output is in this format: ```{x:1,y:2,z:3}```;
 /src/vector.js
 nolink
 

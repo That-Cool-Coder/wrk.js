@@ -16,6 +16,15 @@ nolink
 
 NEXTSECTION
 
+wrk.v.prettyPrint()
+wrk.v.prettyPrint(v, verbose=false)
+console.log(wrk.v.prettyPrint(playerPosition));
+Turn ```v``` into a string for debugging or basic display. If verbose is true, the output is in this format: ```wrk.v: {x : 1, y : 2, z : 3}```. Otherwise, output is in this format: ```{x:1,y:2,z:3}```;
+/src/vector.js
+nolink
+
+NEXTSECTION
+
 wrk.v.copy()
 wrk.v.copy(v)
 var v2 = wrk.v.copy(v)
