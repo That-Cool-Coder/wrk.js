@@ -42,6 +42,10 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         }
     }
 
+    onSelected() {
+        // Overwrite
+    }
+
     /** Do not call this directly, call through wrk.GameEngine.selectScene() */
     select(pixiApp) {
         this.isSelected = true;
@@ -51,6 +55,11 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         pixiApp.stage.addChild(this.container);
 
         this.startBackgroundSound();
+        this.onSelected();
+    }
+
+    onDeselected() {
+        // Overwrite
     }
 
     /** Do not call this directly, call through wrk.GameEngine.deselectCrntScene() */
@@ -60,6 +69,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         this.parentAppPointer = null;
 
         this.stopBackgroundSound();
+        this.onDeselected();
     }
 
     setParent(gameEngine) {

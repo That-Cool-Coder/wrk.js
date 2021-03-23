@@ -10,8 +10,10 @@ This folder contains all information needed to edit and maintain wrk.js.
 - `/src` is where the source code for wrk is kept
 - `/tests` is an informal folder used for testing wrk
 - `/userReference` holds instructions on using wrk
+- `/tutorials` holds more in-depth tutorials
 
 #### Contents of editor documentation:
 - [About the user reference](aboutReference.md)
+- [About the /tutorials folder](aboutTutorials.md)
 - [About the /cdn folder](cdn.md)
 - [Code conventions](codeConventions.md)
