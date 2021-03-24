@@ -457,9 +457,9 @@ wrk.v.sub = function(v1, v2) {
 
 wrk.v.copySub = function(v1, v2) {
     var v3 = wrk.v(
-        v1.x / v2.x,
-        v1.y / v2.y,
-        v1.z / v2.z);
+        v1.x - v2.x,
+        v1.y - v2.y,
+        v1.z - v2.z);
     return v3;
 }
 
