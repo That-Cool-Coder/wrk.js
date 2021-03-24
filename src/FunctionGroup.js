@@ -18,6 +18,10 @@ wrk.FunctionGroup = class {
         return this.functions.delete(f);
     }
 
+    removeAll() {
+        this.functions = [];
+    }
+
     /** Call this with the arguments for the functions. */
     call() {
         this.functions.forEach(f => {

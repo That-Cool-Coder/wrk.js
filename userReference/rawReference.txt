@@ -844,10 +844,19 @@ nolink
 
 NEXTSECTION
 
+wrk.FunctionGroup.removeAll()
+wrk.FunctionGroup.removeAll()
+crntCallbacks.removeAll()
+Remove all functions from the group. Does not delete the functions, so if they are stored to a variable/funtionGroup elsewhere those will not be affected.
+/src/machineLearning/FunctionGroup.js
+nolink
+
+NEXTSECTION
+
 wrk.FunctionGroup.call()
 wrk.FunctionGroup.call()
 functionGroup.call(wages, reports, errors)
-Call all of the functions in the group using the arguments passed. Reads the whole arguments list
+Call all of the functions in the group using the arguments passed. Reads the whole arguments list. In the example shown, each function in the group would be called with the arguments ```wages, reports, errors```.
 /src/machineLearning/FunctionGroup.js
 nolink
 

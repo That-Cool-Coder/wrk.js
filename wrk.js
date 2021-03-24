@@ -250,9 +250,7 @@ wrk.dom.logToPara = function(data, label='No label') {
         wrk.dom.logPara = document.createElement('p');
         document.body.appendChild(wrk.dom.logPara);
     }
-    else {
-        wrk.dom.logPara.innerText += `${label} : ${data}\n`;
-    }
+    wrk.dom.logPara.innerText += `${label} : ${data}\n`;
 }
 
 wrk.dom.delete = function(id) {
@@ -809,6 +807,10 @@ wrk.FunctionGroup = class {
 
     remove(f) {
         return this.functions.delete(f);
+    }
+
+    removeAll() {
+        this.functions = [];
     }
 
     /** Call this with the arguments for the functions. */
