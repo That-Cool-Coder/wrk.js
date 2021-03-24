@@ -1,6 +1,6 @@
 wrk.FunctionGroup = class {
     /** Warning! This is undocumented.
-     * It is basically a collection of functions that can be 
+     * It is basically a collection of functions that can be run together
     */
     constructor(initialFunctions=[]) {
         this.functions = new Set(initialFunctions);
@@ -21,7 +21,7 @@ wrk.FunctionGroup = class {
     /** Call this with the arguments for the functions. */
     call() {
         this.functions.forEach(f => {
-            f.call(...arguments);
+            f(...arguments);
         });
     }
 }
