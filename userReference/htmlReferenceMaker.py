@@ -90,6 +90,8 @@ except FieldMissing:
 except ExtraFields:
     input('\nEnter to close') # It's been handled by the parser, so don't print error info
 
+input('Did you remember to update the version in /userReference/htmlContentsTemplate.html? (enter to make reference)')
+
 initFiles(referenceItems)
 formatCodeSections(referenceItems, HTML_CODE_SECTION_OPEN, HTML_CODE_SECTION_CLOSE)
 createAndSaveReferencePages(referenceItems)
