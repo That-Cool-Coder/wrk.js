@@ -790,6 +790,60 @@ nolink
 
 NEXTSECTION
 
+wrk.MouseWatcher.onPointerDown
+wrk.MouseWatcher.onPointerDown
+watcher.onPointerDown.add(jump)
+A wrk.FunctionGroup that is called when a click or tap starts on ```watcher.elem```.
+/src/MouseWatcher.js
+nolink
+
+NEXTSECTION
+
+wrk.MouseWatcher.onPointerUp
+wrk.MouseWatcher.onPointerUp
+watcher.onPointerUp.add(jump)
+A wrk.FunctionGroup that is called when a click or tap ends on ```watcher.elem```.
+/src/MouseWatcher.js
+nolink
+
+NEXTSECTION
+
+wrk.MouseWatcher.onMouseDown
+wrk.MouseWatcher.onMouseDown
+watcher.onMouseDown.add(jump)
+A wrk.FunctionGroup that is called when a click starts on ```watcher.elem```. Is not called by touchscreen taps - for that see ```wrk.MouseWatcher.onPointerDown``` or ```wrk.MouseWatcher.onTouchStart```.
+/src/MouseWatcher.js
+nolink
+
+NEXTSECTION
+
+wrk.MouseWatcher.onMouseUp
+wrk.MouseWatcher.onMouseUp
+watcher.onMouseUp.add(jump)
+A wrk.FunctionGroup that is called when a click ends on ```watcher.elem```. Is not called by touchscreen taps - for that see ```wrk.MouseWatcher.onPointerUp``` or ```wrk.MouseWatcher.onTouchEnd```.
+/src/MouseWatcher.js
+nolink
+
+NEXTSECTION
+
+wrk.MouseWatcher.onTouchStart
+wrk.MouseWatcher.onTouchStart
+watcher.onTouchStart.add(jump)
+A wrk.FunctionGroup that is called when a touchscreen tap starts on ```watcher.elem```. Is not called by mouse clicks - for that see ```wrk.MouseWatcher.onPointerDown``` or ```wrk.MouseWatcher.onMouseDown```.
+/src/MouseWatcher.js
+nolink
+
+NEXTSECTION
+
+wrk.MouseWatcher.onTouchEnd
+wrk.MouseWatcher.onTouchEnd
+watcher.onTouchEnd.add(jump)
+A wrk.FunctionGroup that is called when a touchscreen tap ends on ```watcher.elem```. Is not called by mouse clicks - for that see ```wrk.MouseWatcher.onPointerUp``` or ```wrk.MouseWatcher.onMouseUp```.
+/src/MouseWatcher.js
+nolink
+
+NEXTSECTION
+
 wrk.KeyWatcher
 wrk.KeyWatcher(elem=document)
 var keyWatcher = new wrk.KeyWatcher(mainDiv)
