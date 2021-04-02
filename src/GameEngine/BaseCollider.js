@@ -3,8 +3,10 @@ wrk.GameEngine.colliderTypes = {
 }
 
 wrk.GameEngine.BaseCollider = class extends wrk.GameEngine.Entity {
-    constructor(name, localPosition, localAngle) {
+    constructor(name, type, localPosition, localAngle) {
         super(name, localPosition, localAngle);
+
+        this.type = type;
 
         this.colliding = false;
 

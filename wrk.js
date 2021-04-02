@@ -1038,7 +1038,11 @@ wrk.GameEngine = class {
 
     static crntScene;
 
+    // Time since last frame in seconds
     static deltaTime;
+
+    // A flattened array of all of the entities for name lookup
+    static entitiesInScene;
 
     static init(canvasSize, globalScale, backgroundColor=0x000000) {
         wrk.internalWarn('wrk.GameEngine is an undocumented, untested festure. Use with caution');
@@ -1052,6 +1056,8 @@ wrk.GameEngine = class {
         this.createPixiApp(canvasSize, backgroundColor);
 
         this.deselectCrntScene();
+
+        this.entitiesInScene = [];
 
         this.keyboard = new wrk.KeyWatcher();
         this.mouse = new wrk.MouseWatcher(this.pixiApp.view);
@@ -1134,6 +1140,47 @@ wrk.GameEngine = class {
         this.crntScene = null;
     }
 
+    // Entity lookup
+    // -------------
+
+    static getAllEntities() {
+        return this.entitiesInScene;
+    }
+
+    static getEntitiesWithName(name) {
+        // Get all entities in the scene with name
+        var entitiesWithName = [];
+        this.entitiesInScene.forEach(entity => {
+            if (entity.name == name) entitiesWithName.push(entity);
+        });
+        return entitiesWithName;
+    }
+
+    static getEntitiesWithoutName(name) {
+        // Get all entities in the scene without name
+        // (not sure why you'd want it)
+        var entitiesWithName = [];
+        this.entitiesInScene.forEach(entity => {
+            if (entity.name != name) entitiesWithName.push(entity);
+        });
+        return entitiesWithName;
+    }
+
+    static getEntitiesWithNames(names) {
+        // Get all the entities in the scene with one of names
+        var entitiesWithName = [];
+        this.entitiesInScene.forEach(entity => {
+            // Use for...of to allow break
+            for (var name of names) {
+                if (entity.name == name) {
+                    entitiesWithName.push(entity);
+                    break;
+                }
+            }
+        });
+        return entitiesWithName;
+    }
+
     // Main method
     // -------------
 
@@ -1170,8 +1217,10 @@ wrk.GameEngine.Entity = class {
 
     addToPixiContainer(container) {
         // do nothing except add children - overwrite in drawable entities
-        this.setParentContainer(container);
-        this.addChildrenToPixiContainer(container);
+        if (! container.children.includes(this.sprite)) {
+            this.setParentContainer(container);
+            this.addChildrenToPixiContainer(container);
+        }
     }
 
     /** Do not call directly, call through wrk.GameEngine.Entity.addToPixiContainer */
@@ -1183,7 +1232,7 @@ wrk.GameEngine.Entity = class {
 
     removeFromPixiContainer() {
         this.removeChildrenFromPixiContainer();
-        this.setParentContainer(null)
+        this.setParentContainer(null);
     }
 
     removeChildrenFromPixiContainer() {
@@ -1233,6 +1282,18 @@ wrk.GameEngine.Entity = class {
 
     // Children/parents
     // ----------------
+
+    addToEntityList() {
+        // Internal function
+
+        wrk.GameEngine.entitiesInScene.push(this);
+    }
+
+    removeFromEntityList() {
+        // Internal function
+
+        wrk.arr.removeItem(wrk.GameEngine.entitiesInScene, this);
+    }
 
     removeChildren() {
         // While there are children, remove the first child
@@ -1444,9 +1505,11 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
     }
 
     addToPixiContainer(container) {
-        container.addChild(this.sprite);
-        this.setParentContainer(container);
-        this.addChildrenToPixiContainer(container);
+        if (! container.children.includes(this.sprite)) {
+            container.addChild(this.sprite);
+            this.setParentContainer(container);
+            this.addChildrenToPixiContainer(container);
+        }
     }
 
     removeFromPixiContainer() {
@@ -1621,8 +1684,10 @@ wrk.GameEngine.colliderTypes = {
 }
 
 wrk.GameEngine.BaseCollider = class extends wrk.GameEngine.Entity {
-    constructor(name, localPosition, localAngle) {
+    constructor(name, type, localPosition, localAngle) {
         super(name, localPosition, localAngle);
+
+        this.type = type;
 
         this.colliding = false;
 
@@ -1633,7 +1698,7 @@ wrk.GameEngine.BaseCollider = class extends wrk.GameEngine.Entity {
 
 wrk.GameEngine.CircleCollider = class extends wrk.GameEngine.BaseCollider {
     constructor(name, localPosition, radius) {
-        super(name, localPosition, 0);
+        super(name, wrk.GameEngine.colliderTypes.circle, localPosition, 0);
 
         this.radius = radius;
     }

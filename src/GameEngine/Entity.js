@@ -22,8 +22,10 @@ wrk.GameEngine.Entity = class {
 
     addToPixiContainer(container) {
         // do nothing except add children - overwrite in drawable entities
-        this.setParentContainer(container);
-        this.addChildrenToPixiContainer(container);
+        if (! container.children.includes(this.sprite)) {
+            this.setParentContainer(container);
+            this.addChildrenToPixiContainer(container);
+        }
     }
 
     /** Do not call directly, call through wrk.GameEngine.Entity.addToPixiContainer */
@@ -35,7 +37,7 @@ wrk.GameEngine.Entity = class {
 
     removeFromPixiContainer() {
         this.removeChildrenFromPixiContainer();
-        this.setParentContainer(null)
+        this.setParentContainer(null);
     }
 
     removeChildrenFromPixiContainer() {
@@ -85,6 +87,18 @@ wrk.GameEngine.Entity = class {
 
     // Children/parents
     // ----------------
+
+    addToEntityList() {
+        // Internal function
+
+        wrk.GameEngine.entitiesInScene.push(this);
+    }
+
+    removeFromEntityList() {
+        // Internal function
+
+        wrk.arr.removeItem(wrk.GameEngine.entitiesInScene, this);
+    }
 
     removeChildren() {
         // While there are children, remove the first child

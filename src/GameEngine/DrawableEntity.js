@@ -42,9 +42,11 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
     }
 
     addToPixiContainer(container) {
-        container.addChild(this.sprite);
-        this.setParentContainer(container);
-        this.addChildrenToPixiContainer(container);
+        if (! container.children.includes(this.sprite)) {
+            container.addChild(this.sprite);
+            this.setParentContainer(container);
+            this.addChildrenToPixiContainer(container);
+        }
     }
 
     removeFromPixiContainer() {

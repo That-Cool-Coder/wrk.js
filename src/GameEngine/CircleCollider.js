@@ -1,6 +1,6 @@
 wrk.GameEngine.CircleCollider = class extends wrk.GameEngine.BaseCollider {
     constructor(name, localPosition, radius) {
-        super(name, localPosition, 0);
+        super(name, wrk.GameEngine.colliderTypes.circle, localPosition, 0);
 
         this.radius = radius;
     }
