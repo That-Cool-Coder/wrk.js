@@ -1,6 +1,7 @@
 ## Code Writing Conventions for wrk.js
 
 [Back to README](/README.md)  
+[Back to editor documentation contents](MAIN.md)
 
 #### Simple guidelines
 - 4 spaces indentation

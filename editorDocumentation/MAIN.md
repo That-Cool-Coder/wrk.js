@@ -1,4 +1,4 @@
-## Editor documentation
+## Editor documentation contents
 
 [Back to README](/README.md)
 
@@ -16,4 +16,5 @@ This folder contains all information needed to edit and maintain wrk.js.
 - [About the user reference](aboutReference.md)
 - [About the /tutorials folder](aboutTutorials.md)
 - [About the /cdn folder](cdn.md)
+- [Minifying wrk.js](minifying.md)
 - [Code conventions](codeConventions.md)

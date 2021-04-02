@@ -1,6 +1,7 @@
 ## About the wrk.js reference
 
 [Back to README](/README.md)
+[Back to editor documentation contents](MAIN.md)
 
 #### Overview
 The wrk.js user reference is stored in `/userReference`. Every public feature or constant of wrk.js is documented here. The basic reference is stored as a series of text files in `/userReference/rawReferenceSections`. Each of the text files corresponds roughly to one JS source file. These seperate files are then appended together using `/userReference/rawReferenceSections/rawReferenceCompiler.py`. From here, different programs can be used to make reference manuals in different formats, eg HTML or markdown.
