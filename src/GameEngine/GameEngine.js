@@ -11,9 +11,6 @@ wrk.GameEngine = class {
     // Time since last frame in seconds
     static deltaTime;
 
-    // A flattened array of all of the entities for name lookup
-    static entitiesInScene;
-
     static init(canvasSize, globalScale, backgroundColor=0x000000) {
         wrk.internalWarn('wrk.GameEngine is an undocumented, untested festure. Use with caution');
         
@@ -26,8 +23,6 @@ wrk.GameEngine = class {
         this.createPixiApp(canvasSize, backgroundColor);
 
         this.deselectCrntScene();
-
-        this.entitiesInScene = [];
 
         this.keyboard = new wrk.KeyWatcher();
         this.mouse = new wrk.MouseWatcher(this.pixiApp.view);
@@ -113,42 +108,71 @@ wrk.GameEngine = class {
     // Entity lookup
     // -------------
 
-    static getAllEntities() {
-        return this.entitiesInScene;
+    static get entitiesInScene() {
+        if (this.crntScene != null) {
+            return this.crntScene.flattenedChildList;
+        }
+        else {
+            return [];
+        }
     }
 
     static getEntitiesWithName(name) {
         // Get all entities in the scene with name
-        var entitiesWithName = [];
+        var searchResults = [];
         this.entitiesInScene.forEach(entity => {
-            if (entity.name == name) entitiesWithName.push(entity);
+            if (entity.name == name) searchResults.push(entity);
         });
-        return entitiesWithName;
+        return searchResults;
     }
 
     static getEntitiesWithoutName(name) {
         // Get all entities in the scene without name
         // (not sure why you'd want it)
-        var entitiesWithName = [];
+        var searchResults = [];
         this.entitiesInScene.forEach(entity => {
-            if (entity.name != name) entitiesWithName.push(entity);
+            if (entity.name != name) searchResults.push(entity);
         });
-        return entitiesWithName;
+        return searchResults;
     }
 
     static getEntitiesWithNames(names) {
         // Get all the entities in the scene with one of names
-        var entitiesWithName = [];
+        var searchResults = [];
         this.entitiesInScene.forEach(entity => {
             // Use for...of to allow break
             for (var name of names) {
                 if (entity.name == name) {
-                    entitiesWithName.push(entity);
+                    searchResults.push(entity);
                     break;
                 }
             }
         });
-        return entitiesWithName;
+        return searchResults;
+    }
+
+    static getEntitiesWithTag(tag) {
+        // Get all of the entities in the scene tagged with tag
+        var searchResults = [];
+        this.entitiesInScene.forEach(entity => {
+            if (entity.tags.includes(tag)) searchResults.push(entity);
+        });
+        return searchResults;
+    }
+
+    static getEntitiesWithTags(tags) {
+        // Get all of the entities in the scene tagged with tag
+        var searchResults = [];
+        this.entitiesInScene.forEach(entity => {
+            // Use for...of to allow break
+            for (var tag of tags) {
+                if (entity.tags.includes(tag)) {
+                    searchResults.push(entity);
+                    break;
+                }
+            }
+        });
+        return searchResults;
     }
 
     // Main method

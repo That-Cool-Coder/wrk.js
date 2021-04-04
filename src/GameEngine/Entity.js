@@ -5,9 +5,11 @@ wrk.GameEngine.Entity = class {
         this.setLocalPosition(localPosition);
         this.setLocalAngle(localAngle);
 
-        this.setParentContainer(null); // specify that this 
-        
+        this.tags = [];
+
         this.children = [];
+
+        this.containingScene = null;
     }
 
     // Misc
@@ -17,39 +19,16 @@ wrk.GameEngine.Entity = class {
         this.name = name;
     }
 
-    // Pixi
-    // ----
-
-    addToPixiContainer(container) {
-        // do nothing except add children - overwrite in drawable entities
-        if (! container.children.includes(this.sprite)) {
-            this.setParentContainer(container);
-            this.addChildrenToPixiContainer(container);
-        }
+    addTag(tag) {
+        this.tags.push(tag);
     }
 
-    /** Do not call directly, call through wrk.GameEngine.Entity.addToPixiContainer */
-    addChildrenToPixiContainer(container) {
-        this.children.forEach(child => {
-            child.addToPixiContainer(container);
-        });
+    addTags(tagArray) {
+        this.tags.push(...tagArray);
     }
 
-    removeFromPixiContainer() {
-        this.removeChildrenFromPixiContainer();
-        this.setParentContainer(null);
-    }
-
-    removeChildrenFromPixiContainer() {
-        this.children.forEach(child => {
-            child.removeFromPixiContainer()
-        });
-    }
-
-    setParentContainer(container=null) {
-        // Internal
-
-        this.parentContainer = container;
+    removeTag(tag) {
+        wrk.arr.removeItem(this.tags, tag);
     }
 
     // Position
@@ -85,20 +64,45 @@ wrk.GameEngine.Entity = class {
         this.setLocalAngle(angle - this.parent.globalAngle);
     }
 
+    // Pixi and adding to scene
+    // ------------------------
+
+    get isInScene() {
+        return this.containingScene != null;
+    }
+
+    setContainingScene(scene) {
+        // do nothing except add children - overwrite in drawable entities
+        this.containingScene = scene;
+        if (this.containingScene != null) {
+            this.containingScene.flattenedChildList.push(this);
+        }
+        this.setChildrensContainingScene(scene);
+    }
+
+    /** Do not call directly, call through wrk.GameEngine.Entity.setContainingScene */
+    setChildrensContainingScene(scene) {
+        this.children.forEach(child => {
+            child.setContainingScene(scene);
+        });
+    }
+
+    removeFromContainingScene() {
+        this.removeChildrenFromContainingScene();
+        if (this.containingScene != null) {
+            wrk.arr.removeItem(this.containingScene.flattenedChildList, this);
+        }
+        this.containingScene = null;
+    }
+
+    removeChildrenFromContainingScene() {
+        this.children.forEach(child => {
+            child.removeFromContainingScene();
+        });
+    }
+
     // Children/parents
     // ----------------
-
-    addToEntityList() {
-        // Internal function
-
-        wrk.GameEngine.entitiesInScene.push(this);
-    }
-
-    removeFromEntityList() {
-        // Internal function
-
-        wrk.arr.removeItem(wrk.GameEngine.entitiesInScene, this);
-    }
 
     removeChildren() {
         // While there are children, remove the first child
@@ -130,7 +134,7 @@ wrk.GameEngine.Entity = class {
         }
         else {
             wrk.arr.removeItem(this.children, entity);
-            entity.removeFromPixiContainer();
+            entity.removeFromScene();
             entity.removeParent();
             return true;
         }
@@ -138,23 +142,22 @@ wrk.GameEngine.Entity = class {
 
     setParent(parent) {
         this.parent = parent;
-        
-        if (this.parent != null) {
-            this.setParentContainer(this.parent.parentContainer);
 
-            if (this.parent.parentContainer != null) {
-                this.addToPixiContainer(this.parent.parentContainer);
+        if (this.parent != null) {
+
+            if (this.parent.isInScene) {
+                this.setContainingScene(this.parent.containingScene);
             }
 
         }
         else {
-            this.setParentContainer(null);
+            this.setContainingScene(null);
         }
     }
 
     removeParent() {
         this.setParent(null);
-        this.setParentContainer(null);
+        this.setContainingScene(null);
     }
 
     // Update
@@ -171,5 +174,5 @@ wrk.GameEngine.Entity = class {
     }
 
     // To be overwritten by the libarry user - just here as a safety
-    update() {}
+    update() { }
 }

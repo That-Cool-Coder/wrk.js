@@ -2,10 +2,10 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
     constructor(name, localPosition=wrk.v(0, 0), localAngle=0) {
         super(name, localPosition, localAngle);
 
-        this.container = new PIXI.Container();
-        this.setParentContainer(this.container);
+        this.pixiContainer = new PIXI.Container();
 
         this.isSelected = false;
+        this.flattenedChildList = [];
     }
 
     get globalAngle() {
@@ -38,7 +38,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         var childAdded = inheritedFunc(child);
 
         if (childAdded) {
-            child.addToPixiContainer(this.container);
+            child.setContainingScene(this);
         }
     }
 
@@ -52,7 +52,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
 
         this.parentAppPointer = pixiApp;
         
-        pixiApp.stage.addChild(this.container);
+        pixiApp.stage.addChild(this.pixiContainer);
 
         this.startBackgroundSound();
         this.onSelected();
@@ -65,7 +65,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
     /** Do not call this directly, call through wrk.GameEngine.deselectCrntScene() */
     deselect() {
         this.isSelected = false;
-        this.parentAppPointer.stage.removeChild(this.container);
+        this.parentAppPointer.stage.removeChild(this.pixiContainer);
         this.parentAppPointer = null;
 
         this.stopBackgroundSound();
@@ -80,6 +80,6 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         this.updateChildren();
         this.update();
 
-        this.container.rotation = this.localAngle;
+        this.pixiContainer.rotation = this.localAngle;
     }
 }

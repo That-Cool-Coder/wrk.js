@@ -8,19 +8,22 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
         this.setAnchor(anchor);
     }
 
-    addToPixiContainer(container) {
-        container.addChild(this.textSprite);
-        this.addChildrenToPixiContainer(container);
-        this.setParentContainer(container);
+    setContainingScene(scene) {
+        this.containingScene = scene;
+        if (scene != null) {
+            scene.pixiContainer.addChild(this.textSprite);
+            this.setChildrensContainingScene(scene);
+            this.containingScene.flattenedChildList.push(this);
+        }
     }
 
-    removeFromPixiContainer() {
-        var container = this.textSprite.parent;
-        this.setParentContainer(null);
-        if (container != undefined) {
-            container.removeChild(this.textSprite);
-            this.removeChildrenFromPixiContainer();
+    removeFromContainingScene() {
+        if (this.containingScene != null) {
+            this.containingScene.removeChild(this.textSprite);
+            this.removeChildrenFromContainingScene();
+            wrk.arr.removeItem(this.scene.flattenedChildList, this);
         }
+        this.containingScene = null;
     }
 
     setTextFormat(format) {

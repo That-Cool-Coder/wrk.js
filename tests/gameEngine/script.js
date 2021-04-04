@@ -100,7 +100,8 @@ class Car extends wrk.GameEngine.DrawableEntity {
         wrk.v.add(this.localPosition, dist);
     }
 
-    collideObstacles(obstacles) {
+    collideObstacles() {
+        var obstacles = wrk.GameEngine.getEntitiesWithTag('obstacle');
         obstacles.forEach(obstacle => {
             if (this.collider.isTouching(obstacle.collider)) {
                 this.speed *= -0.5;
@@ -114,6 +115,7 @@ class Car extends wrk.GameEngine.DrawableEntity {
         this.handleSpeed();
         this.handleSteering();
         this.move();
+        this.collideObstacles();
 
         if (this.mouseHovering) this.setTint(this.glowColor);
         else this.setTint(0xffffff);
@@ -131,6 +133,7 @@ class Obstacle extends wrk.GameEngine.DrawableEntity {
 
     constructor(position) {
         super('obstacle', position, 0, Obstacle.texture, wrk.v(0, 0));
+        this.addTag('obstacle');
 
         this.setTextureSize(wrk.v(this.diameter, this.diameter));
 
@@ -301,10 +304,6 @@ class PlayScreen extends wrk.GameEngine.Scene {
             wrk.v(120, 40), texture);
         this.backButton.mouseDownCallbacks.add(() => wrk.GameEngine.selectScene(menuScreen));
         this.addChild(this.backButton);
-    }
-
-    update() {
-        this.car.collideObstacles(this.obstacles);
     }
 }
 

@@ -13,6 +13,7 @@ This folder contains all information needed to edit and maintain wrk.js.
 - `/tutorials` holds more in-depth tutorials
 
 #### Contents of editor documentation:
+- [Some more information about wrk.js](aboutWrk.md)
 - [About the user reference](aboutReference.md)
 - [About the /tutorials folder](aboutTutorials.md)
 - [About the /cdn folder](cdn.md)

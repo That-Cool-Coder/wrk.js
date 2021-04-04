@@ -10,6 +10,6 @@
 
 #### Main Contents:
 - [Get started](tutorials/getStarted)
-- [More about wrk.js]() (Doesn't exist yet)
+- [More about wrk.js](editorDocumentation/aboutWrk.md)
 - [Online user reference manual](https://naltonsoftware.com/wrkReference/)
 - [Information for editors](editorDocumentation/README.md)

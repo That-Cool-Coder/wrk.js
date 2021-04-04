@@ -1041,9 +1041,6 @@ wrk.GameEngine = class {
     // Time since last frame in seconds
     static deltaTime;
 
-    // A flattened array of all of the entities for name lookup
-    static entitiesInScene;
-
     static init(canvasSize, globalScale, backgroundColor=0x000000) {
         wrk.internalWarn('wrk.GameEngine is an undocumented, untested festure. Use with caution');
         
@@ -1056,8 +1053,6 @@ wrk.GameEngine = class {
         this.createPixiApp(canvasSize, backgroundColor);
 
         this.deselectCrntScene();
-
-        this.entitiesInScene = [];
 
         this.keyboard = new wrk.KeyWatcher();
         this.mouse = new wrk.MouseWatcher(this.pixiApp.view);
@@ -1143,42 +1138,71 @@ wrk.GameEngine = class {
     // Entity lookup
     // -------------
 
-    static getAllEntities() {
-        return this.entitiesInScene;
+    static get entitiesInScene() {
+        if (this.crntScene != null) {
+            return this.crntScene.flattenedChildList;
+        }
+        else {
+            return [];
+        }
     }
 
     static getEntitiesWithName(name) {
         // Get all entities in the scene with name
-        var entitiesWithName = [];
+        var searchResults = [];
         this.entitiesInScene.forEach(entity => {
-            if (entity.name == name) entitiesWithName.push(entity);
+            if (entity.name == name) searchResults.push(entity);
         });
-        return entitiesWithName;
+        return searchResults;
     }
 
     static getEntitiesWithoutName(name) {
         // Get all entities in the scene without name
         // (not sure why you'd want it)
-        var entitiesWithName = [];
+        var searchResults = [];
         this.entitiesInScene.forEach(entity => {
-            if (entity.name != name) entitiesWithName.push(entity);
+            if (entity.name != name) searchResults.push(entity);
         });
-        return entitiesWithName;
+        return searchResults;
     }
 
     static getEntitiesWithNames(names) {
         // Get all the entities in the scene with one of names
-        var entitiesWithName = [];
+        var searchResults = [];
         this.entitiesInScene.forEach(entity => {
             // Use for...of to allow break
             for (var name of names) {
                 if (entity.name == name) {
-                    entitiesWithName.push(entity);
+                    searchResults.push(entity);
                     break;
                 }
             }
         });
-        return entitiesWithName;
+        return searchResults;
+    }
+
+    static getEntitiesWithTag(tag) {
+        // Get all of the entities in the scene tagged with tag
+        var searchResults = [];
+        this.entitiesInScene.forEach(entity => {
+            if (entity.tags.includes(tag)) searchResults.push(entity);
+        });
+        return searchResults;
+    }
+
+    static getEntitiesWithTags(tags) {
+        // Get all of the entities in the scene tagged with tag
+        var searchResults = [];
+        this.entitiesInScene.forEach(entity => {
+            // Use for...of to allow break
+            for (var tag of tags) {
+                if (entity.tags.includes(tag)) {
+                    searchResults.push(entity);
+                    break;
+                }
+            }
+        });
+        return searchResults;
     }
 
     // Main method
@@ -1200,9 +1224,11 @@ wrk.GameEngine.Entity = class {
         this.setLocalPosition(localPosition);
         this.setLocalAngle(localAngle);
 
-        this.setParentContainer(null); // specify that this 
-        
+        this.tags = [];
+
         this.children = [];
+
+        this.containingScene = null;
     }
 
     // Misc
@@ -1212,39 +1238,16 @@ wrk.GameEngine.Entity = class {
         this.name = name;
     }
 
-    // Pixi
-    // ----
-
-    addToPixiContainer(container) {
-        // do nothing except add children - overwrite in drawable entities
-        if (! container.children.includes(this.sprite)) {
-            this.setParentContainer(container);
-            this.addChildrenToPixiContainer(container);
-        }
+    addTag(tag) {
+        this.tags.push(tag);
     }
 
-    /** Do not call directly, call through wrk.GameEngine.Entity.addToPixiContainer */
-    addChildrenToPixiContainer(container) {
-        this.children.forEach(child => {
-            child.addToPixiContainer(container);
-        });
+    addTags(tagArray) {
+        this.tags.push(...tagArray);
     }
 
-    removeFromPixiContainer() {
-        this.removeChildrenFromPixiContainer();
-        this.setParentContainer(null);
-    }
-
-    removeChildrenFromPixiContainer() {
-        this.children.forEach(child => {
-            child.removeFromPixiContainer()
-        });
-    }
-
-    setParentContainer(container=null) {
-        // Internal
-
-        this.parentContainer = container;
+    removeTag(tag) {
+        wrk.arr.removeItem(this.tags, tag);
     }
 
     // Position
@@ -1280,20 +1283,45 @@ wrk.GameEngine.Entity = class {
         this.setLocalAngle(angle - this.parent.globalAngle);
     }
 
+    // Pixi and adding to scene
+    // ------------------------
+
+    get isInScene() {
+        return this.containingScene != null;
+    }
+
+    setContainingScene(scene) {
+        // do nothing except add children - overwrite in drawable entities
+        this.containingScene = scene;
+        if (this.containingScene != null) {
+            this.containingScene.flattenedChildList.push(this);
+        }
+        this.setChildrensContainingScene(scene);
+    }
+
+    /** Do not call directly, call through wrk.GameEngine.Entity.setContainingScene */
+    setChildrensContainingScene(scene) {
+        this.children.forEach(child => {
+            child.setContainingScene(scene);
+        });
+    }
+
+    removeFromContainingScene() {
+        this.removeChildrenFromContainingScene();
+        if (this.containingScene != null) {
+            wrk.arr.removeItem(this.containingScene.flattenedChildList, this);
+        }
+        this.containingScene = null;
+    }
+
+    removeChildrenFromContainingScene() {
+        this.children.forEach(child => {
+            child.removeFromContainingScene();
+        });
+    }
+
     // Children/parents
     // ----------------
-
-    addToEntityList() {
-        // Internal function
-
-        wrk.GameEngine.entitiesInScene.push(this);
-    }
-
-    removeFromEntityList() {
-        // Internal function
-
-        wrk.arr.removeItem(wrk.GameEngine.entitiesInScene, this);
-    }
 
     removeChildren() {
         // While there are children, remove the first child
@@ -1325,7 +1353,7 @@ wrk.GameEngine.Entity = class {
         }
         else {
             wrk.arr.removeItem(this.children, entity);
-            entity.removeFromPixiContainer();
+            entity.removeFromScene();
             entity.removeParent();
             return true;
         }
@@ -1333,23 +1361,22 @@ wrk.GameEngine.Entity = class {
 
     setParent(parent) {
         this.parent = parent;
-        
-        if (this.parent != null) {
-            this.setParentContainer(this.parent.parentContainer);
 
-            if (this.parent.parentContainer != null) {
-                this.addToPixiContainer(this.parent.parentContainer);
+        if (this.parent != null) {
+
+            if (this.parent.isInScene) {
+                this.setContainingScene(this.parent.containingScene);
             }
 
         }
         else {
-            this.setParentContainer(null);
+            this.setContainingScene(null);
         }
     }
 
     removeParent() {
         this.setParent(null);
-        this.setParentContainer(null);
+        this.setContainingScene(null);
     }
 
     // Update
@@ -1366,17 +1393,17 @@ wrk.GameEngine.Entity = class {
     }
 
     // To be overwritten by the libarry user - just here as a safety
-    update() {}
+    update() { }
 }
 
 wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
     constructor(name, localPosition=wrk.v(0, 0), localAngle=0) {
         super(name, localPosition, localAngle);
 
-        this.container = new PIXI.Container();
-        this.setParentContainer(this.container);
+        this.pixiContainer = new PIXI.Container();
 
         this.isSelected = false;
+        this.flattenedChildList = [];
     }
 
     get globalAngle() {
@@ -1409,7 +1436,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         var childAdded = inheritedFunc(child);
 
         if (childAdded) {
-            child.addToPixiContainer(this.container);
+            child.setContainingScene(this);
         }
     }
 
@@ -1423,7 +1450,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
 
         this.parentAppPointer = pixiApp;
         
-        pixiApp.stage.addChild(this.container);
+        pixiApp.stage.addChild(this.pixiContainer);
 
         this.startBackgroundSound();
         this.onSelected();
@@ -1436,7 +1463,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
     /** Do not call this directly, call through wrk.GameEngine.deselectCrntScene() */
     deselect() {
         this.isSelected = false;
-        this.parentAppPointer.stage.removeChild(this.container);
+        this.parentAppPointer.stage.removeChild(this.pixiContainer);
         this.parentAppPointer = null;
 
         this.stopBackgroundSound();
@@ -1451,7 +1478,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         this.updateChildren();
         this.update();
 
-        this.container.rotation = this.localAngle;
+        this.pixiContainer.rotation = this.localAngle;
     }
 }
 
@@ -1504,21 +1531,22 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         this.sprite.height = this.textureSize.y;
     }
 
-    addToPixiContainer(container) {
-        if (! container.children.includes(this.sprite)) {
-            container.addChild(this.sprite);
-            this.setParentContainer(container);
-            this.addChildrenToPixiContainer(container);
+    setContainingScene(scene) {
+        this.containingScene = scene;
+        if (scene != null) {
+            scene.pixiContainer.addChild(this.sprite);
+            this.setChildrensContainingScene(scene);
+            this.containingScene.flattenedChildList.push(this);
         }
     }
 
-    removeFromPixiContainer() {
-        var container = this.sprite.parent;
-        this.setParentContainer(null);
-        if (container != undefined) {
-            container.removeChild(this.sprite);
-            this.removeChildrenFromPixiContainer();
+    removeFromContainingScene() {
+        if (this.containingScene != null) {
+            this.containingScene.removeChild(this.sprite);
+            this.removeChildrenFromContainingScene();
+            wrk.arr.removeItem(this.scene.flattenedChildList, this);
         }
+        this.containingScene = null;
     }
 
     setTexture(texture, textureSize=null) {
@@ -1587,19 +1615,22 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
         this.setAnchor(anchor);
     }
 
-    addToPixiContainer(container) {
-        container.addChild(this.textSprite);
-        this.addChildrenToPixiContainer(container);
-        this.setParentContainer(container);
+    setContainingScene(scene) {
+        this.containingScene = scene;
+        if (scene != null) {
+            scene.pixiContainer.addChild(this.textSprite);
+            this.setChildrensContainingScene(scene);
+            this.containingScene.flattenedChildList.push(this);
+        }
     }
 
-    removeFromPixiContainer() {
-        var container = this.textSprite.parent;
-        this.setParentContainer(null);
-        if (container != undefined) {
-            container.removeChild(this.textSprite);
-            this.removeChildrenFromPixiContainer();
+    removeFromContainingScene() {
+        if (this.containingScene != null) {
+            this.containingScene.removeChild(this.textSprite);
+            this.removeChildrenFromContainingScene();
+            wrk.arr.removeItem(this.scene.flattenedChildList, this);
         }
+        this.containingScene = null;
     }
 
     setTextFormat(format) {

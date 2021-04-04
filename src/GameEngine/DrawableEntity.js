@@ -41,21 +41,22 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         this.sprite.height = this.textureSize.y;
     }
 
-    addToPixiContainer(container) {
-        if (! container.children.includes(this.sprite)) {
-            container.addChild(this.sprite);
-            this.setParentContainer(container);
-            this.addChildrenToPixiContainer(container);
+    setContainingScene(scene) {
+        this.containingScene = scene;
+        if (scene != null) {
+            scene.pixiContainer.addChild(this.sprite);
+            this.setChildrensContainingScene(scene);
+            this.containingScene.flattenedChildList.push(this);
         }
     }
 
-    removeFromPixiContainer() {
-        var container = this.sprite.parent;
-        this.setParentContainer(null);
-        if (container != undefined) {
-            container.removeChild(this.sprite);
-            this.removeChildrenFromPixiContainer();
+    removeFromContainingScene() {
+        if (this.containingScene != null) {
+            this.containingScene.removeChild(this.sprite);
+            this.removeChildrenFromContainingScene();
+            wrk.arr.removeItem(this.scene.flattenedChildList, this);
         }
+        this.containingScene = null;
     }
 
     setTexture(texture, textureSize=null) {
