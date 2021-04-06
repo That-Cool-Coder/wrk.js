@@ -134,7 +134,7 @@ wrk.GameEngine.Entity = class {
         }
         else {
             wrk.arr.removeItem(this.children, entity);
-            entity.removeFromScene();
+            entity.removeFromContainingScene();
             entity.removeParent();
             return true;
         }

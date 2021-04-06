@@ -26,3 +26,5 @@ src/GameEngine/Label.js
 src/GameEngine/Button.js
 src/GameEngine/BaseCollider.js
 src/GameEngine/CircleCollider.js
+src/GameEngine/Particle.js
+src/GameEngine/ParticleEffect.js

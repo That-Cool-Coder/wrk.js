@@ -52,9 +52,9 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
     removeFromContainingScene() {
         if (this.containingScene != null) {
-            this.containingScene.removeChild(this.sprite);
+            this.containingScene.pixiContainer.removeChild(this.sprite);
             this.removeChildrenFromContainingScene();
-            wrk.arr.removeItem(this.scene.flattenedChildList, this);
+            wrk.arr.removeItem(this.containingScene.flattenedChildList, this);
         }
         this.containingScene = null;
     }
