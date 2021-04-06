@@ -8,6 +8,12 @@ wrk.v = function(x, y, z=0) {
     return {x : x, y : y, z : z};
 }
 
+wrk.v.makeZero = function(v) {
+    v.x = 0;
+    v.y = 0;
+    v.z = 0;
+}
+
 wrk.v.random = function(min, max, floatsAllowed=true) {
     if (floatsAllowed) {
         return new wrk.v(wrk.randflt(min.x, max.x),
