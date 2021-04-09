@@ -1,6 +1,8 @@
 wrk.GameEngine.Particle = class extends wrk.GameEngine.DrawableEntity {
     // This class is only designed to be used internally by wrk.GameEngine.ParticleEffect
 
+    static airFrictionMult = 0.001;
+
     constructor(name, localPosition, localAngle, texture, size,
             velocity, timeToLive, effectorStrengths) {
         super(name, localPosition, localAngle, texture, size);
@@ -17,6 +19,17 @@ wrk.GameEngine.Particle = class extends wrk.GameEngine.DrawableEntity {
             var forceVector = wrk.v(0, this.effectorStrengths.gravity);
             wrk.v.rotate(forceVector, this.effectorStrengths.gravityDirection);
             wrk.v.add(this.acceleration, forceVector);
+        }
+        if (this.effectorStrengths.airFriction) {
+            var dragAmount = wrk.v.mag(this.velocity);
+            dragAmount *= dragAmount;
+            dragAmount *= this.effectorStrengths.airFriction *
+                wrk.GameEngine.Particle.airFrictionMult;
+
+            var dragVector = wrk.v.copy(this.velocity);
+            wrk.v.normalize(dragVector);
+            wrk.v.mult(dragVector, dragAmount);
+            wrk.v.sub(this.acceleration, dragVector);
         }
     }
 

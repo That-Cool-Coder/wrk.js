@@ -1,8 +1,19 @@
 wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
     /*
+    Example of emitterData:
+    {
+        particleTemplate : <a particle template>, (see below)
+        shape : <'circle'||'arc'||'line'>,
+        amount : <number>,
+        delay : <number>, (in seconds)
+        interval : <number>, (in seconds)
+        minAngle : <number>, (only needed for shape:'arc')
+        maxAngle : <number> (only needed for shape:'arc')
+    }
+
     Example of particleTemplate:
     {
-        textures : [<wrk.GameEngine.Texture>, <wrk.GameEngine.Texture>],
+        texture : <wrk.GameEngine.Texture>],
         minSize : <wrk.v>,
         maxSize : <wrk.v>,
         minSpeed : <number>,
@@ -14,25 +25,14 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
             gravityDirection : <number> (radians)
         }
     }
-
-    Example of emitterData:
-    {
-        shape : <'circle'||'arc'||'line'>,
-        amount : <number>,
-        delay : <number>, (in seconds)
-        interval : <number>, (in seconds)
-        minAngle : <number>, (only needed for shape:'arc')
-        maxAngle : <number> (only needed for shape:'arc')
-    }
     */
 
     timer = 0;
     playing = false;
     particlesRemaining = false;
 
-    constructor(name, localPosition, localAngle, particleTemplate, emitterData) {
+    constructor(name, localPosition, localAngle, emitterData) {
         super(name, localPosition, localAngle);
-        this.particleTemplate = particleTemplate;
         this.emitterData = emitterData;
     }
 
@@ -45,25 +45,26 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
 
     /** Internal method - don't use*/
     addParticle() {
+        particleTemplate = this.emitterData.particleTemplate;
         var position = wrk.v(0, 0);
-        var size = wrk.v.random(this.particleTemplate.minSize,
-            this.particleTemplate.maxSize);
-        var timeToLive = wrk.randflt(this.particleTemplate.minTimeToLive,
-            this.particleTemplate.maxTimeToLive);
+        var size = wrk.v.random(particleTemplate.minSize,
+            particleTemplate.maxSize);
+        var timeToLive = wrk.randflt(particleTemplate.minTimeToLive,
+            particleTemplate.maxTimeToLive);
 
         var angle = 0;
         var velocity = wrk.v(0, 0);
         switch (this.emitterData.shape) {
             case 'circle':
                 angle = wrk.randflt(0, wrk.PI * 2);
-                velocity = wrk.v(0, wrk.randflt(this.particleTemplate.minSpeed,
-                    this.particleTemplate.maxSpeed));
+                velocity = wrk.v(0, wrk.randflt(particleTemplate.minSpeed,
+                    particleTemplate.maxSpeed));
                 wrk.v.rotate(velocity, angle);
                 break;
             case 'arc':
                 angle = wrk.randflt(this.emitterData.minAngle, this.emitterData.maxAngle);
-                velocity = wrk.v(0, wrk.randflt(this.particleTemplate.minSpeed,
-                    this.particleTemplate.maxSpeed));
+                velocity = wrk.v(0, wrk.randflt(particleTemplate.minSpeed,
+                    particleTemplate.maxSpeed));
                 wrk.v.rotate(velocity, angle);
                 break;
             case 'line':
@@ -72,8 +73,8 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
         }
 
         var particle = new wrk.GameEngine.Particle('particle', position, angle,
-            wrk.arr.choose(this.particleTemplate.textures), size,
-            velocity, timeToLive, this.particleTemplate.effectorStrengths);
+            particleTemplate.texture, size,
+            velocity, timeToLive, particleTemplate.effectorStrengths);
         this.particlesRemaining --
         this.addChild(particle);
 
