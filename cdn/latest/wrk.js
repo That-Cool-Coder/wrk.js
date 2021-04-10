@@ -1,4 +1,4 @@
-// wrk.js v1.3.0
+// wrk.js v1.4.0
 // Protected under GNU General Public License v3.0
 
 // Setup wrk instance
@@ -11,7 +11,7 @@ if (window.wrk !== undefined) {
 }
 else {
     var wrk = {}; // Create an object to be the basis of wrk
-    wrk.VERSION = 'v1.3.0';
+    wrk.VERSION = 'v1.4.0';
     wrk.consoleLogHeader = '  🔧🔧 ';
     wrk.consoleLogStyling = 'background-color: #9cc8ff; display: block';
     window.wrk = wrk; // Make it global
@@ -250,8 +250,13 @@ wrk.dom.logToPara = function(data, label='No label') {
         wrk.dom.logPara = document.createElement('p');
         document.body.appendChild(wrk.dom.logPara);
     }
-    else {
-        wrk.dom.logPara.innerText += `${label} : ${data}\n`;
+    wrk.dom.logPara.innerText += `${label} : ${data}\n`;
+}
+
+wrk.dom.delete = function(id) {
+    var elem = wrk.dom.id(id);
+    if (elem != undefined) {
+        elem.remove();
     }
 }
 
@@ -390,9 +395,20 @@ wrk.obj.oneLevelCopy = function(obj) {
     return newObj;
 }
 
+// You'll notice that a lot of the functions in this file could use the other ones
+// But this carries a severe speed penalty, so I've put things inline if that speeds it up
+// Vector operations are often the slowest thing in an application,
+// so making them fast is critical
+
 wrk.v = function(x, y, z=0) {
     // simple and (hopefully) fast
     return {x : x, y : y, z : z};
+}
+
+wrk.v.makeZero = function(v) {
+    v.x = 0;
+    v.y = 0;
+    v.z = 0;
 }
 
 wrk.v.random = function(min, max, floatsAllowed=true) {
@@ -412,6 +428,15 @@ wrk.v.copy = function(v) {
     return wrk.v(v.x, v.y, v.z);
 }
 
+wrk.v.prettyPrint = function(v, verbose=false) {
+    if (verbose) {
+        return `wrk.v: {x : ${v.x}, y : ${v.y}, z : ${v.z}}`;
+    }
+    else {
+        return `{x:${v.x},y:${v.y},z:${v.z}}`;
+    }
+}
+
 wrk.v.equal = function(v1, v2) {
     return (v1.x == v2.x && v1.y == v2.y && v1.z == v1.z);
 }
@@ -423,8 +448,10 @@ wrk.v.add = function(v1, v2) {
 }
 
 wrk.v.copyAdd = function(v1, v2) {
-    var v3 = wrk.v.copy(v1);
-    wrk.v.add(v3, v2);
+    var v3 = wrk.v(
+        v1.x + v2.x,
+        v1.y + v2.y,
+        v1.z + v2.z);
     return v3;
 }
 
@@ -435,8 +462,10 @@ wrk.v.sub = function(v1, v2) {
 }
 
 wrk.v.copySub = function(v1, v2) {
-    var v3 = wrk.v.copy(v1);
-    wrk.v.sub(v3, v2);
+    var v3 = wrk.v(
+        v1.x - v2.x,
+        v1.y - v2.y,
+        v1.z - v2.z);
     return v3;
 }
 
@@ -447,8 +476,10 @@ wrk.v.mult = function(v, amount) {
 }
 
 wrk.v.copyMult = function(v, amount) {
-    var v2 = wrk.v.copy(v);
-    wrk.v.mult(v2, amount);
+    var v2 = wrk.v(
+        v.x * amount,
+        v.y * amount,
+        v.z * amount);
     return v2;
 }
 
@@ -459,8 +490,10 @@ wrk.v.div = function(v, amount) {
 }
 
 wrk.v.copyDiv = function(v, amount) {
-    var v2 = wrk.v.copy(v);
-    wrk.v.div(v2, amount);
+    var v2 = wrk.v(
+        v.x / amount,
+        v.y / amount,
+        v.z / amount);
     return v2;
 }
 
@@ -469,32 +502,44 @@ wrk.v.magSq = function(v) {
 }
 
 wrk.v.mag = function(v) {
-    return wrk.sqrt(wrk.v.magSq(v));
+    return wrk.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2);
 }
 
 wrk.v.distSq = function(v1, v2) {
-    var v3 = wrk.v.copySub(v2, v1);
-    return wrk.v.magSq(v3);
+    var displacementX = v2.x - v1.x;
+    var displacementY = v2.y - v1.y;
+    var displacementZ = v2.z - v1.z;
+    return displacementX ** 2 + displacementY ** 2 + displacementZ ** 2;
 }
 
 wrk.v.dist = function(v1, v2) {
-    return wrk.sqrt(wrk.v.distSq(v1, v2));
+    var displacementX = v2.x - v1.x;
+    var displacementY = v2.y - v1.y;
+    var displacementZ = v2.z - v1.z;
+    return wrk.sqrt(displacementX ** 2 + displacementY ** 2 + displacementZ ** 2);
 }
 
 wrk.v.mean = function(v1, v2) {
-    var displacement = wrk.v.copySub(v2, v1);
-    wrk.v.div(displacement, 2);
-    return wrk.v.copyAdd(v1, displacement);
+    var halfDisplacementX = (v2.x - v1.x) / 2;
+    var halfDisplacementY = (v2.y - v1.y) / 2;
+    var halfDisplacementZ = (v2.z - v1.z) / 2;
+
+    return wrk.v(
+        v1.x + halfDisplacementX,
+        v1.y + halfDisplacementY,
+        v1.z + halfDisplacementZ);
 }
 
 wrk.v.normalize = function(v) {
-    var mag = wrk.v.mag(v);
-    wrk.v.div(v, mag);
+    var mag = wrk.sqrt(v.x ** 2 + v.y ** 2 + v.z ** 2)
+    v.x /= mag;
+    v.y /= mag;
+    v.z /= mag;
 }
 
 wrk.v.rotate = function(v, angle=0, useDegrees=false) {
     if (useDegrees) {
-        angle = wrk.radians(angle);
+        angle /= wrk._180DIVPI;
     }
     
     var cos = wrk.cos(angle);
@@ -510,7 +555,7 @@ wrk.v.rotate = function(v, angle=0, useDegrees=false) {
 
 wrk.v.heading = function(v, useDegrees=false) {
     var heading = wrk.atan2(v.y, v.x);
-    if (useDegrees) heading = wrk.degrees(heading);
+    if (useDegrees) heading *= wrk._180DIVPI;
     return heading;
 }
 
@@ -703,42 +748,56 @@ wrk.MouseWatcher = class {
         this.pointerDown = false;
         this.mouseDown = false;
         this.touchDown = false;
-        
+
+        this.onMouseMove = new wrk.FunctionGroup();
         this.elem.addEventListener('mousemove', e => {
             var rect = e.target.getBoundingClientRect();
             this.position.x = e.x - rect.left;
             this.position.y = e.y - rect.top;
+            this.onMouseMove.call(this.position, e);
         });
-
+        
+        this.onMouseDown = new wrk.FunctionGroup();
         this.elem.addEventListener('mousedown', e => {
             this.mouseDown = true;
+            this.onMouseDown.call(this.position, e);
         });
 
+        this.onMouseUp = new wrk.FunctionGroup();
         this.elem.addEventListener('mouseup', e => {
             this.mouseDown = false;
+            this.onMouseUp.call(this.position, e);
         });
 
+        this.onTouchStart = new wrk.FunctionGroup();
         this.elem.addEventListener('touchstart', e => {
             this.touchDown = true;
+            this.onTouchStart.call(this.position, e);
         });
 
+        this.onTouchEnd = new wrk.FunctionGroup();
         this.elem.addEventListener('touchend', e => {
             this.touchDown = false;
+            this.onTouchEnd.call(this.position, e);
         });
 
+        this.onPointerDown = new wrk.FunctionGroup();
         this.elem.addEventListener('pointerdown', e => {
             this.pointerDown = true;
+            this.onPointerDown.call(this.position, e);
         });
 
+        this.onPointerUp = new wrk.FunctionGroup();
         this.elem.addEventListener('pointerup', e => {
             this.pointerDown = false;
+            this.onPointerUp.call(this.position, e);
         });
     }
 }
 
 wrk.FunctionGroup = class {
     /** Warning! This is undocumented.
-     * It is basically a collection of functions that can be 
+     * It is basically a collection of functions that can be run together
     */
     constructor(initialFunctions=[]) {
         this.functions = new Set(initialFunctions);
@@ -756,10 +815,14 @@ wrk.FunctionGroup = class {
         return this.functions.delete(f);
     }
 
+    removeAll() {
+        this.functions = [];
+    }
+
     /** Call this with the arguments for the functions. */
     call() {
         this.functions.forEach(f => {
-            f.call(...arguments);
+            f(...arguments);
         });
     }
 }
@@ -981,6 +1044,7 @@ wrk.GameEngine = class {
 
     static crntScene;
 
+    // Time since last frame in seconds
     static deltaTime;
 
     static init(canvasSize, globalScale, backgroundColor=0x000000) {
@@ -1077,6 +1141,76 @@ wrk.GameEngine = class {
         this.crntScene = null;
     }
 
+    // Entity lookup
+    // -------------
+
+    static get entitiesInScene() {
+        if (this.crntScene != null) {
+            return this.crntScene.flattenedChildList;
+        }
+        else {
+            return [];
+        }
+    }
+
+    static getEntitiesWithName(name) {
+        // Get all entities in the scene with name
+        var searchResults = [];
+        this.entitiesInScene.forEach(entity => {
+            if (entity.name == name) searchResults.push(entity);
+        });
+        return searchResults;
+    }
+
+    static getEntitiesWithoutName(name) {
+        // Get all entities in the scene without name
+        // (not sure why you'd want it)
+        var searchResults = [];
+        this.entitiesInScene.forEach(entity => {
+            if (entity.name != name) searchResults.push(entity);
+        });
+        return searchResults;
+    }
+
+    static getEntitiesWithNames(names) {
+        // Get all the entities in the scene with one of names
+        var searchResults = [];
+        this.entitiesInScene.forEach(entity => {
+            // Use for...of to allow break
+            for (var name of names) {
+                if (entity.name == name) {
+                    searchResults.push(entity);
+                    break;
+                }
+            }
+        });
+        return searchResults;
+    }
+
+    static getEntitiesWithTag(tag) {
+        // Get all of the entities in the scene tagged with tag
+        var searchResults = [];
+        this.entitiesInScene.forEach(entity => {
+            if (entity.tags.includes(tag)) searchResults.push(entity);
+        });
+        return searchResults;
+    }
+
+    static getEntitiesWithTags(tags) {
+        // Get all of the entities in the scene tagged with tag
+        var searchResults = [];
+        this.entitiesInScene.forEach(entity => {
+            // Use for...of to allow break
+            for (var tag of tags) {
+                if (entity.tags.includes(tag)) {
+                    searchResults.push(entity);
+                    break;
+                }
+            }
+        });
+        return searchResults;
+    }
+
     // Main method
     // -------------
 
@@ -1096,9 +1230,11 @@ wrk.GameEngine.Entity = class {
         this.setLocalPosition(localPosition);
         this.setLocalAngle(localAngle);
 
-        this.setParentContainer(null); // specify that this 
-        
+        this.tags = [];
+
         this.children = [];
+
+        this.containingScene = null;
     }
 
     // Misc
@@ -1108,37 +1244,16 @@ wrk.GameEngine.Entity = class {
         this.name = name;
     }
 
-    // Pixi
-    // ----
-
-    addToPixiContainer(container) {
-        // do nothing except add children - overwrite in drawable entities
-        this.setParentContainer(container);
-        this.addChildrenToPixiContainer(container);
+    addTag(tag) {
+        this.tags.push(tag);
     }
 
-    /** Do not call directly, call through wrk.GameEngine.Entity.addToPixiContainer */
-    addChildrenToPixiContainer(container) {
-        this.children.forEach(child => {
-            child.addToPixiContainer(container);
-        });
+    addTags(tagArray) {
+        this.tags.push(...tagArray);
     }
 
-    removeFromPixiContainer() {
-        this.removeChildrenFromPixiContainer();
-        this.setParentContainer(null)
-    }
-
-    removeChildrenFromPixiContainer() {
-        this.children.forEach(child => {
-            child.removeFromPixiContainer()
-        });
-    }
-
-    setParentContainer(container=null) {
-        // Internal
-
-        this.parentContainer = container;
+    removeTag(tag) {
+        wrk.arr.removeItem(this.tags, tag);
     }
 
     // Position
@@ -1174,6 +1289,43 @@ wrk.GameEngine.Entity = class {
         this.setLocalAngle(angle - this.parent.globalAngle);
     }
 
+    // Pixi and adding to scene
+    // ------------------------
+
+    get isInScene() {
+        return this.containingScene != null;
+    }
+
+    setContainingScene(scene) {
+        // do nothing except add children - overwrite in drawable entities
+        this.containingScene = scene;
+        if (this.containingScene != null) {
+            this.containingScene.flattenedChildList.push(this);
+        }
+        this.setChildrensContainingScene(scene);
+    }
+
+    /** Do not call directly, call through wrk.GameEngine.Entity.setContainingScene */
+    setChildrensContainingScene(scene) {
+        this.children.forEach(child => {
+            child.setContainingScene(scene);
+        });
+    }
+
+    removeFromContainingScene() {
+        this.removeChildrenFromContainingScene();
+        if (this.containingScene != null) {
+            wrk.arr.removeItem(this.containingScene.flattenedChildList, this);
+        }
+        this.containingScene = null;
+    }
+
+    removeChildrenFromContainingScene() {
+        this.children.forEach(child => {
+            child.removeFromContainingScene();
+        });
+    }
+
     // Children/parents
     // ----------------
 
@@ -1207,7 +1359,7 @@ wrk.GameEngine.Entity = class {
         }
         else {
             wrk.arr.removeItem(this.children, entity);
-            entity.removeFromPixiContainer();
+            entity.removeFromContainingScene();
             entity.removeParent();
             return true;
         }
@@ -1215,23 +1367,22 @@ wrk.GameEngine.Entity = class {
 
     setParent(parent) {
         this.parent = parent;
-        
-        if (this.parent != null) {
-            this.setParentContainer(this.parent.parentContainer);
 
-            if (this.parent.parentContainer != null) {
-                this.addToPixiContainer(this.parent.parentContainer);
+        if (this.parent != null) {
+
+            if (this.parent.isInScene) {
+                this.setContainingScene(this.parent.containingScene);
             }
 
         }
         else {
-            this.setParentContainer(null);
+            this.setContainingScene(null);
         }
     }
 
     removeParent() {
         this.setParent(null);
-        this.setParentContainer(null);
+        this.setContainingScene(null);
     }
 
     // Update
@@ -1248,17 +1399,17 @@ wrk.GameEngine.Entity = class {
     }
 
     // To be overwritten by the libarry user - just here as a safety
-    update() {}
+    update() { }
 }
 
 wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
     constructor(name, localPosition=wrk.v(0, 0), localAngle=0) {
         super(name, localPosition, localAngle);
 
-        this.container = new PIXI.Container();
-        this.setParentContainer(this.container);
+        this.pixiContainer = new PIXI.Container();
 
         this.isSelected = false;
+        this.flattenedChildList = [];
     }
 
     get globalAngle() {
@@ -1291,8 +1442,12 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         var childAdded = inheritedFunc(child);
 
         if (childAdded) {
-            child.addToPixiContainer(this.container);
+            child.setContainingScene(this);
         }
+    }
+
+    onSelected() {
+        // Overwrite
     }
 
     /** Do not call this directly, call through wrk.GameEngine.selectScene() */
@@ -1301,18 +1456,24 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
 
         this.parentAppPointer = pixiApp;
         
-        pixiApp.stage.addChild(this.container);
+        pixiApp.stage.addChild(this.pixiContainer);
 
         this.startBackgroundSound();
+        this.onSelected();
+    }
+
+    onDeselected() {
+        // Overwrite
     }
 
     /** Do not call this directly, call through wrk.GameEngine.deselectCrntScene() */
     deselect() {
         this.isSelected = false;
-        this.parentAppPointer.stage.removeChild(this.container);
+        this.parentAppPointer.stage.removeChild(this.pixiContainer);
         this.parentAppPointer = null;
 
         this.stopBackgroundSound();
+        this.onDeselected();
     }
 
     setParent(gameEngine) {
@@ -1323,7 +1484,7 @@ wrk.GameEngine.Scene = class extends wrk.GameEngine.Entity {
         this.updateChildren();
         this.update();
 
-        this.container.rotation = this.localAngle;
+        this.pixiContainer.rotation = this.localAngle;
     }
 }
 
@@ -1376,19 +1537,22 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         this.sprite.height = this.textureSize.y;
     }
 
-    addToPixiContainer(container) {
-        container.addChild(this.sprite);
-        this.setParentContainer(container);
-        this.addChildrenToPixiContainer(container);
+    setContainingScene(scene) {
+        this.containingScene = scene;
+        if (scene != null) {
+            scene.pixiContainer.addChild(this.sprite);
+            this.setChildrensContainingScene(scene);
+            this.containingScene.flattenedChildList.push(this);
+        }
     }
 
-    removeFromPixiContainer() {
-        var container = this.sprite.parent;
-        this.setParentContainer(null);
-        if (container != undefined) {
-            container.removeChild(this.sprite);
-            this.removeChildrenFromPixiContainer();
+    removeFromContainingScene() {
+        if (this.containingScene != null) {
+            this.containingScene.pixiContainer.removeChild(this.sprite);
+            this.removeChildrenFromContainingScene();
+            wrk.arr.removeItem(this.containingScene.flattenedChildList, this);
         }
+        this.containingScene = null;
     }
 
     setTexture(texture, textureSize=null) {
@@ -1457,19 +1621,22 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
         this.setAnchor(anchor);
     }
 
-    addToPixiContainer(container) {
-        container.addChild(this.textSprite);
-        this.addChildrenToPixiContainer(container);
-        this.setParentContainer(container);
+    setContainingScene(scene) {
+        this.containingScene = scene;
+        if (scene != null) {
+            scene.pixiContainer.addChild(this.textSprite);
+            this.setChildrensContainingScene(scene);
+            this.containingScene.flattenedChildList.push(this);
+        }
     }
 
-    removeFromPixiContainer() {
-        var container = this.textSprite.parent;
-        this.setParentContainer(null);
-        if (container != undefined) {
-            container.removeChild(this.textSprite);
-            this.removeChildrenFromPixiContainer();
+    removeFromContainingScene() {
+        if (this.containingScene != null) {
+            this.containingScene.removeChild(this.textSprite);
+            this.removeChildrenFromContainingScene();
+            wrk.arr.removeItem(this.scene.flattenedChildList, this);
         }
+        this.containingScene = null;
     }
 
     setTextFormat(format) {
@@ -1549,9 +1716,15 @@ wrk.GameEngine.Button = class extends wrk.GameEngine.DrawableEntity {
     }
 }
 
+wrk.GameEngine.colliderTypes = {
+    circle : 'circle'
+}
+
 wrk.GameEngine.BaseCollider = class extends wrk.GameEngine.Entity {
-    constructor(name, localPosition, localAngle) {
+    constructor(name, type, localPosition, localAngle) {
         super(name, localPosition, localAngle);
+
+        this.type = type;
 
         this.colliding = false;
 
@@ -1562,14 +1735,168 @@ wrk.GameEngine.BaseCollider = class extends wrk.GameEngine.Entity {
 
 wrk.GameEngine.CircleCollider = class extends wrk.GameEngine.BaseCollider {
     constructor(name, localPosition, radius) {
-        super(name, localPosition, 0);
+        super(name, wrk.GameEngine.colliderTypes.circle, localPosition, 0);
 
         this.radius = radius;
     }
 
     isTouching(collider) {
-        var distSq = wrk.v.distSq(this.globalPosition, collider.globalPosition);
-        return (distSq < this.radius ** 2 + collider.radius ** 2);
+        switch(collider.type) {
+            case wrk.GameEngine.colliderTypes.circle:
+                var distSq = wrk.v.distSq(this.globalPosition, collider.globalPosition);
+                return (distSq < this.radius ** 2 + collider.radius ** 2);
+        }
+    }
+}
+
+wrk.GameEngine.Particle = class extends wrk.GameEngine.DrawableEntity {
+    // This class is only designed to be used internally by wrk.GameEngine.ParticleEffect
+
+    static airFrictionMult = 0.001;
+
+    constructor(name, localPosition, localAngle, texture, size,
+            velocity, timeToLive, effectorStrengths) {
+        super(name, localPosition, localAngle, texture, size);
+        this.addTag('Particle');
+        this.velocity = wrk.v.copy(velocity);
+        this.timeToLive = timeToLive;
+        this.effectorStrengths = effectorStrengths;
+
+        this.acceleration = wrk.v(0, 0);
+    }
+
+    feelEffectors() {
+        if (this.effectorStrengths.gravity) {
+            var forceVector = wrk.v(0, this.effectorStrengths.gravity);
+            wrk.v.rotate(forceVector, this.effectorStrengths.gravityDirection);
+            wrk.v.add(this.acceleration, forceVector);
+        }
+        if (this.effectorStrengths.airFriction) {
+            var dragAmount = wrk.v.mag(this.velocity);
+            dragAmount *= dragAmount;
+            dragAmount *= this.effectorStrengths.airFriction *
+                wrk.GameEngine.Particle.airFrictionMult;
+
+            var dragVector = wrk.v.copy(this.velocity);
+            wrk.v.normalize(dragVector);
+            wrk.v.mult(dragVector, dragAmount);
+            wrk.v.sub(this.acceleration, dragVector);
+        }
+    }
+
+    update() {
+        if (this.timeToLive < 0) this.parent.removeChild(this);
+
+        this.feelEffectors();
+
+        wrk.v.mult(this.acceleration, wrk.GameEngine.deltaTime);
+        wrk.v.add(this.velocity, this.acceleration);
+
+        var distToMove = wrk.v.copyMult(this.velocity, wrk.GameEngine.deltaTime);
+        wrk.v.add(this.localPosition, distToMove);
+
+        wrk.v.makeZero(this.acceleration);
+
+        this.timeToLive -= wrk.GameEngine.deltaTime;
+    }
+}
+
+wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
+    /*
+    Example of emitterData:
+    {
+        particleTemplate : <a particle template>, (see below)
+        shape : <'circle'||'arc'||'line'>,
+        amount : <number>,
+        delay : <number>, (in seconds)
+        interval : <number>, (in seconds)
+        minAngle : <number>, (only needed for shape:'arc')
+        maxAngle : <number> (only needed for shape:'arc')
+    }
+
+    Example of particleTemplate:
+    {
+        texture : <wrk.GameEngine.Texture>],
+        minSize : <wrk.v>,
+        maxSize : <wrk.v>,
+        minSpeed : <number>,
+        maxSpeed : <number>,
+        minTimeToLive : <number>, (seconds)
+        maxTimeToLive : <number>, (seconds)
+        effectorStrengths : {
+            gravity : <number>,
+            gravityDirection : <number> (radians)
+        }
+    }
+    */
+
+    timer = 0;
+    playing = false;
+    particlesRemaining = false;
+
+    constructor(name, localPosition, localAngle, emitterData) {
+        super(name, localPosition, localAngle);
+        this.emitterData = emitterData;
+    }
+
+    play() {
+        this.removeChildren();
+        this.timer = this.emitterData.delay || 0;
+        this.playing = true;
+        this.particlesRemaining = this.emitterData.amount;
+    }
+
+    /** Internal method - don't use*/
+    addParticle() {
+        particleTemplate = this.emitterData.particleTemplate;
+        var position = wrk.v(0, 0);
+        var size = wrk.v.random(particleTemplate.minSize,
+            particleTemplate.maxSize);
+        var timeToLive = wrk.randflt(particleTemplate.minTimeToLive,
+            particleTemplate.maxTimeToLive);
+
+        var angle = 0;
+        var velocity = wrk.v(0, 0);
+        switch (this.emitterData.shape) {
+            case 'circle':
+                angle = wrk.randflt(0, wrk.PI * 2);
+                velocity = wrk.v(0, wrk.randflt(particleTemplate.minSpeed,
+                    particleTemplate.maxSpeed));
+                wrk.v.rotate(velocity, angle);
+                break;
+            case 'arc':
+                angle = wrk.randflt(this.emitterData.minAngle, this.emitterData.maxAngle);
+                velocity = wrk.v(0, wrk.randflt(particleTemplate.minSpeed,
+                    particleTemplate.maxSpeed));
+                wrk.v.rotate(velocity, angle);
+                break;
+            case 'line':
+                void 0; // do nothing - line isn't planned yet
+                break;
+        }
+
+        var particle = new wrk.GameEngine.Particle('particle', position, angle,
+            particleTemplate.texture, size,
+            velocity, timeToLive, particleTemplate.effectorStrengths);
+        this.particlesRemaining --
+        this.addChild(particle);
+
+        // If effect is instantaneous, then don't wait for next frame
+        if (this.emitterData.interval == 0 && this.particlesRemaining > 0) {
+            this.addParticle();
+        }
+    }
+
+    update() {
+        if (this.playing) {
+            if (this.particlesRemaining > 0) {
+                this.timer -= wrk.GameEngine.deltaTime;
+                if (this.timer < 0) {
+                    this.addParticle();
+                    this.timer = this.emitterData.interval;
+                }
+            }
+        }
     }
 }
 
