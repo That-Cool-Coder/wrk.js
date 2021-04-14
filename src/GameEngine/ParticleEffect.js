@@ -49,6 +49,7 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
     /** Internal method - don't use*/
     addParticle() {
         var particleTemplate = this.emitterData.particleTemplate;
+        if (particleTemplate.tint === undefined) particleTemplate.tint = 0xffffff;
         var position = wrk.v(0, 0);
         var size = wrk.v.random(particleTemplate.minSize,
             particleTemplate.maxSize);
@@ -78,7 +79,7 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
         var particle = new wrk.GameEngine.Particle('particle', position, angle,
             particleTemplate.texture, size,
             velocity, timeToLive, particleTemplate.effectorStrengths);
-        particle.setTint(this.particleTemplate.tint || 0xffffff);
+        particle.setTint(particleTemplate.tint);
         this.particlesRemaining --;
         this.addChild(particle);
 
