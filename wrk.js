@@ -1843,7 +1843,10 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
     }
 
     play() {
-        this.removeChildren();
+        // Only remove the children if the effect is non-looping,
+        // as removing them spoils the loop illusion
+        if (! this.looping) this.removeChildren();
+        
         this.timer = this.emitterData.delay || 0;
         this.playing = true;
         this.particlesRemaining = this.emitterData.amount;
@@ -1901,11 +1904,12 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
                     this.timer = this.emitterData.interval;
                 }
             }
-        }
-
-        // Make it loop
-        if (this.particlesRemaining == 0 && this.looping) {
-            this.play();
+            else {
+                // Make it loop
+                if (this.looping) this.play()
+                // Otherwise just quit
+                else this.playing = false;
+            }
         }
     }
 }
