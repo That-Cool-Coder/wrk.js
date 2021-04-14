@@ -14,6 +14,7 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
     Example of particleTemplate:
     {
         texture : <wrk.GameEngine.Texture>,
+        tint : <a hex color>, (optional, defaults to no tint)
         minSize : <wrk.v>,
         maxSize : <wrk.v>,
         minSpeed : <number>,
@@ -21,6 +22,7 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
         minTimeToLive : <number>, (seconds)
         maxTimeToLive : <number>, (seconds)
         effectorStrengths : {
+            airFriction : <number>
             gravity : <number>,
             gravityDirection : <number> (radians)
         }
@@ -76,7 +78,8 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
         var particle = new wrk.GameEngine.Particle('particle', position, angle,
             particleTemplate.texture, size,
             velocity, timeToLive, particleTemplate.effectorStrengths);
-        this.particlesRemaining --
+        particle.setTint(this.particleTemplate.tint || 0xffffff);
+        this.particlesRemaining --;
         this.addChild(particle);
 
         // If effect is instantaneous, then don't wait for next frame
