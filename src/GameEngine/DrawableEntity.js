@@ -35,6 +35,33 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         }
     }
 
+    getGlobalCornerPositions() {
+        // Cache global position here for more speed
+        var globalPosition = this.globalPosition;
+        
+        var topLeftPos = wrk.v(this.textureSize.x * -this.anchor.x,
+            this.textureSize.y * -this.anchor.y);
+        wrk.v.rotate(topLeftPos, this.localAngle);
+        wrk.v.add(topLeftPos, globalPosition);
+
+        var topRightPos = wrk.v(this.textureSize.x * this.anchor.x,
+            this.textureSize.y * -this.anchor.y);
+        wrk.v.rotate(topRightPos, this.localAngle);
+        wrk.v.add(topRightPos, globalPosition);
+
+        var bottomRightPos = wrk.v(this.textureSize.x * this.anchor.x,
+            this.textureSize.y * this.anchor.y);
+        wrk.v.rotate(bottomRightPos, this.localAngle);
+        wrk.v.add(bottomRightPos, globalPosition);
+
+        var bottomLeftPos = wrk.v(this.textureSize.x * -this.anchor.x,
+            this.textureSize.y * this.anchor.y);
+        wrk.v.rotate(bottomLeftPos, this.localAngle);
+        wrk.v.add(bottomLeftPos, globalPosition);
+
+        return [topLeftPos, topRightPos, bottomRightPos, bottomLeftPos];
+    }
+
     setTextureSize(size) {
         this.textureSize = wrk.v.copy(size);
         this.sprite.width = this.textureSize.x;
@@ -87,8 +114,9 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
     }
 
     setAnchor(position) {
-        // from 0,0 to 1, 1
-
+        // from 0,0 to 1,1
+        
+        this.anchor = wrk.v.copy(position);
         this.sprite.anchor.x = position.x;
         this.sprite.anchor.y = position.y;
     }
