@@ -36,7 +36,7 @@ wrk.GameEngine.Particle = class extends wrk.GameEngine.DrawableEntity {
     update() {
         if (this.timeToLive < 0) this.parent.removeChild(this);
 
-        this.feelEffectors();
+        if (this.effectorStrengths) this.feelEffectors();
 
         wrk.v.mult(this.acceleration, wrk.GameEngine.deltaTime);
         wrk.v.add(this.velocity, this.acceleration);

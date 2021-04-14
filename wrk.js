@@ -1787,7 +1787,7 @@ wrk.GameEngine.Particle = class extends wrk.GameEngine.DrawableEntity {
     update() {
         if (this.timeToLive < 0) this.parent.removeChild(this);
 
-        this.feelEffectors();
+        if (this.effectorStrengths) this.feelEffectors();
 
         wrk.v.mult(this.acceleration, wrk.GameEngine.deltaTime);
         wrk.v.add(this.velocity, this.acceleration);
@@ -1816,7 +1816,7 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
 
     Example of particleTemplate:
     {
-        texture : <wrk.GameEngine.Texture>],
+        texture : <wrk.GameEngine.Texture>,
         minSize : <wrk.v>,
         maxSize : <wrk.v>,
         minSpeed : <number>,
@@ -1834,9 +1834,10 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
     playing = false;
     particlesRemaining = false;
 
-    constructor(name, localPosition, localAngle, emitterData) {
+    constructor(name, localPosition, localAngle, emitterData, looping=false) {
         super(name, localPosition, localAngle);
         this.emitterData = emitterData;
+        this.looping = looping;
     }
 
     play() {
@@ -1848,7 +1849,7 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
 
     /** Internal method - don't use*/
     addParticle() {
-        particleTemplate = this.emitterData.particleTemplate;
+        var particleTemplate = this.emitterData.particleTemplate;
         var position = wrk.v(0, 0);
         var size = wrk.v.random(particleTemplate.minSize,
             particleTemplate.maxSize);
@@ -1896,6 +1897,11 @@ wrk.GameEngine.ParticleEffect = class extends wrk.GameEngine.Entity {
                     this.timer = this.emitterData.interval;
                 }
             }
+        }
+
+        // Make it loop
+        if (this.particlesRemaining == 0 && this.looping) {
+            this.play();
         }
     }
 }
