@@ -39,13 +39,13 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         // Cache global position here for more speed
         var globalPosition = this.globalPosition;
         
-        var topLeftPos = wrk.v(this.textureSize.x * -this.anchor.x,
-            this.textureSize.y * -this.anchor.y);
+        var topLeftPos = wrk.v(this.textureSize.x * -(1 - this.anchor.x),
+            this.textureSize.y * -(1 - this.anchor.y));
         wrk.v.rotate(topLeftPos, this.localAngle);
         wrk.v.add(topLeftPos, globalPosition);
 
         var topRightPos = wrk.v(this.textureSize.x * this.anchor.x,
-            this.textureSize.y * -this.anchor.y);
+            this.textureSize.y * -(1 - this.anchor.y));
         wrk.v.rotate(topRightPos, this.localAngle);
         wrk.v.add(topRightPos, globalPosition);
 
@@ -54,7 +54,7 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         wrk.v.rotate(bottomRightPos, this.localAngle);
         wrk.v.add(bottomRightPos, globalPosition);
 
-        var bottomLeftPos = wrk.v(this.textureSize.x * -this.anchor.x,
+        var bottomLeftPos = wrk.v(this.textureSize.x * -(1 - this.anchor.x),
             this.textureSize.y * this.anchor.y);
         wrk.v.rotate(bottomLeftPos, this.localAngle);
         wrk.v.add(bottomLeftPos, globalPosition);
@@ -130,10 +130,18 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         this.sprite.visible = state;
     }
 
-    internalUpdate() {
+    get visible() {
+        return this.sprite.visible;
+    }
+
+    updateSpritePosition() {
         var globalPosition = this.globalPosition;
         this.sprite.position.set(globalPosition.x, globalPosition.y);
         this.sprite.rotation = this.globalAngle + wrk.PI;
+    }
+
+    internalUpdate() {
+        this.updateSpritePosition();
 
         // This needs to be after the block above - 
         // otherwise, if this entity's parent gets removed in update(),
