@@ -19,7 +19,7 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
 
     removeFromContainingScene() {
         if (this.containingScene != null) {
-            this.containingScene.removeChild(this.textSprite);
+            this.containingScene.pixiContainer.removeChild(this.textSprite);
             this.removeChildrenFromContainingScene();
             wrk.arr.removeItem(this.containingScene.flattenedChildList, this);
         }
