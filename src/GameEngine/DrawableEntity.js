@@ -122,8 +122,11 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
     }
 
     setTint(tint) {
-        this.tint = tint;
         this.sprite.tint = tint;
+    }
+
+    get tint() {
+        return this.sprite.tint;
     }
 
     setVisible(state) {
@@ -132,6 +135,14 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
     get visible() {
         return this.sprite.visible;
+    }
+
+    setAlpha(alpha) {
+        this.sprite.alpha = alpha;
+    }
+
+    get alpha() {
+        return this.sprite.alpha;
     }
 
     updateSpritePosition() {

@@ -1618,8 +1618,11 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
     }
 
     setTint(tint) {
-        this.tint = tint;
         this.sprite.tint = tint;
+    }
+
+    get tint() {
+        return this.sprite.tint;
     }
 
     setVisible(state) {
@@ -1628,6 +1631,14 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
     get visible() {
         return this.sprite.visible;
+    }
+
+    setAlpha(alpha) {
+        this.sprite.alpha = alpha;
+    }
+
+    get alpha() {
+        return this.sprite.alpha;
     }
 
     updateSpritePosition() {
@@ -1668,7 +1679,7 @@ wrk.GameEngine.Label = class extends wrk.GameEngine.Entity {
 
     removeFromContainingScene() {
         if (this.containingScene != null) {
-            this.containingScene.removeChild(this.textSprite);
+            this.containingScene.pixiContainer.removeChild(this.textSprite);
             this.removeChildrenFromContainingScene();
             wrk.arr.removeItem(this.containingScene.flattenedChildList, this);
         }
