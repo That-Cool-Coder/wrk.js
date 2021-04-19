@@ -1584,12 +1584,11 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
     setTexture(texture, textureSize=null) {
         if (this.sprite != undefined) {
-            var container = this.sprite.parent;
-
+            var containingScene = this.containingScene;
             var anchor = this.sprite.anchor;
 
-            if (container != undefined) {
-                this.removeFromPixiContainer(); // remove old sprite
+            if (containingScene != undefined) {
+                this.removeFromContainingScene(); // remove old sprite
             }
         }
 
@@ -1601,8 +1600,8 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
             this.setTint(this.tint);
         }
 
-        if (container != undefined) {
-            this.addToPixiContainer(container); // add new container
+        if (containingScene != undefined) {
+            this.setContainingScene(containingScene); // add new container
         }
         if (anchor != undefined) {
             this.setAnchor(anchor);
