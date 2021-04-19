@@ -1506,19 +1506,26 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
     }
 
     setupMouseInteraction() {
-        this.mouseHovering = false;
+        if (this.mouseHovering == undefined) this.mouseHovering = false;
 
         this.sprite.interactive = true;
 
-        this.mouseDownCallbacks = new wrk.FunctionGroup();
+        if (this.mouseDownCallbacks == undefined) {
+            this.mouseDownCallbacks = new wrk.FunctionGroup();
+        }
         this.sprite.mousedown = data => this.mouseDownCallbacks.call(data);
         this.sprite.touchstart = data => this.mouseDownCallbacks.call(data);
         
-        this.mouseUpCallbacks = new wrk.FunctionGroup();
+        if (this.mouseUpCallbacks == undefined) {
+            this.mouseUpCallbacks = new wrk.FunctionGroup();
+        }
         this.sprite.mouseup = data => this.mouseUpCallbacks.call(data);
         this.sprite.touchend = data => this.mouseUpCallbacks.call(data);
 
-        this.mouseOverCallbacks = new wrk.FunctionGroup();
+        
+        if (this.mouseOverCallbacks == undefined) {
+            this.mouseOverCallbacks = new wrk.FunctionGroup();
+        }
         this.sprite.mouseover = data => {
             this.mouseHovering = true;
             this.mouseOverCallbacks.call(data);
@@ -1594,6 +1601,7 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
 
         this.sprite = new PIXI.Sprite(texture);
         this.setTextureSize(textureSize);
+        this.setupMouseInteraction();
         if (this.parent != null) this.updateSpritePosition();
         if (this.tint != undefined) {
             this.setTint(this.tint);
