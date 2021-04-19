@@ -86,7 +86,7 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         this.containingScene = null;
     }
 
-    setTexture(texture, textureSize=null) {
+    setTexture(texture, textureSize=this.textureSize) {
         if (this.sprite != undefined) {
             var containingScene = this.containingScene;
             var anchor = this.sprite.anchor;
@@ -97,15 +97,14 @@ wrk.GameEngine.DrawableEntity = class extends wrk.GameEngine.Entity {
         }
 
         this.sprite = new PIXI.Sprite(texture);
-        if (textureSize != null) {
-            this.setTextureSize(textureSize);
-        }
+        this.setTextureSize(textureSize);
+        if (this.parent != null) this.updateSpritePosition();
         if (this.tint != undefined) {
             this.setTint(this.tint);
         }
 
         if (containingScene != undefined) {
-            this.setContainingScene(containingScene); // add new container
+            this.setContainingScene(containingScene); // add new sprite
         }
         if (anchor != undefined) {
             this.setAnchor(anchor);
