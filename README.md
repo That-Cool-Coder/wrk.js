@@ -2,6 +2,8 @@
 
 ## A multipurpose, flexible, and fast JavaScript library
 
+## Due to a naming conflict, this library has been renamed to [spnr.js](https://github.com/That-Cool-Coder/spnr.js). This repository remains for history's sake.
+
 #### Goals:
 - Be fast through simplicity
 - Leave no unexpected suprises
